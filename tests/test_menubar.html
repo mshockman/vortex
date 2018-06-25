@@ -7,63 +7,35 @@
     <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
     <script type="text/javascript" src="../dist/menu.bundle.js"></script>
 
+    <link type="text/css" rel="stylesheet" href="../dist/css/style.css" />
+
     <style type="text/css">
-        html, body {
-            margin: 0;
-            padding: 0;
-        }
 
-        .main-nav {
-            border-bottom: 1px solid #000;
-            background-color: #ccc;
-        }
-
-        .menuitem {
-            cursor: pointer;
-        }
-
-        .menubar {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: row;
-        }
-
-        .menubar > .menuitem {
-            line-height: 30px;
-            padding: 0 10px;
-        }
-
-        .menu {
-            position: absolute;
-            display: none;
-        }
     </style>
 </head>
 <body>
-<div class="main-nav">
-    <ul class="menubar" id="main-menubar">
-        <li class="menuitem">
+<div class="navbar navbar-top">
+    <ul class="menubar" id="main-menubar" data-role="menu" data-auto-activate="false">
+        <li class="menuitem" data-role="dropdown">
             <a>Test Item #1</a>
-            <div class="menu">
+            <div class="menu" data-role="menu">
                 <ul class="list-group">
-                    <li class="menuitem"><a href="#">Test Sub Item #1</a></li>
-                    <li class="menuitem"><a href="#">Test Sub Item #2</a></li>
-                    <li class="menuitem"><a href="#">Test Sub Item #3</a></li>
-                    <li class="menuitem"><a href="#">Test Sub Item #4</a></li>
-                    <li class="menuitem"><a href="#">Test Sub Item #5</a></li>
+                    <li class="menuitem" data-role="item"><a href="#">Test Sub Item #1</a></li>
+                    <li class="menuitem" data-role="item"><a href="#">Test Sub Item #2</a></li>
+                    <li class="menuitem" data-role="item"><a href="#">Test Sub Item #3</a></li>
+                    <li class="menuitem" data-role="item"><a href="#">Test Sub Item #4</a></li>
+                    <li class="menuitem" data-role="item"><a href="#">Test Sub Item #5</a></li>
                 </ul>
             </div>
         </li>
-        <li class="menuitem">Test Item #2</li>
-        <li class="menuitem">Test Item #3</li>
-        <li class="menuitem">Test Item #4</li>
+        <li class="menuitem" data-role="item">Test Item #2</li>
+        <li class="menuitem" data-role="item">Test Item #3</li>
+        <li class="menuitem" data-role="item">Test Item #4</li>
     </ul>
 </div>
 
 <script type="text/javascript">
-    let menu = new Menu({element: "#main-menubar"});
+    let menu = new Menu({target: "#main-menubar"});
 </script>
 </body>
 </html>

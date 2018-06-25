@@ -1,0 +1,67 @@
+@import "../modules/variables";
+@import "../modules/colors";
+
+
+.menubar {
+  display: flex;
+  flex-direction: row;
+
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  background-color: $cape-cod;
+  color: $white;
+  border: 1px solid $emperor;
+
+  & > .menuitem {
+    line-height: 1.875rem;
+    padding: 0 5px;
+  }
+
+  & > .menuitem.active {
+    background-color: $hippie-blue;
+  }
+}
+
+
+.menuitem > a {
+  padding: 0 5px;
+}
+
+
+.menuitem, .dropdown {
+  cursor: pointer;
+  position: relative;
+}
+
+
+.menuitem.active, .dropdown.active {
+  background-color: $hippie-blue;
+}
+
+
+.menu {
+  position: absolute;
+  display: none;
+  min-width: 200px;
+  z-index: $menu-layer;
+  border: 1px solid $emperor;
+  background-color: $cape-cod;
+  left: 0;
+  top: 100%;
+
+  a {
+    color: $white;
+    text-decoration: none;
+  }
+
+  &.open {
+    display: block;
+  }
+}
+
+
+.menubar.main-bar {
+
+}

@@ -1,0 +1,18 @@
+@import 'partials/menus';
+@import 'partials/components';
+@import "partials/layout";
+
+
+* {
+  box-sizing: border-box;
+}
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-family: arial, sans-serif;
+  font-size: large;
+}
