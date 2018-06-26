@@ -11,7 +11,7 @@
 <body data-init="toggle">
 
 
-<div class="navbar navbar-main navbar-inline navbar-top">
+<div class="navbar navbar-main navbar-inline navbar-top mb-2">
     <ul class="menubar" data-role="menu" data-init="menu" data-auto-activate="false" data-timeout="3000">
         <li class="menuitem" data-role="dropdown">
             <a>Tools</a>
@@ -23,6 +23,26 @@
         </li>
     </ul>
 </div>
+
+
+
+<div class="modal" id="test-modal" data-init="modal">
+    <div class="modal-window">
+        <div class="modal-head hbox">
+            <div class="pane-1 modal-title">Test Modal</div>
+            <div class="pane-1 text-right"><i data-action="dismiss">Dismiss</i></div>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer hbox">
+            <div class="pane-1"></div>
+            <div class="pane-1 text-right">
+                <button type="button">Cancel</button>
+                <button type="button">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 </body>
