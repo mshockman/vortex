@@ -1057,6 +1057,8 @@ var Menu = function () {
                     return value;
                 }
             }
+
+            return null;
         }
     }, {
         key: 'closeOnBlur',
@@ -1065,8 +1067,10 @@ var Menu = function () {
 
             if (value === 'true' || value === 'false') {
                 return value === 'true';
-            } else {
+            } else if (value !== undefined && value !== null) {
                 return value;
+            } else {
+                return true;
             }
         }
     }, {
@@ -1076,8 +1080,10 @@ var Menu = function () {
 
             if (value === 'true' || value === 'false') {
                 return value === 'true';
-            } else {
+            } else if (value !== undefined && value !== null) {
                 return value;
+            } else {
+                return true;
             }
         }
     }]);

@@ -723,6 +723,8 @@ export default class Menu {
                 return value;
             }
         }
+
+        return null;
     }
 
     get closeOnBlur() {
@@ -730,8 +732,10 @@ export default class Menu {
 
         if(value === 'true' || value === 'false') {
             return value === 'true';
-        } else {
+        } else if(value !== undefined && value !== null) {
             return value;
+        } else {
+            return true;
         }
     }
 
@@ -740,8 +744,10 @@ export default class Menu {
 
         if(value === 'true' || value === 'false') {
             return value === 'true';
-        } else {
+        } else if(value !== undefined && value !== null) {
             return value;
+        } else {
+            return true;
         }
     }
 }
