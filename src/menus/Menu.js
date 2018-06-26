@@ -27,6 +27,7 @@
  * - closeOnSelect
  * - closeOnBlur
  * - timeout
+ * - positioner
  *
  * Menu attributes
  * - openDelay {Number} Default 0
@@ -46,9 +47,10 @@
  * - toggleItems {boolean|'on'|'off'|'both'}
  *   Controls how the menu's child items behave when clicked.  This can be overridden by the items toggle property.
  *   If true or 'both' the item will toggle on and off when clicked.  If 'on' the item will only toggle on.  If 'off'
- *   the item will only toggle off.  If false the item will never toggle on or off.  This is primarly used by dropdown
+ *   the item will only toggle off.  If false the item will never toggle on or off.  This is primarily used by dropdown
  *   items as items will be selected when clicked and turn off the menu if close on select is true.
  * - menuToggle
+ * - positioner
  *
  * Item attributes
  * - selectable
@@ -89,6 +91,9 @@ const EVENTS = {
 };
 
 
+const POSITIONER_REGISTRY = {};
+
+
 function menuTemplate() {
     return `<div class='menu' data-role='menu'>`;
 }
@@ -98,7 +103,7 @@ function menuTemplate() {
  * A grouping of items that act in sync together.
  */
 export default class Menu {
-    constructor({target=menuTemplate, timeout=1000, closeOnBlur=true, closeOnSelect=true}) {
+    constructor({target=menuTemplate, timeout=1000, closeOnBlur=true, closeOnSelect=true, positioner=null}) {
         this._onMouseOver = this.onMouseOver.bind(this);
         this._onMouseOut = this.onMouseOut.bind(this);
         this._onClick = this.onClick.bind(this);
@@ -114,7 +119,8 @@ export default class Menu {
         this.$element.data({
             timeout: timeout,
             closeOnBlur: closeOnBlur,
-            closeOnSelect: closeOnSelect
+            closeOnSelect: closeOnSelect,
+            positioner: positioner
         });
     }
 
@@ -282,6 +288,13 @@ export default class Menu {
             const open = () => {
                 menu.data("_cancelOpenTimer", null);
                 menu.addClass(CLASSNAMES.open);
+
+                let positioner = this.getPositioner(menu);
+
+                if(positioner) {
+                    positioner(menu, this);
+                }
+
                 menu.trigger(EVENTS.open, this);
             };
 
@@ -689,6 +702,20 @@ export default class Menu {
         }
     }
 
+    getPositioner(menu) {
+        menu = $(menu);
+        let value = firstValue([
+            menu.data("positioner"),
+            this.$element.data("positioner")
+        ]);
+
+        if(typeof value === 'string') {
+            return POSITIONER_REGISTRY[value];
+        } else {
+            return value;
+        }
+    }
+
     //------------------------------------------------------------------------------------------------------------------
     // Properties
 
@@ -728,3 +755,11 @@ export default class Menu {
         }
     }
 }
+
+
+Menu.EVENTS = EVENTS;
+Menu.PREFIX = PREFIX;
+Menu.CONTROLLER = CONTROLLER;
+Menu.CLASSNAMES = CLASSNAMES;
+Menu.SELECTORS = SELECTORS;
+Menu.POSITIONER_REGISTRY = POSITIONER_REGISTRY;

@@ -130,6 +130,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * - closeOnSelect
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * - closeOnBlur
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * - timeout
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - positioner
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       *
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * Menu attributes
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * - openDelay {Number} Default 0
@@ -149,9 +150,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * - toggleItems {boolean|'on'|'off'|'both'}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       *   Controls how the menu's child items behave when clicked.  This can be overridden by the items toggle property.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       *   If true or 'both' the item will toggle on and off when clicked.  If 'on' the item will only toggle on.  If 'off'
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   the item will only toggle off.  If false the item will never toggle on or off.  This is primarly used by dropdown
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   the item will only toggle off.  If false the item will never toggle on or off.  This is primarily used by dropdown
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       *   items as items will be selected when clicked and turn off the menu if close on select is true.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * - menuToggle
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - positioner
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       *
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * Item attributes
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * - selectable
@@ -194,6 +196,8 @@ var EVENTS = {
     close: PREFIX + 'close'
 };
 
+var POSITIONER_REGISTRY = {};
+
 function menuTemplate() {
     return '<div class=\'menu\' data-role=\'menu\'>';
 }
@@ -211,7 +215,9 @@ var Menu = function () {
             _ref$closeOnBlur = _ref.closeOnBlur,
             closeOnBlur = _ref$closeOnBlur === undefined ? true : _ref$closeOnBlur,
             _ref$closeOnSelect = _ref.closeOnSelect,
-            closeOnSelect = _ref$closeOnSelect === undefined ? true : _ref$closeOnSelect;
+            closeOnSelect = _ref$closeOnSelect === undefined ? true : _ref$closeOnSelect,
+            _ref$positioner = _ref.positioner,
+            positioner = _ref$positioner === undefined ? null : _ref$positioner;
 
         _classCallCheck(this, Menu);
 
@@ -230,7 +236,8 @@ var Menu = function () {
         this.$element.data({
             timeout: timeout,
             closeOnBlur: closeOnBlur,
-            closeOnSelect: closeOnSelect
+            closeOnSelect: closeOnSelect,
+            positioner: positioner
         });
     }
 
@@ -421,6 +428,13 @@ var Menu = function () {
                 var open = function open() {
                     menu.data("_cancelOpenTimer", null);
                     menu.addClass(CLASSNAMES.open);
+
+                    var positioner = _this3.getPositioner(menu);
+
+                    if (positioner) {
+                        positioner(menu, _this3);
+                    }
+
                     menu.trigger(EVENTS.open, _this3);
                 };
 
@@ -870,6 +884,18 @@ var Menu = function () {
                 return value;
             }
         }
+    }, {
+        key: 'getPositioner',
+        value: function getPositioner(menu) {
+            menu = (0, _jquery2.default)(menu);
+            var value = (0, _utility.firstValue)([menu.data("positioner"), this.$element.data("positioner")]);
+
+            if (typeof value === 'string') {
+                return POSITIONER_REGISTRY[value];
+            } else {
+                return value;
+            }
+        }
 
         //------------------------------------------------------------------------------------------------------------------
         // Properties
@@ -920,29 +946,13 @@ var Menu = function () {
 
 exports.default = Menu;
 
-/***/ }),
 
-/***/ "./src/menus/MenuItem.js":
-/*!*******************************!*\
-  !*** ./src/menus/MenuItem.js ***!
-  \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var MenuItem = function MenuItem() {
-    _classCallCheck(this, MenuItem);
-};
-
-exports.default = MenuItem;
+Menu.EVENTS = EVENTS;
+Menu.PREFIX = PREFIX;
+Menu.CONTROLLER = CONTROLLER;
+Menu.CLASSNAMES = CLASSNAMES;
+Menu.SELECTORS = SELECTORS;
+Menu.POSITIONER_REGISTRY = POSITIONER_REGISTRY;
 
 /***/ }),
 
@@ -959,24 +969,18 @@ exports.default = MenuItem;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.MenuItem = exports.Menu = undefined;
+exports.Menu = undefined;
 
 var _Menu = __webpack_require__(/*! ./Menu */ "./src/menus/Menu.js");
 
 var _Menu2 = _interopRequireDefault(_Menu);
 
-var _MenuItem = __webpack_require__(/*! ./MenuItem */ "./src/menus/MenuItem.js");
-
-var _MenuItem2 = _interopRequireDefault(_MenuItem);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.Menu = _Menu2.default;
-exports.MenuItem = _MenuItem2.default;
 
 
 window.Menu = _Menu2.default;
-window.MenuItem = _MenuItem2.default;
 
 /***/ }),
 
