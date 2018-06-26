@@ -60,35 +60,7 @@
 
 import $ from 'jquery';
 import {firstValue, parseBoolean, parseBooleanString, parseInteger} from '../utility';
-
-
-const PREFIX = 'menus.',
-    CONTROLLER = `${PREFIX}menu`;
-
-
-const SELECTORS = {
-    menu: "[data-role~='menu']",
-    item: "[data-role~='item']",
-    dropdown: "[data-role~='dropdown']"
-};
-SELECTORS.all = `${SELECTORS.menu}, ${SELECTORS.item}, ${SELECTORS.dropdown}`;
-SELECTORS.menuitem = `${SELECTORS.item}, ${SELECTORS.dropdown}`;
-
-
-const CLASSNAMES = {
-    open: 'open',
-    active: 'active',
-    disabled: 'disabled'
-};
-
-
-const EVENTS = {
-    select: `${PREFIX}select`,
-    activate: `${PREFIX}activate`,
-    deactivate: `${PREFIX}deactivate`,
-    open: `${PREFIX}open`,
-    close: `${PREFIX}close`
-};
+import {CLASSNAMES, PREFIX, EVENTS, SELECTORS, CONTROLLER, addRole} from './core';
 
 
 const POSITIONER_REGISTRY = {};
@@ -103,7 +75,7 @@ function menuTemplate() {
  * A grouping of items that act in sync together.
  */
 export default class Menu {
-    constructor({target=menuTemplate, timeout=1000, closeOnBlur=true, closeOnSelect=true, positioner=null}) {
+    constructor({target=menuTemplate, timeout=null, closeOnBlur=null, closeOnSelect=null, positioner=null, role=null}) {
         this._onMouseOver = this.onMouseOver.bind(this);
         this._onMouseOut = this.onMouseOut.bind(this);
         this._onClick = this.onClick.bind(this);
@@ -116,12 +88,22 @@ export default class Menu {
             this.setElement(target);
         }
 
-        this.$element.data({
+        let config = {
             timeout: timeout,
             closeOnBlur: closeOnBlur,
             closeOnSelect: closeOnSelect,
             positioner: positioner
-        });
+        };
+
+        for(let key in config) {
+            if(config.hasOwnProperty(key) && config[key] !== null && config[key] !== undefined) {
+                this.$element.data(key, config[key]);
+            }
+        }
+
+        if(role) {
+            addRole(this.$element, role);
+        }
     }
 
     setElement(element) {
@@ -554,6 +536,9 @@ export default class Menu {
                 this.select($target);
             }
         } else {
+            window.t = $target;
+            console.dir($target);
+            console.log(toggle);
             if(!isActive && (toggle === 'both' || toggle === true || toggle === 'on')) {
                 this.activate($target);
             } else if(isActive && (toggle === 'off' || toggle === 'both' || toggle === true)) {

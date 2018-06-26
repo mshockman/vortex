@@ -81,10 +81,151 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/menus/index.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.js");
 /******/ })
 /************************************************************************/
 /******/ ({
+
+/***/ "./src/index.js":
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+__webpack_require__(/*! ./menus */ "./src/menus/index.js");
+
+var _loader = __webpack_require__(/*! ./loader */ "./src/loader.js");
+
+var _loader2 = _interopRequireDefault(_loader);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_loader2.default.init();
+
+/***/ }),
+
+/***/ "./src/loader.js":
+/*!***********************!*\
+  !*** ./src/loader.js ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _class, _temp;
+
+var _jquery = __webpack_require__(/*! jquery */ "jquery");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Loader = (_temp = _class = function () {
+    function Loader() {
+        _classCallCheck(this, Loader);
+
+        this.classes = {};
+    }
+
+    _createClass(Loader, [{
+        key: "init",
+        value: function init() {
+            (0, _jquery2.default)(this.parse.bind(this));
+        }
+    }, {
+        key: "register",
+        value: function register(name, func) {
+            if (this.classes.hasOwnProperty(name) && this.classes[name]) {
+                throw new Error("Auto Loading name conflict.");
+            }
+
+            this.classes[name] = func;
+        }
+    }, {
+        key: "parse",
+        value: function parse() {
+            var _this = this;
+
+            var section = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+            if (section === null) {
+                section = (0, _jquery2.default)("[data-init]");
+            } else {
+                section = (0, _jquery2.default)(section).find("[data-init]").addBack("[data-init]");
+            }
+
+            section.each(function (x, element) {
+                var classes = element.getAttribute("data-init").split(/\s+/);
+
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = classes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var c = _step.value;
+
+                        if (c) {
+                            try {
+                                _this.classes[c]({ target: element });
+                            } catch (error) {
+                                if (error instanceof TypeError && error.message === 'Cannot call a class as a function') {
+                                    new _this.classes[c]({ target: element });
+                                }
+                            }
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            });
+        }
+    }], [{
+        key: "register",
+        value: function register(name, fn) {
+            return this.loader.register(name, fn);
+        }
+    }, {
+        key: "init",
+        value: function init() {
+            return this.loader.init();
+        }
+    }]);
+
+    return Loader;
+}(), _class.loader = null, _temp);
+exports.default = Loader;
+
+
+Loader.loader = new Loader();
+
+/***/ }),
 
 /***/ "./src/menus/Menu.js":
 /*!***************************!*\
@@ -167,34 +308,11 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 var _utility = __webpack_require__(/*! ../utility */ "./src/utility.js");
 
+var _core = __webpack_require__(/*! ./core */ "./src/menus/core.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var PREFIX = 'menus.',
-    CONTROLLER = PREFIX + 'menu';
-
-var SELECTORS = {
-    menu: "[data-role~='menu']",
-    item: "[data-role~='item']",
-    dropdown: "[data-role~='dropdown']"
-};
-SELECTORS.all = SELECTORS.menu + ', ' + SELECTORS.item + ', ' + SELECTORS.dropdown;
-SELECTORS.menuitem = SELECTORS.item + ', ' + SELECTORS.dropdown;
-
-var CLASSNAMES = {
-    open: 'open',
-    active: 'active',
-    disabled: 'disabled'
-};
-
-var EVENTS = {
-    select: PREFIX + 'select',
-    activate: PREFIX + 'activate',
-    deactivate: PREFIX + 'deactivate',
-    open: PREFIX + 'open',
-    close: PREFIX + 'close'
-};
 
 var POSITIONER_REGISTRY = {};
 
@@ -211,13 +329,15 @@ var Menu = function () {
         var _ref$target = _ref.target,
             target = _ref$target === undefined ? menuTemplate : _ref$target,
             _ref$timeout = _ref.timeout,
-            timeout = _ref$timeout === undefined ? 1000 : _ref$timeout,
+            timeout = _ref$timeout === undefined ? null : _ref$timeout,
             _ref$closeOnBlur = _ref.closeOnBlur,
-            closeOnBlur = _ref$closeOnBlur === undefined ? true : _ref$closeOnBlur,
+            closeOnBlur = _ref$closeOnBlur === undefined ? null : _ref$closeOnBlur,
             _ref$closeOnSelect = _ref.closeOnSelect,
-            closeOnSelect = _ref$closeOnSelect === undefined ? true : _ref$closeOnSelect,
+            closeOnSelect = _ref$closeOnSelect === undefined ? null : _ref$closeOnSelect,
             _ref$positioner = _ref.positioner,
-            positioner = _ref$positioner === undefined ? null : _ref$positioner;
+            positioner = _ref$positioner === undefined ? null : _ref$positioner,
+            _ref$role = _ref.role,
+            role = _ref$role === undefined ? null : _ref$role;
 
         _classCallCheck(this, Menu);
 
@@ -233,12 +353,22 @@ var Menu = function () {
             this.setElement(target);
         }
 
-        this.$element.data({
+        var config = {
             timeout: timeout,
             closeOnBlur: closeOnBlur,
             closeOnSelect: closeOnSelect,
             positioner: positioner
-        });
+        };
+
+        for (var key in config) {
+            if (config.hasOwnProperty(key) && config[key] !== null && config[key] !== undefined) {
+                this.$element.data(key, config[key]);
+            }
+        }
+
+        if (role) {
+            (0, _core.addRole)(this.$element, role);
+        }
     }
 
     _createClass(Menu, [{
@@ -249,11 +379,11 @@ var Menu = function () {
             }
 
             this.$element = (0, _jquery2.default)(element);
-            this.$element.data(CONTROLLER, this);
+            this.$element.data(_core.CONTROLLER, this);
             this.$element.on('click', this._onClick);
             this.$element.on('mouseover', this._onMouseOver);
             this.$element.on('mouseout', this._onMouseOut);
-            this.$element.on(EVENTS.select, this._onSelect);
+            this.$element.on(_core.EVENTS.select, this._onSelect);
         }
     }, {
         key: 'destroy',
@@ -261,14 +391,14 @@ var Menu = function () {
             this.$element.off('click', this._onClick);
             this.$element.off('mouseover', this._onMouseOver);
             this.$element.off('mouseout', this._onMouseOut);
-            this.$element.off(EVENTS.select, this._onSelect);
+            this.$element.off(_core.EVENTS.select, this._onSelect);
 
             if (this.$doc) {
                 this.$doc.off('click', this._onDocumentClick);
                 this.$doc = null;
             }
 
-            this.$element.data(CONTROLLER, null);
+            this.$element.data(_core.CONTROLLER, null);
             this.$element = null;
         }
 
@@ -290,7 +420,7 @@ var Menu = function () {
     }, {
         key: 'getInstance',
         value: function getInstance(selector) {
-            return (0, _jquery2.default)(selector).data(CONTROLLER);
+            return (0, _jquery2.default)(selector).data(_core.CONTROLLER);
         }
 
         //------------------------------------------------------------------------------------------------------------------
@@ -322,8 +452,8 @@ var Menu = function () {
                 }
 
                 // Add class and trigger events.
-                node.addClass(CLASSNAMES.active);
-                node.trigger(EVENTS.activate, _this);
+                node.addClass(_core.CLASSNAMES.active);
+                node.trigger(_core.EVENTS.activate, _this);
 
                 // Clear other active items if multiple is not true.
                 if (parent.length && !_this.getMultiple(parent)) {
@@ -398,8 +528,8 @@ var Menu = function () {
             }
 
             if (this.isActive(node)) {
-                node.removeClass(CLASSNAMES.active);
-                node.trigger(EVENTS.deactivate, this);
+                node.removeClass(_core.CLASSNAMES.active);
+                node.trigger(_core.EVENTS.deactivate, this);
 
                 if (node.is(this.$element) && this.$doc) {
                     this.$doc.off('click', this._onDocumentClick);
@@ -435,7 +565,7 @@ var Menu = function () {
             if (!this.isOpen(menu)) {
                 var open = function open() {
                     menu.data("_cancelOpenTimer", null);
-                    menu.addClass(CLASSNAMES.open);
+                    menu.addClass(_core.CLASSNAMES.open);
 
                     var positioner = _this3.getPositioner(menu);
 
@@ -443,7 +573,7 @@ var Menu = function () {
                         positioner(menu, _this3);
                     }
 
-                    menu.trigger(EVENTS.open, _this3);
+                    menu.trigger(_core.EVENTS.open, _this3);
                 };
 
                 var openTimer = menu.data("_cancelOpenTimer");
@@ -492,14 +622,14 @@ var Menu = function () {
             }
 
             if (this.isOpen(menu)) {
-                menu.removeClass(CLASSNAMES.open);
-                menu.trigger(EVENTS.close, this);
+                menu.removeClass(_core.CLASSNAMES.open);
+                menu.trigger(_core.EVENTS.close, this);
             }
         }
     }, {
         key: 'select',
         value: function select(node) {
-            return (0, _jquery2.default)(node, this.$element).trigger(EVENTS.select, this);
+            return (0, _jquery2.default)(node, this.$element).trigger(_core.EVENTS.select, this);
         }
 
         //------------------------------------------------------------------------------------------------------------------
@@ -529,7 +659,7 @@ var Menu = function () {
             var _this4 = this;
 
             node = (0, _jquery2.default)(node, this.$element);
-            var children = node.find(SELECTORS.menuitem);
+            var children = node.find(_core.SELECTORS.menuitem);
 
             return children.filter(function (x, item) {
                 return _this4.getParentNode(item).is(node);
@@ -550,7 +680,7 @@ var Menu = function () {
 
             node = (0, _jquery2.default)(node, this.$element);
             var type = this.getNodeType(node);
-            var children = node.find(SELECTORS.menu);
+            var children = node.find(_core.SELECTORS.menu);
 
             if (type === 'dropdown') {
                 return children.filter(function (x, item) {
@@ -567,21 +697,21 @@ var Menu = function () {
     }, {
         key: 'getItemSubMenu',
         value: function getItemSubMenu(item) {
-            return (0, _jquery2.default)(item, this.$element).children(SELECTORS.menu).eq(0);
+            return (0, _jquery2.default)(item, this.$element).children(_core.SELECTORS.menu).eq(0);
         }
     }, {
         key: 'getParentNode',
         value: function getParentNode(node) {
             var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'all';
 
-            return (0, _jquery2.default)(node, this.$element).parent().closest(SELECTORS[type], this.$element);
+            return (0, _jquery2.default)(node, this.$element).parent().closest(_core.SELECTORS[type], this.$element);
         }
     }, {
         key: 'getClosestNode',
         value: function getClosestNode(node) {
             var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'all';
 
-            var selector = SELECTORS[type];
+            var selector = _core.SELECTORS[type];
             node = (0, _jquery2.default)(node, this.$element);
             return node.closest(selector, this.$element);
         }
@@ -591,8 +721,8 @@ var Menu = function () {
             var _this6 = this;
 
             node = (0, _jquery2.default)(node, this.$element);
-            return node.find(SELECTORS.all).filter(function (x, child) {
-                return _this6.getParentNode(child).is(node) && (0, _jquery2.default)(child).hasClass(CLASSNAMES.active);
+            return node.find(_core.SELECTORS.all).filter(function (x, child) {
+                return _this6.getParentNode(child).is(node) && (0, _jquery2.default)(child).hasClass(_core.CLASSNAMES.active);
             });
         }
 
@@ -602,17 +732,17 @@ var Menu = function () {
     }, {
         key: 'isActive',
         value: function isActive(node) {
-            return (0, _jquery2.default)(node, this.$element).hasClass(CLASSNAMES.active);
+            return (0, _jquery2.default)(node, this.$element).hasClass(_core.CLASSNAMES.active);
         }
     }, {
         key: 'isOpen',
         value: function isOpen(node) {
-            return (0, _jquery2.default)(node, this.$element).hasClass(CLASSNAMES.open);
+            return (0, _jquery2.default)(node, this.$element).hasClass(_core.CLASSNAMES.open);
         }
     }, {
         key: 'isDisabled',
         value: function isDisabled(node) {
-            return !!(0, _jquery2.default)(node).closest('.' + CLASSNAMES.disabled, this.$element).length;
+            return !!(0, _jquery2.default)(node).closest('.' + _core.CLASSNAMES.disabled, this.$element).length;
         }
 
         /**
@@ -628,11 +758,11 @@ var Menu = function () {
 
             if (!node.length) {
                 return null;
-            } else if (node.is(SELECTORS.menu)) {
+            } else if (node.is(_core.SELECTORS.menu)) {
                 return 'menu';
-            } else if (node.is(SELECTORS.dropdown)) {
+            } else if (node.is(_core.SELECTORS.dropdown)) {
                 return 'dropdown';
-            } else if (node.is(SELECTORS.item)) {
+            } else if (node.is(_core.SELECTORS.item)) {
                 return 'item';
             }
         }
@@ -747,6 +877,9 @@ var Menu = function () {
                     this.select($target);
                 }
             } else {
+                window.t = $target;
+                console.dir($target);
+                console.log(toggle);
                 if (!isActive && (toggle === 'both' || toggle === true || toggle === 'on')) {
                     this.activate($target);
                 } else if (isActive && (toggle === 'off' || toggle === 'both' || toggle === true)) {
@@ -955,12 +1088,194 @@ var Menu = function () {
 exports.default = Menu;
 
 
-Menu.EVENTS = EVENTS;
-Menu.PREFIX = PREFIX;
-Menu.CONTROLLER = CONTROLLER;
-Menu.CLASSNAMES = CLASSNAMES;
-Menu.SELECTORS = SELECTORS;
+Menu.EVENTS = _core.EVENTS;
+Menu.PREFIX = _core.PREFIX;
+Menu.CONTROLLER = _core.CONTROLLER;
+Menu.CLASSNAMES = _core.CLASSNAMES;
+Menu.SELECTORS = _core.SELECTORS;
 Menu.POSITIONER_REGISTRY = POSITIONER_REGISTRY;
+
+/***/ }),
+
+/***/ "./src/menus/core.js":
+/*!***************************!*\
+  !*** ./src/menus/core.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.addRole = addRole;
+exports.removeRole = removeRole;
+exports.hasRoles = hasRoles;
+exports.getRoles = getRoles;
+var PREFIX = exports.PREFIX = 'menus.',
+    CONTROLLER = exports.CONTROLLER = PREFIX + "menu";
+
+var SELECTORS = exports.SELECTORS = {
+    menu: "[data-role~='menu']",
+    item: "[data-role~='item']",
+    dropdown: "[data-role~='dropdown']"
+};
+
+SELECTORS.all = SELECTORS.menu + ", " + SELECTORS.item + ", " + SELECTORS.dropdown;
+SELECTORS.menuitem = SELECTORS.item + ", " + SELECTORS.dropdown;
+
+var CLASSNAMES = exports.CLASSNAMES = {
+    open: 'open',
+    active: 'active',
+    disabled: 'disabled'
+};
+
+var EVENTS = exports.EVENTS = {
+    select: PREFIX + "select",
+    activate: PREFIX + "activate",
+    deactivate: PREFIX + "deactivate",
+    open: PREFIX + "open",
+    close: PREFIX + "close"
+};
+
+function addRole(element) {
+    element = $(element);
+    var r = getRoles(element);
+
+    for (var _len = arguments.length, roles = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        roles[_key - 1] = arguments[_key];
+    }
+
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = roles[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var item = _step.value;
+
+            var i = r.indexOf(item);
+
+            if (i === -1) {
+                r.push(item);
+            }
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+
+    r = r.join(' ');
+    element.attr("data-role", r);
+    return r;
+}
+
+function removeRole(element) {
+    element = $(element);
+    var r = getRoles(element);
+
+    for (var _len2 = arguments.length, roles = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        roles[_key2 - 1] = arguments[_key2];
+    }
+
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+        for (var _iterator2 = roles[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var item = _step2.value;
+
+            var i = r.indexOf(item);
+
+            if (i !== -1) {
+                r.splice(i, 1);
+            }
+        }
+    } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+            }
+        } finally {
+            if (_didIteratorError2) {
+                throw _iteratorError2;
+            }
+        }
+    }
+
+    r = r.join(' ');
+    element.attr("data-role", r);
+    return r;
+}
+
+function hasRoles(element) {
+    element = $(element);
+    var r = getRoles(element);
+
+    for (var _len3 = arguments.length, roles = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+        roles[_key3 - 1] = arguments[_key3];
+    }
+
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+        for (var _iterator3 = roles[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var item = _step3.value;
+
+            var i = r.indexOf(item);
+
+            if (i === -1) {
+                return false;
+            }
+        }
+    } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
+            }
+        } finally {
+            if (_didIteratorError3) {
+                throw _iteratorError3;
+            }
+        }
+    }
+
+    return true;
+}
+
+function getRoles(element) {
+    element = $(element);
+    var r = element.attr("data-role");
+
+    if (!r) {
+        r = [];
+    } else {
+        r = r.split('/s+/');
+    }
+
+    return r;
+}
 
 /***/ }),
 
@@ -983,12 +1298,57 @@ var _Menu = __webpack_require__(/*! ./Menu */ "./src/menus/Menu.js");
 
 var _Menu2 = _interopRequireDefault(_Menu);
 
+__webpack_require__(/*! ./loaders */ "./src/menus/loaders.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.Menu = _Menu2.default;
 
 
 window.Menu = _Menu2.default;
+
+/***/ }),
+
+/***/ "./src/menus/loaders.js":
+/*!******************************!*\
+  !*** ./src/menus/loaders.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _loader = __webpack_require__(/*! ../loader */ "./src/loader.js");
+
+var _loader2 = _interopRequireDefault(_loader);
+
+var _Menu = __webpack_require__(/*! ./Menu */ "./src/menus/Menu.js");
+
+var _Menu2 = _interopRequireDefault(_Menu);
+
+var _utility = __webpack_require__(/*! ../utility */ "./src/utility.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_loader2.default.register('menu', function (config) {
+    return new _Menu2.default(config);
+});
+
+_loader2.default.register('dropdown', function (config) {
+    config.role = "dropdown";
+    var r = new _Menu2.default(config);
+
+    (0, _utility.setDefaultValues)(r.$element.data(), {
+        timeout: false,
+        closeOnBlur: true,
+        closeOnSelect: true,
+        toggle: true,
+        autoActivate: false
+    });
+
+    return r;
+});
 
 /***/ }),
 
@@ -1011,6 +1371,7 @@ exports.parseInteger = parseInteger;
 exports.parseBoolean = parseBoolean;
 exports.parseBooleanString = parseBooleanString;
 exports.parseBooleanOrNumber = parseBooleanOrNumber;
+exports.setDefaultValues = setDefaultValues;
 var nill = {};
 
 function clamp(value, minValue, maxValue) {}
@@ -1093,6 +1454,14 @@ function parseBooleanOrNumber(value) {
         return value;
     } else {
         return parseInteger(value, defaultValue, radix);
+    }
+}
+
+function setDefaultValues(target, defaults) {
+    for (var key in defaults) {
+        if (defaults.hasOwnProperty(key) && (!target.hasOwnProperty(key) || target[key] === undefined)) {
+            target[key] = defaults[key];
+        }
     }
 }
 

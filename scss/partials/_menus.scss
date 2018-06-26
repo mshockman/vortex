@@ -36,11 +36,6 @@
 }
 
 
-.menuitem.active, .dropdown.active {
-  background-color: $hippie-blue;
-}
-
-
 .menu {
   position: absolute;
   display: none;
@@ -50,6 +45,10 @@
   background-color: $cape-cod;
   left: 0;
   top: 100%;
+
+  .menuitem.active, .dropdown.active {
+    background-color: $hippie-blue;
+  }
 
   a {
     color: $white;
@@ -61,6 +60,11 @@
   }
 }
 
+
+.dropdown {
+  display: inline-block;
+  position: relative;
+}
 
 .menu .menu {
   left: 100%;

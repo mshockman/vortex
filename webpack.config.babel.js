@@ -14,7 +14,7 @@ export default [
         mode: MODE,
 
         entry: {
-            'menu': './src/menus/index.js'
+            'menu': './src/index.js'
         },
 
         module: {

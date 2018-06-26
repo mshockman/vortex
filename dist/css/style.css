@@ -20,9 +20,6 @@
   cursor: pointer;
   position: relative; }
 
-.menuitem.active, .dropdown.active {
-  background-color: #5896ba; }
-
 .menu {
   position: absolute;
   display: none;
@@ -32,11 +29,17 @@
   background-color: #3c3f41;
   left: 0;
   top: 100%; }
+  .menu .menuitem.active, .menu .dropdown.active {
+    background-color: #5896ba; }
   .menu a {
     color: #ffffff;
     text-decoration: none; }
   .menu.open {
     display: block; }
+
+.dropdown {
+  display: inline-block;
+  position: relative; }
 
 .menu .menu {
   left: 100%;

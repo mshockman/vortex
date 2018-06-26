@@ -1,4 +1,5 @@
 import Menu from './Menu';
+import './loaders';
 
 
 export {

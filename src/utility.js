@@ -61,3 +61,12 @@ export function parseBooleanOrNumber(value, defaultValue=null, radix=10) {
         return parseInteger(value, defaultValue, radix);
     }
 }
+
+
+export function setDefaultValues(target, defaults) {
+    for(let key in defaults) {
+        if(defaults.hasOwnProperty(key) && (!target.hasOwnProperty(key) || target[key] === undefined)) {
+            target[key] = defaults[key];
+        }
+    }
+}

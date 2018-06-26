@@ -24,11 +24,11 @@ export default class Loader {
         if(section === null) {
             section = $("[data-init]");
         } else {
-            section = section.find("[data-init]").addBack("[data-init]");
+            section = $(section).find("[data-init]").addBack("[data-init]");
         }
 
         section.each((x, element) => {
-            const classes = element.getAttribute("data-init").split(/\s*,\s*/);
+            const classes = element.getAttribute("data-init").split(/\s+/);
 
             for(let c of classes) {
                 if(c) {
