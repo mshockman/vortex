@@ -536,9 +536,6 @@ export default class Menu {
                 this.select($target);
             }
         } else {
-            window.t = $target;
-            console.dir($target);
-            console.log(toggle);
             if(!isActive && (toggle === 'both' || toggle === true || toggle === 'on')) {
                 this.activate($target);
             } else if(isActive && (toggle === 'off' || toggle === 'both' || toggle === true)) {

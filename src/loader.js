@@ -31,14 +31,26 @@ export default class Loader {
             const classes = element.getAttribute("data-init").split(/\s+/);
 
             for(let c of classes) {
-                if(c) {
+                if(this.classes[c]) {
+                    let r;
+
                     try {
-                        this.classes[c]({target: element});
+                        r = this.classes[c]({target: element});
                     } catch(error) {
                         if(error instanceof TypeError && error.message === 'Cannot call a class as a function') {
-                            new this.classes[c]({target: element});
+                            r = this.classes[c]({target: element});
+                        } else {
+                            throw error;
                         }
                     }
+
+                    element = $(element);
+
+                    if(!element.data('initialized')) {
+                        element.data('initialized', {});
+                    }
+
+                    element.data('initialized')[c] = r;
                 }
             }
         });

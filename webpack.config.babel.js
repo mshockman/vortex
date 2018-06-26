@@ -14,7 +14,7 @@ export default [
         mode: MODE,
 
         entry: {
-            'menu': './src/index.js'
+            'vortex': './src/index.js'
         },
 
         module: {
