@@ -285,6 +285,14 @@ var Menu = function () {
             return this.$element.appendTo(selector);
         }
 
+        // noinspection JSUnusedGlobalSymbols
+
+    }, {
+        key: 'getInstance',
+        value: function getInstance(selector) {
+            return (0, _jquery2.default)(selector).data(CONTROLLER);
+        }
+
         //------------------------------------------------------------------------------------------------------------------
         // Actions
 

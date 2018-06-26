@@ -162,6 +162,11 @@ export default class Menu {
         return this.$element.appendTo(selector);
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    getInstance(selector) {
+        return $(selector).data(CONTROLLER);
+    }
+
     //------------------------------------------------------------------------------------------------------------------
     // Actions
 
