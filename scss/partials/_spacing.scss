@@ -1,0 +1,50 @@
+@import "../modules/variables";
+
+
+@each $item in $spacings {
+  $index: index($spacings, $item) - 1;
+
+  @if $item != 0 {
+    $item: #{$item}rem;
+  }
+
+  .m-#{$index} {
+    margin: $item;
+  }
+
+  .mt-#{$index} {
+    margin-top: $item;
+  }
+
+  .mr-#{$index} {
+    margin-right: $item;
+  }
+
+  .mb-#{$index} {
+    margin-bottom: $item;
+  }
+
+  .ml-#{$index} {
+    margin-left: $item;
+  }
+
+  .p-#{$index} {
+    padding: $item;
+  }
+
+  .pt-#{$index} {
+    padding-top: $item;
+  }
+
+  .pr-#{$index} {
+    padding-right: $item;
+  }
+
+  .pb-#{$index} {
+    padding-bottom: $item;
+  }
+
+  .pl-#{$index} {
+    padding-left: $item;
+  }
+}

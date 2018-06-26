@@ -1,10 +1,44 @@
-.navbar {
-  border: 1px solid #ccc;
+@import "../modules/variables";
+
+
+.hbox {
+  display: flex;
+  flex-direction: row;
 }
 
 
-.navbar.navbar-top {
-  border-top: 0;
-  border-right: 0;
-  border-left: 0;
+.vbox {
+  display: flex;
+  flex-direction: column;
+}
+
+
+@for $i from 1 through $panes-range {
+  .pane-#{$i} {
+    flex: $i;
+    overflow: hidden;
+    position: relative;
+  }
+}
+
+
+.pane {
+  position: relative;
+  overflow: hidden;
+}
+
+
+.fluid {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+
+.fluid-width {
+  width: 100% !important;
+}
+
+
+.fluid-height {
+  height: 100% !important;
 }

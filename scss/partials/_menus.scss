@@ -33,6 +33,7 @@
 .menuitem, .dropdown {
   cursor: pointer;
   position: relative;
+  user-select: none;
 }
 
 
@@ -40,7 +41,7 @@
   position: absolute;
   display: none;
   min-width: 200px;
-  z-index: $menu-layer;
+  z-index: $z-menu-layer;
   border: 1px solid $emperor;
   background-color: $cape-cod;
   left: 0;
