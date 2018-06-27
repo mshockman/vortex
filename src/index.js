@@ -2,5 +2,10 @@ import './menus';
 import Loader from './loader';
 import './components/toggle';
 import './components/Modal';
+import Application from './apps';
 
-Loader.init();
+
+export {
+    Loader,
+    Application
+};
