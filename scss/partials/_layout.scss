@@ -4,12 +4,16 @@
 .hbox {
   display: flex;
   flex-direction: row;
+  position: relative;
+  overflow: hidden;
 }
 
 
 .vbox {
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
 
@@ -41,4 +45,9 @@
 
 .fluid-height {
   height: 100% !important;
+}
+
+
+.align-middle {
+  align-items: center;
 }

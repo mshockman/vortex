@@ -1,5 +1,18 @@
 $z-menu-layer: 1000;
 
 
-$spacings: 0 0.3125 0.625 1 1.25 1.5 1.75 2;
 $panes-range: 12;
+
+
+$spacing-0: 0;
+$spacing-1: 0.3125;
+$spacing-2: 0.625;
+$spacing-3: 1;
+$spacing-4: 1.25;
+$spacing-5: 1.5;
+$spacing-6: 1.75;
+$spacing-7: 2;
+$spacings: $spacing-0 $spacing-1 $spacing-2 $spacing-3 $spacing-4 $spacing-5 $spacing-6 $spacing-7;
+
+
+$font-sizes: 2 1.5 1.7 1.12 0.83 0.75;

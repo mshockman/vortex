@@ -1,3 +1,4 @@
+@import "../modules/variables";
 
 
 .text-right {
@@ -7,4 +8,26 @@
 
 .text-center {
   text-align: center;
+}
+
+
+@each $size in $font-sizes {
+  $index: index($font-sizes, $size);
+
+  .display-#{$index} {
+    font-size: #{$size}em;
+    font-weight: 700;
+    display: block;
+  }
+
+  h#{$index}, .h#{$index} {
+    font-size: #{$size}em;
+    font-weight: 700;
+    display: block;
+  }
+}
+
+
+.bold {
+  font-weight: 700;
 }

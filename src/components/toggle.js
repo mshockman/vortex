@@ -16,9 +16,19 @@ export default class Toggle {
         if($target.length) {
             let [selector, key] = $target.attr('data-toggle').split(/\s*->\s*/),
                 element = $(selector),
-                object = element.data(key);
+                initialized = element.data('initialized');
 
-            object.toggle();
+            if(key) {
+                initialized[key].toggle();
+            } else if(initialized) {
+                for(let key in initialized) {
+                    if(initialized.hasOwnProperty(key)) {
+                        if(initialized[key].toggle) {
+                            initialized[key].toggle();
+                        }
+                    }
+                }
+            }
         }
     }
 }

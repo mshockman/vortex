@@ -1,0 +1,49 @@
+@import '../modules/colors';
+
+
+.form-group {
+  label {
+    display: block;
+    margin-bottom: 3px;
+    font-weight: 700;
+  }
+
+  .form-control {
+    display: block;
+    width: 100%;
+  }
+}
+
+
+.form-group.form-group-row {
+  display: flex;
+  flex-direction: row;
+}
+
+
+input[type='text'].form-control {
+  height: 2rem;
+  font-size: x-large;
+  border: 1px solid #ccc;
+  color: $cape-cod;
+}
+
+
+select.form-control {
+  height: 2rem;
+}
+
+
+.form-check-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+
+.form-check {
+  margin: 0;
+  height: 1.3125rem;
+  width: 1.3125rem;
+  color: $cape-cod;
+}
