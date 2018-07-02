@@ -5,7 +5,7 @@ export default class Loader {
     static loader = null;
 
     constructor() {
-        this.classes = {};
+        this.registry = {};
     }
 
     init() {
@@ -13,11 +13,11 @@ export default class Loader {
     }
 
     register(name, func) {
-        if(this.classes.hasOwnProperty(name) && this.classes[name]) {
+        if(this.registry.hasOwnProperty(name) && this.registry[name]) {
             throw new Error("Auto Loading name conflict.");
         }
 
-        this.classes[name] = func;
+        this.registry[name] = func;
     }
 
     parse(section=null) {
@@ -31,26 +31,24 @@ export default class Loader {
             const classes = element.getAttribute("data-init").split(/\s+/);
 
             for(let c of classes) {
-                if(this.classes[c]) {
-                    let r;
-
-                    try {
-                        r = this.classes[c]({target: element});
-                    } catch(error) {
-                        if(error instanceof TypeError && error.message === 'Cannot call a class as a function') {
-                            r = this.classes[c]({target: element});
-                        } else {
-                            throw error;
-                        }
-                    }
+                if(this.registry[c]) {
+                    let target = element,
+                        data = {},
+                        r;
 
                     element = $(element);
+                    Object.assign({}, element.data());
 
-                    if(!element.data('initialized')) {
-                        element.data('initialized', {});
+                    r = this.registry[c](target, data);
+                    data = element.data();
+
+                    if(r) {
+                        if(!data.initialized) {
+                            data.initialized = {};
+                        }
+
+                        data.initialized[c] = r;
                     }
-
-                    element.data('initialized')[c] = r;
                 }
             }
         });
@@ -67,3 +65,4 @@ export default class Loader {
 
 
 Loader.loader = new Loader();
+window.Loader = Loader;

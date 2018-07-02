@@ -12,7 +12,7 @@ const EVENTS = {
 
 
 export default class Modal {
-    constructor({target}) {
+    constructor(target) {
         this.$element = $(target);
         this.$element.attr('data-role', 'modal');
 
@@ -55,8 +55,8 @@ export default class Modal {
 }
 
 
-Loader.register('modal', (config) => {
-    return new Modal(config);
+Loader.register('modal', (target) => {
+    return new Modal(target);
 });
 
 

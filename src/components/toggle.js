@@ -3,7 +3,7 @@ import Loader from '../loader';
 
 
 export default class Toggle {
-    constructor({target}) {
+    constructor(target) {
         this.$element = $(target);
 
         this._onClick = this.onClick.bind(this);
@@ -34,6 +34,6 @@ export default class Toggle {
 }
 
 
-Loader.register('toggle', (config) => {
-    return new Toggle(config);
+Loader.register('toggle', (target) => {
+    return new Toggle(target);
 });

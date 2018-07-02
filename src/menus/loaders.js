@@ -3,13 +3,15 @@ import Menu from './Menu';
 import {setDefaultValues} from '../utility';
 
 
-Loader.register('menu', (config) => {
+Loader.register('menu', (target, config) => {
+    config.target = target;
     return new Menu(config);
 });
 
 
-Loader.register('dropdown', (config) => {
+Loader.register('dropdown', (target, config) => {
     config.role = "dropdown";
+    config.target = target;
     let r = new Menu(config);
 
     setDefaultValues(r.$element.data(), {
