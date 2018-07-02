@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="../dist/vortex.bundle.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="../dist/css/style.css" />
+
+    <style type="text/css">
+        #test-output {
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+        }
+
+        #test {
+            position: absolute;
+            bottom: 500px;
+            right: 500px;
+            background-color: #00f;
+            width: 100px;
+            height: 100px;
+        }
+
+        .resize-handle {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            cursor: nw-resize;
+        }
+    </style>
+</head>
+<body>
+
+<div id="test" data-init="resizeable" data-resize="-x -y" data-min-width="100" data-min-height="100" data-max-width="300" data-max-height="300" data-handle=".resize-handle">
+    <div class="resize-handle"></div>
+</div>
+<div id="test-output"></div>
+
+<script type="text/javascript">
+    Loader.init();
+</script>
+
+</body>
+</html>

@@ -37,7 +37,7 @@ export default class Loader {
                         r;
 
                     element = $(element);
-                    Object.assign({}, element.data());
+                    Object.assign(data, element.data());
 
                     r = this.registry[c](target, data);
                     data = element.data();

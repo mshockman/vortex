@@ -1,8 +1,16 @@
 const nill = {};
 
 
-export function clamp(value, minValue, maxValue) {
+export function clamp(value, minValue=null, maxValue=null) {
+    if(minValue !== null) {
+        value = Math.max(value, minValue);
+    }
 
+    if(maxValue !== null) {
+        value = Math.min(value, maxValue);
+    }
+
+    return value;
 }
 
 

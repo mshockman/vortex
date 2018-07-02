@@ -1,202 +1,133 @@
-import $ from 'jquery';
-import Loader from './loader';
-import {clamp} from './util';
+import Mouse from '../common/Mouse';
+import {matrixSub, matrixProduct, privotRow, getColumnVertex, matrixAdd} from "../common/matricies";
+import Loader from '../loader';
+import {clamp, parseInteger} from '../utility';
 
 
-const PREFIX = 'resizeable.',
-    CONTROLLER = `${PREFIX}controller`;
-
-
-const EVENTS = {
-    start: `${PREFIX}start`,
-    stop: `${PREFIX}stop`,
-    resize: `${PREFIX}resize`,
-    beforeResize: `${PREFIX}beforeResize`
-};
-
-
-export default class Resizeable {
-    static EVENTS = EVENTS;
-    static CONTROLLER = CONTROLLER;
-
-    static getInstance(element) {
-        return $(element).data(this.CONTROLLER);
-    }
-
-    constructor({target, resizeable}) {
-        this._onMouseDown = this.onMouseDown.bind(this);
-
-        if(element) {
-            this.setElement(element);
-            this.$handle = this.$element.children('.resize-handle');
-
-            if(!this.$handle.length) {
-                this.$handle = $('<div class="resize-handle"></div>');
-                this.$element.append(this.$handle);
-            }
-        }
-    }
-
-    setElement(element) {
-        if(this.$element) {
-            this.destroy();
-        }
+export default class Resizeable extends Mouse {
+    constructor(element, {resize='x y', minWidth=0, maxWidth=null, minHeight=0, maxHeight=null, handle=null, exclude=null}) {
+        super();
 
         this.$element = $(element);
-        this.$element.data(CONTROLLER, this).on("mousedown", this._onMouseDown);
+        this.resize = resize;
+        this.minWidth = parseInteger(minWidth, parseInteger(this.$element.css('minWidth'), 0));
+        this.minHeight = parseInteger(minHeight, parseInteger(this.$element.css('minHeight'), 0));
+        this.maxWidth = parseInteger(maxWidth, parseInteger(this.$element.css('maxWidth'), null));
+        this.maxHeight = parseInteger(maxHeight, parseInteger(this.$element.css('maxHeight'), null));
+        this.handle = handle;
+        this.exclude = exclude;
+
+        this._onMouseDown = this.onMouseDown.bind(this);
+        this._width = null;
+        this._height = null;
+
+        this.$element.on('mousedown', this._onMouseDown);
     }
 
-    destroy() {
-        if(this.$element) {
-            this.$element.data(CONTROLLER, null).off("mousedown", this._onMouseDown);
-            this.$element = null;
-        }
+    appendTo(selector) {
+        return this.$element.appendTo(selector);
     }
 
     onMouseDown(event) {
-        if(!this.$handle[0].contains(event.target) || this.$element.hasClass('no-resize')) {
+        console.log("here");
+        let $target = $(event.target);
+
+        if(this.handle && !$target.closest(this.handle, this.$element).length) {
+            return;
+        } if(this.exclude && $target.closest(this.exclude, this.$element).length) {
+            return;
+        } else if(this.isDisabled) {
             return;
         }
 
-        this.startResizing(event);
-    }
+        let originMatrix = [[event.pageX], [event.pageY]],
+            start = [[this.width], [this.height]];
 
-    startResizing(event) {
-        const element = this.$element;
+        // Start tracking mouse position on mouse move.
+        let tracker = this.trackMousePosition((event, cords) => {
+            cords = matrixSub(privotRow(cords), originMatrix); // Offset cordinents so the origin is the starting position.
+            cords = matrixProduct(this._getTransformationMatrix(), cords); // Transform the matrix.
 
-        const startX = event.pageX,
-            startY = event.pageY,
-            $doc = $(document),
-            xProperty = this.resizeX,
-            yProperty = this.resizeY,
-            startWidth = xProperty ? parseInt(this.width, 10) : false,
-            startHeight = yProperty ? parseInt(this.height, 10) : false;
+            let size = getColumnVertex(matrixAdd(start, cords), 0);
 
-        const mouseUp = (event) => {
-            $doc.off('mousemove', mouseMove);
+            this._setCords(size);
 
-            // We remove the class in a requestAnimationFrame
-            // so that the class is only removed after click events are run.
-            window.requestAnimationFrame(() => {
-                element.removeClass('resizing');
-            });
+            $("#test-output").text(`${cords[0]}, ${cords[1]}`);
+        });
+
+        // Add event listeners to untrack mouse on mouse up.
+        const onMouseUp = (event) => {
+            tracker.untrack();
+            tracker.callback(event, [event.pageX, event.pageY]);
+            tracker.$doc.off('mouseup', onMouseUp);
         };
 
-        const mouseMove = (event) => {
-            if(element.hasClass('resizing')) {
-                element.addClass('resizing');
-            }
+        tracker.$doc.on('mouseup', onMouseUp);
+    }
 
-            const dX = event.pageX - startX,
-                dY = event.pageY - startY;
+    _getTransformationMatrix() {
+        let resize = this.resize.split(/\s+/),
+            matrix = [[1, 0], [0, 1]];
 
-            let newWidth = null, newHeight = null;
+        if(resize.indexOf('-x') !== -1) {
+            matrix[0] = [-1, 0];
+        }
 
-            if(xProperty === '+') {
-                newWidth = clamp(startWidth + dX, this.minWidth, this.maxWidth);
-            } else if(xProperty === '-') {
-                newWidth = clamp(startWidth - dX, this.minWidth, this.maxWidth);
-            }
+        if(resize.indexOf('-y') !== -1) {
+            matrix[1] = [0, -1];
+        }
 
-            if(yProperty === '+') {
-                newHeight = clamp(startHeight + dY, this.minHeight, this.maxHeight);
-            } else if(yProperty === '-') {
-                newHeight = clamp(startHeight - dY, this.minHeight, this.maxHeight);
-            }
+        return matrix;
+    }
 
-            window.requestAnimationFrame(() => {
-                if(newWidth !== null) element.css('width', newWidth);
-                if(newHeight !== null) element.css('height', newHeight);
+   _setCords(cords) {
+        let resize = this.resize.split(/\s+/);
+
+        if(resize.indexOf('x') !== -1 || resize.indexOf('-x') !== -1) {
+            this.width = cords[0];
+        }
+
+        if(resize.indexOf('y') !== -1 || resize.indexOf('-y') !== -1) {
+            this.height = cords[1];
+        }
+
+        window.requestAnimationFrame(() => {
+            this.$element.css({
+                'width': this.width,
+                'height': this.height
             });
+        });
+   }
 
-            element.trigger(EVENTS.resize, {
-                to: {
-                    width: newWidth !== null ? newWidth : startWidth,
-                    height: newHeight !== null ? newHeight : startHeight,
-                },
-                from: {
-                    width: newWidth,
-                    height: newHeight,
-                },
-                controller: this,
-                xDirection: xProperty,
-                yDirection: yProperty,
-                startX: startX,
-                startY: startY,
-                positionX: event.pageX,
-                positionY: event.pageY,
-                dX: dX,
-                dY: dY
-            }, event);
-
-            event.preventDefault();
-        };
-
-        $doc.one('mouseup', mouseUp);
-        $doc.on('mousemove', mouseMove);
-    }
-
-    get resizeX() {
-        const v = this.resize;
-
-        if(v.indexOf("-x") !== -1) {
-            return '-';
-        } else if(v.indexOf('x') !== -1) {
-            return '+';
-        } else {
-            return false;
+   get width() {
+        if(this._width === null) {
+            this.width = parseInt(this.$element.css('width'), 10);
         }
-    }
 
-    get resizeY() {
-        const v = this.resize;
+        return this._width;
+   }
 
-        if(v.indexOf("-y") !== -1) {
-            return '-';
-        } else if(v.indexOf('y') !== -1) {
-            return '+';
-        } else {
-            return false;
+   set width(value) {
+        this._width = clamp(value, this.minWidth, this.maxWidth);
+   }
+
+   get height() {
+        if(this._height === null) {
+            this.height = parseInt(this.$element.css('height'), 10);
         }
-    }
 
-    get minWidth() {
-        const v = parseInt(this.$element.css("minWidth"), 10);
-        return Number.isNaN(v) ? 0 : v;
-    }
+        return this._height;
+   }
 
-    get maxWidth() {
-        const v = parseInt(this.$element.css("maxWidth"), 10);
-        return Number.isNaN(v) ? Infinity : v;
-    }
-
-    get minHeight() {
-        const v = parseInt(this.$element.css("minHeight"), 10);
-        return Number.isNaN(v) ? 0 : v;
-    }
-
-    get maxHeight() {
-        const v = parseInt(this.$element.css("maxHeight"), 10);
-        return Number.isNaN(v) ? Infinity : v;
-    }
-
-    get width() {
-        return this.$element.outerWidth();
-    }
-
-    get height() {
-        return this.$element.outerHeight();
-    }
-
-    get resize() {
-        return this.$element.data('resizeable') || 'xy';
-    }
+   set height(value) {
+        this._height = clamp(value, this.minHeight, this.maxHeight);
+   }
 }
 
 
-Loader.register('resizeable', (element) => new Resizeable(element));
+window.Resizeable = Resizeable;
 
 
-$(function() {
-    $('[data-resizeable]').each((x, element) => new Resizeable(element));
+Loader.register('resizeable', (target, config) => {
+    return new Resizeable(target, config);
 });
