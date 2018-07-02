@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" class="fluid">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="../dist/vortex.bundle.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="../dist/css/style.css" />
+</head>
+<body class="fluid">
+
+<div class="hbox fluid" data-init="panes" data-pane="x">
+    <div class="pane sidebar-pane sidebar-left" data-init="resizeable" data-resize="x" data-handle=".resize-handle">
+        Pane #1
+        <div class="resize-handle"></div>
+    </div>
+    <div class="pane-1">Hello</div>
+    <div class="pane sidebar-pane sidebar-right" data-init="resizeable" data-resize="-x" data-handle=".resize-handle">
+        Pane #3
+        <div class="resize-handle"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    Loader.init();
+</script>
+
+</body>
+</html>

@@ -107,3 +107,38 @@
   margin-left: -350px;
   margin-top: -250px;
 }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+// Panes
+
+.sidebar-pane {
+  background-color: $cape-cod;
+  width: 250px;
+}
+
+
+.resize-handle {
+  background-color: $black;
+  cursor: ew-resize;
+  width: 4px;
+  height: 4px;
+}
+
+
+.sidebar-left > .resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  height: auto;
+}
+
+
+.sidebar-right > .resize-handle {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  height: auto;
+}

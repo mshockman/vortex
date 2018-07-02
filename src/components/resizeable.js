@@ -4,6 +4,15 @@ import Loader from '../loader';
 import {clamp, parseInteger} from '../utility';
 
 
+const PREFIX = 'resizeable.';
+
+
+const EVENTS = {
+    'resizing': `${PREFIX}resizing`,
+    'resized': `${PREFIX}resized`
+};
+
+
 export default class Resizeable extends Mouse {
     constructor(element, {resize='x y', minWidth=0, maxWidth=null, minHeight=0, maxHeight=null, handle=null, exclude=null}) {
         super();
@@ -52,7 +61,7 @@ export default class Resizeable extends Mouse {
 
             this._setCords(size);
 
-            $("#test-output").text(`${cords[0]}, ${cords[1]}`);
+            $("#test-output").text(`${this.width}, ${this.height}`);
         });
 
         // Add event listeners to untrack mouse on mouse up.
@@ -81,22 +90,26 @@ export default class Resizeable extends Mouse {
     }
 
    _setCords(cords) {
-        let resize = this.resize.split(/\s+/);
+        let width = this.width,
+            height = this.height;
 
-        if(resize.indexOf('x') !== -1 || resize.indexOf('-x') !== -1) {
-            this.width = cords[0];
+        this.width = cords[0];
+        this.height = cords[1];
+
+        if(this.width !== width || this.height !== height) {
+            let event = {
+                controller: this,
+                from: [width, height],
+                to: [this.width, this.height],
+            };
+
+            this.$element.trigger(EVENTS.resizing, event);
+
+            this.width = event.to[0];
+            this.height = event.to[1];
+
+            this.render();
         }
-
-        if(resize.indexOf('y') !== -1 || resize.indexOf('-y') !== -1) {
-            this.height = cords[1];
-        }
-
-        window.requestAnimationFrame(() => {
-            this.$element.css({
-                'width': this.width,
-                'height': this.height
-            });
-        });
    }
 
    get width() {
@@ -108,7 +121,9 @@ export default class Resizeable extends Mouse {
    }
 
    set width(value) {
-        this._width = clamp(value, this.minWidth, this.maxWidth);
+        if(this.isWidthResizeable) {
+            this._width = clamp(value, this.minWidth, this.maxWidth);
+        }
    }
 
    get height() {
@@ -120,9 +135,52 @@ export default class Resizeable extends Mouse {
    }
 
    set height(value) {
-        this._height = clamp(value, this.minHeight, this.maxHeight);
+        if(this.isHeightResizeable) {
+            this._height = clamp(value, this.minHeight, this.maxHeight);
+        }
    }
+
+   render() {
+        if(this._animationId) return;
+
+        this._animationId = window.requestAnimationFrame(() => {
+            this._animationId = null;
+            let r = {};
+
+            if(this.isWidthResizeable) {
+                r.width = this.width;
+            }
+
+            if(this.isHeightResizeable) {
+                r.height = this.height;
+            }
+
+            this.$element.css(r);
+
+            this.$element.trigger(EVENTS.resized, {
+                controller: this,
+                size: {
+                    width: this.width,
+                    height: this.height
+                }
+            });
+        });
+   }
+
+   get isWidthResizeable() {
+       let resize = this.resize.split(/\s+/);
+       return resize.indexOf('x') !== -1 || resize.indexOf('-x') !== -1;
+   }
+
+    get isHeightResizeable() {
+        let resize = this.resize.split(/\s+/);
+        return resize.indexOf('y') !== -1 || resize.indexOf('-y') !== -1;
+    }
 }
+
+
+Resizeable.EVENTS = EVENTS;
+Resizeable.PREFIX = PREFIX;
 
 
 window.Resizeable = Resizeable;
