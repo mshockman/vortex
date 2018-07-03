@@ -566,14 +566,6 @@ var Resizeable = function (_Mouse) {
     function Resizeable(element, _ref) {
         var _ref$resize = _ref.resize,
             resize = _ref$resize === undefined ? 'x y' : _ref$resize,
-            _ref$minWidth = _ref.minWidth,
-            minWidth = _ref$minWidth === undefined ? 0 : _ref$minWidth,
-            _ref$maxWidth = _ref.maxWidth,
-            maxWidth = _ref$maxWidth === undefined ? null : _ref$maxWidth,
-            _ref$minHeight = _ref.minHeight,
-            minHeight = _ref$minHeight === undefined ? 0 : _ref$minHeight,
-            _ref$maxHeight = _ref.maxHeight,
-            maxHeight = _ref$maxHeight === undefined ? null : _ref$maxHeight,
             _ref$handle = _ref.handle,
             handle = _ref$handle === undefined ? null : _ref$handle,
             _ref$exclude = _ref.exclude,
@@ -585,10 +577,6 @@ var Resizeable = function (_Mouse) {
 
         _this.$element = $(element);
         _this.resize = resize;
-        _this.minWidth = (0, _utility.parseInteger)(minWidth, (0, _utility.parseInteger)(_this.$element.css('minWidth'), 0));
-        _this.minHeight = (0, _utility.parseInteger)(minHeight, (0, _utility.parseInteger)(_this.$element.css('minHeight'), 0));
-        _this.maxWidth = (0, _utility.parseInteger)(maxWidth, (0, _utility.parseInteger)(_this.$element.css('maxWidth'), null));
-        _this.maxHeight = (0, _utility.parseInteger)(maxHeight, (0, _utility.parseInteger)(_this.$element.css('maxHeight'), null));
         _this.handle = handle;
         _this.exclude = exclude;
 
@@ -632,8 +620,6 @@ var Resizeable = function (_Mouse) {
                 var size = (0, _matricies.getColumnVertex)((0, _matricies.matrixAdd)(start, cords), 0);
 
                 _this2._setCords(size);
-
-                $("#test-output").text(_this2.width + ', ' + _this2.height);
             });
 
             // Add event listeners to untrack mouse on mouse up.
@@ -754,6 +740,38 @@ var Resizeable = function (_Mouse) {
         get: function get() {
             var resize = this.resize.split(/\s+/);
             return resize.indexOf('y') !== -1 || resize.indexOf('-y') !== -1;
+        }
+    }, {
+        key: 'minWidth',
+        get: function get() {
+            return (0, _utility.parseInteger)(this.$element.css('min-width'), 0, 10);
+        },
+        set: function set(value) {
+            this.$element.css('min-width', value);
+        }
+    }, {
+        key: 'minHeight',
+        get: function get() {
+            return (0, _utility.parseInteger)(this.$element.css('min-height'), 0, 10);
+        },
+        set: function set(value) {
+            this.$element.css('min-height', value);
+        }
+    }, {
+        key: 'maxWidth',
+        get: function get() {
+            return (0, _utility.parseInteger)(this.$element.css('max-width'), Infinity, 10);
+        },
+        set: function set(value) {
+            this.$element.css('max-width', value);
+        }
+    }, {
+        key: 'maxHeight',
+        get: function get() {
+            return (0, _utility.parseInteger)(this.$element.css('max-height'), Infinity, 10);
+        },
+        set: function set(value) {
+            this.$element.css('max-height', value);
         }
     }]);
 

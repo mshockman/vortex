@@ -14,15 +14,11 @@ const EVENTS = {
 
 
 export default class Resizeable extends Mouse {
-    constructor(element, {resize='x y', minWidth=0, maxWidth=null, minHeight=0, maxHeight=null, handle=null, exclude=null}) {
+    constructor(element, {resize='x y', handle=null, exclude=null}) {
         super();
 
         this.$element = $(element);
         this.resize = resize;
-        this.minWidth = parseInteger(minWidth, parseInteger(this.$element.css('minWidth'), 0));
-        this.minHeight = parseInteger(minHeight, parseInteger(this.$element.css('minHeight'), 0));
-        this.maxWidth = parseInteger(maxWidth, parseInteger(this.$element.css('maxWidth'), null));
-        this.maxHeight = parseInteger(maxHeight, parseInteger(this.$element.css('maxHeight'), null));
         this.handle = handle;
         this.exclude = exclude;
 
@@ -60,8 +56,6 @@ export default class Resizeable extends Mouse {
             let size = getColumnVertex(matrixAdd(start, cords), 0);
 
             this._setCords(size);
-
-            $("#test-output").text(`${this.width}, ${this.height}`);
         });
 
         // Add event listeners to untrack mouse on mouse up.
@@ -175,6 +169,38 @@ export default class Resizeable extends Mouse {
     get isHeightResizeable() {
         let resize = this.resize.split(/\s+/);
         return resize.indexOf('y') !== -1 || resize.indexOf('-y') !== -1;
+    }
+
+    get minWidth() {
+        return parseInteger(this.$element.css('min-width'), 0, 10);
+    }
+
+    get minHeight() {
+        return parseInteger(this.$element.css('min-height'), 0, 10);
+    }
+
+    get maxWidth() {
+        return parseInteger(this.$element.css('max-width'), Infinity, 10);
+    }
+
+    get maxHeight() {
+        return parseInteger(this.$element.css('max-height'), Infinity, 10);
+    }
+
+    set minWidth(value) {
+        this.$element.css('min-width', value);
+    }
+
+    set minHeight(value) {
+        this.$element.css('min-height', value);
+    }
+
+    set maxWidth(value) {
+        this.$element.css('max-width', value);
+    }
+
+    set maxHeight(value) {
+        this.$element.css('max-height', value);
     }
 }
 
