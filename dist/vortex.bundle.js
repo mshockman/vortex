@@ -477,30 +477,89 @@ var _resizeable = __webpack_require__(/*! ./resizeable */ "./src/components/resi
 
 var _resizeable2 = _interopRequireDefault(_resizeable);
 
+var _jquery = __webpack_require__(/*! jquery */ "jquery");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _utility = __webpack_require__(/*! ../utility */ "./src/utility.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Panes = function () {
     function Panes(element, _ref) {
+        var _this = this;
+
         var _ref$pane = _ref.pane,
             pane = _ref$pane === undefined ? 'x' : _ref$pane;
 
         _classCallCheck(this, Panes);
 
-        this.$element = $(element);
+        this.$element = (0, _jquery2.default)(element);
         this.pane = pane;
 
         this.$element.on(_resizeable2.default.EVENTS.resizing, function (event, ui) {
-            console.dir(ui.to);
+            var $target = (0, _jquery2.default)(event.target),
+                space = _this.getPaneSpace($target);
+
+            if (_this.pane === 'x' || _this.pane === 'x y') {
+                ui.to[0] = (0, _utility.clamp)(ui.to[0], 0, Math.max(0, _this.innerWidth - space.width));
+            }
+
+            if (_this.pane === 'y' || _this.pane === 'x y') {
+                ui.to[1] = (0, _utility.clamp)(ui.to[1], 0, Math.max(0, _this.innerHeight - space.height));
+            }
         });
     }
 
     _createClass(Panes, [{
-        key: 'getPanesWidth',
-        value: function getPanesWidth(panes) {
-            // current width
-            // min width
+        key: 'getPaneSpace',
+        value: function getPaneSpace(exclude) {
+            var children = this.$element.children();
+
+            if (exclude) {
+                children = children.not(exclude);
+            }
+
+            var r = {
+                width: 0,
+                height: 0
+            };
+
+            children.each(function (x, element) {
+                element = (0, _jquery2.default)(element);
+                var grow = parseInt(element.css('flex-grow'), 10);
+
+                if (grow === 0) {
+                    r.width += (0, _utility.parseInteger)(element.css('width'), 0, 10);
+                    r.height += (0, _utility.parseInteger)(element.css('height'), 0, 10);
+                }
+            });
+
+            return r;
+        }
+    }, {
+        key: 'getElementBounds',
+        value: function getElementBounds(element) {
+            element = (0, _jquery2.default)(element);
+
+            return {
+                minWidth: (0, _utility.parseInteger)(element.css('min-width'), 0, 10),
+                maxWidth: (0, _utility.parseInteger)(element.css('max-width', Infinity, 10)),
+                minHeight: (0, _utility.parseInteger)(element.css('min-height', 0, 10)),
+                maxHeight: (0, _utility.parseInteger)(element.css('max-height'), Infinity, 10)
+            };
+        }
+    }, {
+        key: 'innerWidth',
+        get: function get() {
+            return this.$element.innerWidth();
+        }
+    }, {
+        key: 'innerHeight',
+        get: function get() {
+            return this.$element.innerHeight();
         }
     }]);
 
@@ -511,7 +570,9 @@ exports.default = Panes;
 
 
 _loader2.default.register('panes', function (target, config) {
-    return new Panes(target, config);
+    var p = new Panes(target, config);
+    window.p = p;
+    return p;
 });
 
 /***/ }),
