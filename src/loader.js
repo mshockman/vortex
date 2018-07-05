@@ -9,7 +9,11 @@ export default class Loader {
     }
 
     init() {
-        $(this.parse.bind(this));
+        $(() => {
+            if(Loader.autoLoad) {
+                this.parse();
+            }
+        });
     }
 
     register(name, func) {
@@ -66,3 +70,5 @@ export default class Loader {
 
 Loader.loader = new Loader();
 window.Loader = Loader;
+Loader.autoLoad = true;
+Loader.init();

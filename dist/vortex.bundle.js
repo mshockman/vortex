@@ -1011,7 +1011,13 @@ var Loader = (_temp = _class = function () {
     _createClass(Loader, [{
         key: "init",
         value: function init() {
-            (0, _jquery2.default)(this.parse.bind(this));
+            var _this = this;
+
+            (0, _jquery2.default)(function () {
+                if (Loader.autoLoad) {
+                    _this.parse();
+                }
+            });
         }
     }, {
         key: "register",
@@ -1025,7 +1031,7 @@ var Loader = (_temp = _class = function () {
     }, {
         key: "parse",
         value: function parse() {
-            var _this = this;
+            var _this2 = this;
 
             var section = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -1046,7 +1052,7 @@ var Loader = (_temp = _class = function () {
                     for (var _iterator = classes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                         var c = _step.value;
 
-                        if (_this.registry[c]) {
+                        if (_this2.registry[c]) {
                             var target = element,
                                 data = {},
                                 r = void 0;
@@ -1054,7 +1060,7 @@ var Loader = (_temp = _class = function () {
                             element = (0, _jquery2.default)(element);
                             Object.assign(data, element.data());
 
-                            r = _this.registry[c](target, data);
+                            r = _this2.registry[c](target, data);
                             data = element.data();
 
                             if (r) {
@@ -1101,6 +1107,8 @@ exports.default = Loader;
 
 Loader.loader = new Loader();
 window.Loader = Loader;
+Loader.autoLoad = true;
+Loader.init();
 
 /***/ }),
 
