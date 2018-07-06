@@ -1,0 +1,55 @@
+@import "../../modules/colors";
+
+
+/**
+ * A bar component that positions it's items horizontally using flexbox.
+ * This component is positioned relative so it can be used as an anchor point for any
+ * child elements that need to be absolutely positioned.  navbar-item and navbar-nav classes
+ * should not be positioned relative so that `ribbon` menu will work correctly.  If you want an
+ * item to be an anchor point itself it should have the dropdown class.
+ */
+.navbar {
+  background-color: $calypso;
+  color: $white;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+}
+
+
+.navbar.navbar-secondary {
+  background-color: $silver;
+  color: $black;
+}
+
+
+.navbar.navbar-lg {
+  .navbar-nav, .navbar-item {
+    padding: 0.75rem 1rem;
+  }
+}
+
+
+.navbar-item {
+  color: $white;
+  padding: 0.25rem 0.5rem;
+}
+
+
+.navbar-item.active {
+  background-color: darken($calypso, 10%);
+}
+
+
+.navbar-nav {
+  color: $white;
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  display: block;
+  cursor: pointer;
+
+  &:hover, &.active {
+    background-color: darken($calypso, 10%);
+  }
+}

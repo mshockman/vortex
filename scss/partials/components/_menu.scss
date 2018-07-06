@@ -1,0 +1,88 @@
+@import "../../modules/colors";
+
+
+.menubar-control {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  padding-left: 0;
+}
+
+
+.menu {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  margin: 0;
+  list-style: none;
+  padding-left: 0;
+  border: 1px solid $silver;
+  background-color: $white;
+  left: 0;
+  top: 100%;
+  min-width: 200px;
+  color: $black;
+}
+
+
+.menuitem, .item {
+  position: relative;
+  cursor: pointer;
+}
+
+
+.menuitem > a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+
+.menu.open {
+  display: block;
+}
+
+
+.menu.arrow-up {
+  margin-top: 0.1rem;
+  padding-top: 0.25rem;
+
+  &::before {
+    border-bottom: 0.5rem solid $silver;
+    border-left: 0.5rem solid transparent;
+    border-right: 0.5rem solid transparent;
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: 1rem;
+    top: -0.5rem;
+    content: "";
+  }
+
+  &::after {
+    border-bottom: 0.4375rem solid $white;
+    border-left: 0.4375rem solid transparent;
+    border-right: 0.4375rem solid transparent;
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: 1.0625rem;
+    top: -0.375rem;
+    content: "";
+  }
+}
+
+
+.ribbon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  background-color: $silver;
+  display: none;
+
+  &.open {
+    display: block;
+  }
+}

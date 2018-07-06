@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="../dist/vortex.bundle.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="../dist/css/style.css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-lg">
+    <a class="navbar-nav" href="#">Link 1</a>
+    <ul data-init="menu" class="menubar-control" data-timeout="3000" data-role="menu" data-auto-activate="false">
+        <li data-role="dropdown" class="navbar-nav menuitem">
+            <a>DropDown #1</a>
+            <div class="menu arrow-up" data-role="menu">
+                <ul class="list-group list-group-merge">
+                    <li data-role="item" class="list-item menuitem"><a href="#">Test Item #1</a></li>
+                    <li data-role="item" class="list-item menuitem"><a href="#">Test Item #2</a></li>
+                    <li data-role="item" class="list-item menuitem"><a href="#">Test Item #3</a></li>
+                    <li data-role="item" class="list-item menuitem"><a href="#">Test Item #4</a></li>
+                    <li data-role="item" class="list-item menuitem"><a href="#">Test Item #5</a></li>
+                </ul>
+            </div>
+        </li>
+        <li data-role="dropdown" class="navbar-nav">
+            <a>Ribbon #1</a>
+            <div class="ribbon" data-role="menu">
+                <h1>Hello World</h1>
+            </div>
+        </li>
+    </ul>
+</nav>
+
+
+<div class="container">
+<ul class="list-group">
+    <li class="list-item">List Item #1</li>
+    <li class="list-item active">List Item #2</li>
+    <li class="list-item">List Item #3</li>
+    <li class="list-item">List Item #4</li>
+    <li class="list-item">List Item #5</li>
+</ul>
+</div>
+
+
+<div class="container">
+    <div class="panel">
+        <div class="panel-header hbox">
+            <div class="panel-title">Panel Title</div>
+        </div>
+        <div class="panel-body">
+            This it the body
+        </div>
+        <div class="panel-footer">
+            This is the footer
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

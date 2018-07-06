@@ -1,0 +1,36 @@
+@import "../../modules/colors";
+
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $silver;
+  border-radius: 0.25rem;
+}
+
+
+.panel-header {
+  position: relative;
+  background-color: $calypso;
+  display: flex;
+  flex-direction: row;
+  color: $white;
+  padding: 0.25rem 0.5rem;
+  border-top-right-radius: 0.25rem;
+  border-top-left-radius: 0.25rem;
+}
+
+
+.panel-footer {
+  position: relative;
+  background-color: #eeeeee;
+  padding: 0.25rem 0.5rem;
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+
+.panel-body {
+  position: relative;
+  padding: 0.5rem;
+}

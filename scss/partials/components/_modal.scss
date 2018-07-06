@@ -1,0 +1,61 @@
+@import "../../modules/colors";
+
+
+.modal {
+  background: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  overflow: auto;
+  display: none;
+
+  &.open {
+    display: block;
+  }
+}
+
+
+.modal-window {
+  position: absolute;
+  background-color: #eeeeee;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  box-shadow: $black 0 0 10px;
+  border: 1px solid $black;
+  overflow: hidden;
+
+  .modal-body {
+    flex: 1;
+  }
+
+  .modal-head {
+    height: 2em;
+    line-height: 2em;
+    background-color: $apple-blossom;
+    color: $white;
+    padding: 0 0.3125em;
+  }
+
+  .modal-footer {
+    height: 2em;
+    line-height: 2em;
+    background-color: $apple-blossom;
+    color: $white;
+    padding: 0 0.3125em;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+  }
+}
+
+
+.modal-static-1 {
+  width: 700px;
+  left: 50%;
+  height: 500px;
+  top: 50%;
+  margin-left: -350px;
+  margin-top: -250px;
+}
