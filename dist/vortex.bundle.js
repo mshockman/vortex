@@ -577,6 +577,94 @@ _loader2.default.register('panes', function (target, config) {
 
 /***/ }),
 
+/***/ "./src/components/Tabs.js":
+/*!********************************!*\
+  !*** ./src/components/Tabs.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jquery = __webpack_require__(/*! jquery */ "jquery");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _loader = __webpack_require__(/*! ../loader */ "./src/loader.js");
+
+var _loader2 = _interopRequireDefault(_loader);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Tabs = function () {
+    function Tabs(target) {
+        _classCallCheck(this, Tabs);
+
+        this.$element = (0, _jquery2.default)(target);
+        this._onClick = this.onClick.bind(this);
+
+        this.$element.on('click', this._onClick);
+    }
+
+    _createClass(Tabs, [{
+        key: 'onClick',
+        value: function onClick(event) {
+            var $target = (0, _jquery2.default)(event.target).closest('[data-tab]', this.$element);
+
+            if (!$target.length) {
+                return;
+            }
+
+            this.activate($target);
+        }
+    }, {
+        key: 'activate',
+        value: function activate(tab) {
+            var _this = this;
+
+            this.$element.children('[data-tab]').not(tab).each(function (index, element) {
+                _this.deactivate(element);
+            });
+
+            tab = (0, _jquery2.default)(tab);
+
+            tab.addClass('active');
+            var tabPane = (0, _jquery2.default)(tab.attr('data-tab'));
+            tabPane.addClass('open');
+        }
+    }, {
+        key: 'deactivate',
+        value: function deactivate(tab) {
+            tab = (0, _jquery2.default)(tab);
+
+            tab.removeClass('active');
+            var tabPane = (0, _jquery2.default)(tab.attr('data-tab'));
+            tabPane.removeClass('open');
+        }
+    }]);
+
+    return Tabs;
+}();
+
+exports.default = Tabs;
+
+
+_loader2.default.register('tabs', function (target, config) {
+    return new Tabs(target, config);
+});
+
+/***/ }),
+
 /***/ "./src/components/resizeable.js":
 /*!**************************************!*\
   !*** ./src/components/resizeable.js ***!
@@ -966,6 +1054,8 @@ var _apps2 = _interopRequireDefault(_apps);
 __webpack_require__(/*! ./components/resizeable */ "./src/components/resizeable.js");
 
 __webpack_require__(/*! ./components/Panes */ "./src/components/Panes.js");
+
+__webpack_require__(/*! ./components/Tabs */ "./src/components/Tabs.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
