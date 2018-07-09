@@ -1,5 +1,5 @@
 
-export function privotRow(row) {
+export function pivotRow(row) {
     let r = [];
 
     for(let i = 0; i < row.length; i++) {

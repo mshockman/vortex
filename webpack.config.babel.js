@@ -14,7 +14,8 @@ export default [
         mode: MODE,
 
         entry: {
-            'vortex': './src/index.js'
+            'vortex': './src/index.js',
+            'test-app': ['babel-polyfill', './src/tests/app.js']
         },
 
         module: {
@@ -26,7 +27,7 @@ export default [
         output: {
             path: path.resolve(ROOT, "dist"),
             filename: "[name].bundle.js",
-            publicPath: "/static/js/",
+            publicPath: "/vortex/dist/",
             chunkFilename: "chunk-[name].bundle.js"
         },
 

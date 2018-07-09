@@ -1,4 +1,5 @@
 @import "../modules/variables";
+@import "../modules/colors";
 
 
 .hbox {
@@ -66,4 +67,9 @@
 
 .align-middle {
   align-items: center;
+}
+
+
+.sidebar-pane {
+  background-color: $silver;
 }

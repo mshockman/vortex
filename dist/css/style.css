@@ -119,6 +119,10 @@
   align-items: center;
 }
 
+.sidebar-pane {
+  background-color: #cccccc;
+}
+
 .m-0 {
   margin: 0;
 }
@@ -807,6 +811,33 @@ select.form-control {
 
 .tab:not(.open) {
   display: none;
+}
+
+.resize-handle {
+  position: absolute;
+  width: 0.3125rem;
+  height: 0.3125rem;
+  background-color: #000000;
+  bottom: 0;
+  right: 0;
+  cursor: nwse-resize;
+  user-select: none;
+}
+
+.resize-right .resize-handle {
+  bottom: 0;
+  top: 0;
+  right: 0;
+  height: auto;
+  cursor: w-resize;
+}
+
+.resize-left .resize-handle {
+  bottom: 0;
+  top: 0;
+  left: 0;
+  height: auto;
+  cursor: w-resize;
 }
 
 * {

@@ -1,5 +1,5 @@
 import Mouse from '../common/Mouse';
-import {matrixSub, matrixProduct, privotRow, getColumnVertex, matrixAdd} from "../common/matricies";
+import {matrixSub, matrixProduct, pivotRow, getColumnVertex, matrixAdd} from "../common/matricies";
 import Loader from '../loader';
 import {clamp, parseInteger} from '../utility';
 
@@ -34,7 +34,6 @@ export default class Resizeable extends Mouse {
     }
 
     onMouseDown(event) {
-        console.log("here");
         let $target = $(event.target);
 
         if(this.handle && !$target.closest(this.handle, this.$element).length) {
@@ -45,12 +44,15 @@ export default class Resizeable extends Mouse {
             return;
         }
 
+        event.preventDefault();
+
         let originMatrix = [[event.pageX], [event.pageY]],
             start = [[this.width], [this.height]];
 
         // Start tracking mouse position on mouse move.
         let tracker = this.trackMousePosition((event, cords) => {
-            cords = matrixSub(privotRow(cords), originMatrix); // Offset cordinents so the origin is the starting position.
+            event.preventDefault();
+            cords = matrixSub(pivotRow(cords), originMatrix); // Offset cordinents so the origin is the starting position.
             cords = matrixProduct(this._getTransformationMatrix(), cords); // Transform the matrix.
 
             let size = getColumnVertex(matrixAdd(start, cords), 0);

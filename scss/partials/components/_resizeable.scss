@@ -1,0 +1,31 @@
+@import "../../modules/colors";
+
+
+.resize-handle {
+  position: absolute;
+  width: 0.3125rem;
+  height: 0.3125rem;
+  background-color: $black;
+  bottom: 0;
+  right: 0;
+  cursor: nwse-resize;
+  user-select: none;
+}
+
+
+.resize-right .resize-handle {
+  bottom: 0;
+  top: 0;
+  right: 0;
+  height: auto;
+  cursor: w-resize;
+}
+
+
+.resize-left .resize-handle {
+  bottom: 0;
+  top: 0;
+  left: 0;
+  height: auto;
+  cursor: w-resize;
+}

@@ -6,7 +6,7 @@ export default class Mouse {
 
     trackMousePosition(callback) {
         if(this.isMouseTracked) {
-            throw new Error("Mouse is already being tracked.");
+            return;
         }
 
         const $doc = $(document);

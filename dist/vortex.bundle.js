@@ -77,7 +77,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/static/js/";
+/******/ 	__webpack_require__.p = "/vortex/dist/";
 /******/
 /******/
 /******/ 	// Load entry module and return exports
@@ -209,7 +209,7 @@ var Mouse = function () {
             var _this = this;
 
             if (this.isMouseTracked) {
-                throw new Error("Mouse is already being tracked.");
+                return;
             }
 
             var $doc = $(document);
@@ -266,14 +266,14 @@ exports.default = Mouse;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.privotRow = privotRow;
+exports.pivotRow = pivotRow;
 exports.matrixAdd = matrixAdd;
 exports.matrixSub = matrixSub;
 exports.dotProduct = dotProduct;
 exports.getRowVertex = getRowVertex;
 exports.getColumnVertex = getColumnVertex;
 exports.matrixProduct = matrixProduct;
-function privotRow(row) {
+function pivotRow(row) {
     var r = [];
 
     for (var i = 0; i < row.length; i++) {
@@ -747,7 +747,6 @@ var Resizeable = function (_Mouse) {
         value: function onMouseDown(event) {
             var _this2 = this;
 
-            console.log("here");
             var $target = $(event.target);
 
             if (this.handle && !$target.closest(this.handle, this.$element).length) {
@@ -758,12 +757,15 @@ var Resizeable = function (_Mouse) {
                 return;
             }
 
+            event.preventDefault();
+
             var originMatrix = [[event.pageX], [event.pageY]],
                 start = [[this.width], [this.height]];
 
             // Start tracking mouse position on mouse move.
             var tracker = this.trackMousePosition(function (event, cords) {
-                cords = (0, _matricies.matrixSub)((0, _matricies.privotRow)(cords), originMatrix); // Offset cordinents so the origin is the starting position.
+                event.preventDefault();
+                cords = (0, _matricies.matrixSub)((0, _matricies.pivotRow)(cords), originMatrix); // Offset cordinents so the origin is the starting position.
                 cords = (0, _matricies.matrixProduct)(_this2._getTransformationMatrix(), cords); // Transform the matrix.
 
                 var size = (0, _matricies.getColumnVertex)((0, _matricies.matrixAdd)(start, cords), 0);
