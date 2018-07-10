@@ -93,15 +93,15 @@ CallList.BREAK = {};
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.DummyPagedData = exports.PagedDataInterface = exports.DataInterface = undefined;
+exports.DataServiceModel = exports.DataModel = exports.DummyPagedData = exports.PagedDataInterface = exports.DataInterface = undefined;
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _ObjectEvents2 = __webpack_require__(/*! ./ObjectEvents */ "./src/common/ObjectEvents.js");
+var _ObjectEvents3 = __webpack_require__(/*! ./ObjectEvents */ "./src/common/ObjectEvents.js");
 
-var _ObjectEvents3 = _interopRequireDefault(_ObjectEvents2);
+var _ObjectEvents4 = _interopRequireDefault(_ObjectEvents3);
 
 var _utility = __webpack_require__(/*! ../utility */ "./src/utility.js");
 
@@ -500,7 +500,7 @@ var DataInterface = exports.DataInterface = function (_ObjectEvents) {
     }]);
 
     return DataInterface;
-}(_ObjectEvents3.default);
+}(_ObjectEvents4.default);
 
 /**
  * A data interface class that adds the interface for pages.
@@ -692,6 +692,332 @@ var DummyPagedData = exports.DummyPagedData = function (_PagedDataInterface) {
 
     return DummyPagedData;
 }(PagedDataInterface);
+
+var DataModel = exports.DataModel = function (_ObjectEvents2) {
+    _inherits(DataModel, _ObjectEvents2);
+
+    function DataModel(data) {
+        var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+        var pageLength = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 100;
+
+        _classCallCheck(this, DataModel);
+
+        var _this6 = _possibleConstructorReturn(this, (DataModel.__proto__ || Object.getPrototypeOf(DataModel)).call(this));
+
+        _this6.page = page;
+        _this6.pageLength = pageLength;
+        _this6.data = data;
+        _this6.disabled = false;
+
+        _this6.refresh();
+        return _this6;
+    }
+
+    _createClass(DataModel, [{
+        key: "getRow",
+        value: function getRow(index) {
+            if (this.data) {
+                index = index + (this.page - 1) * this.pageLength;
+                return this.data[index];
+            }
+        }
+    }, {
+        key: "getRowValue",
+        value: function getRowValue(index, key) {
+            if (this.data) {
+                return this.getRow(index)[key];
+            }
+        }
+
+        /**
+         * Returns the number of items on the current page.
+         * @returns {Number}
+         */
+
+    }, {
+        key: "refresh",
+
+
+        /**
+         * Queues a ui refresh
+         */
+        value: function refresh() {
+            var _this7 = this;
+
+            if (this._queueId || this.disabled) return;
+
+            this._queueId = window.requestAnimationFrame(function () {
+                _this7._queueId = null;
+                _this7.trigger('data-changed', _this7);
+            });
+        }
+    }, {
+        key: "setPage",
+        value: function setPage(page) {
+            if (this.page !== page) {
+                this.page = page;
+                this.refresh();
+            }
+        }
+    }, {
+        key: "setPageLength",
+        value: function setPageLength(pageLength) {
+            if (this.pageLength !== pageLength) {
+                this.pageLength = pageLength;
+                this.refresh();
+            }
+        }
+    }, {
+        key: "setData",
+        value: function setData(data) {
+            if (this.data !== data) {
+                this.data = data;
+                this.refresh();
+            }
+        }
+
+        /**
+         * Iterates over every row.
+         * @returns {IterableIterator<{}>}
+         */
+
+    }, {
+        key: Symbol.iterator,
+        value: /*#__PURE__*/regeneratorRuntime.mark(function value() {
+            var i, l;
+            return regeneratorRuntime.wrap(function value$(_context2) {
+                while (1) {
+                    switch (_context2.prev = _context2.next) {
+                        case 0:
+                            i = 0, l = this.length;
+
+                        case 1:
+                            if (!(i < l)) {
+                                _context2.next = 7;
+                                break;
+                            }
+
+                            _context2.next = 4;
+                            return this.getRow(i);
+
+                        case 4:
+                            i++;
+                            _context2.next = 1;
+                            break;
+
+                        case 7:
+                        case "end":
+                            return _context2.stop();
+                    }
+                }
+            }, value, this);
+        })
+    }, {
+        key: "length",
+        get: function get() {
+            var start = (this.page - 1) * this.pageLength,
+                end = Math.min(this.page * this.pageLength, this.total);
+
+            return end - start;
+        }
+
+        /**
+         *  Returns the total number of items across all pages.
+         *  @returns {Number}
+         */
+
+    }, {
+        key: "total",
+        get: function get() {
+            if (this.data) {
+                return this.data.length;
+            }
+
+            return 0;
+        }
+
+        /**
+         * Returns the total number of pages.
+         */
+
+    }, {
+        key: "pageCount",
+        get: function get() {
+            return Math.ceil(this.total / this.pageLength);
+        }
+    }]);
+
+    return DataModel;
+}(_ObjectEvents4.default);
+
+var DataServiceModel = exports.DataServiceModel = function (_DataModel) {
+    _inherits(DataServiceModel, _DataModel);
+
+    function DataServiceModel(data) {
+        var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+        var pageLength = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 100;
+        var filters = arguments[3];
+        var endpoint = arguments[4];
+        var method = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 'POST';
+        var timeout = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 5000;
+
+        _classCallCheck(this, DataServiceModel);
+
+        var _this8 = _possibleConstructorReturn(this, (DataServiceModel.__proto__ || Object.getPrototypeOf(DataServiceModel)).call(this, data, page, pageLength));
+
+        _this8.endpoint = endpoint;
+        _this8.method = method;
+        _this8.timeout = timeout;
+        _this8.status = 'unloaded';
+        _this8.filters = {};
+
+        if (filters) {
+            _this8.setFilters(filters);
+        }
+        return _this8;
+    }
+
+    _createClass(DataServiceModel, [{
+        key: "getFilter",
+        value: function getFilter(key) {
+            return this.filters[key];
+        }
+    }, {
+        key: "setFilter",
+        value: function setFilter(key, value) {
+            if (this.filters[key] !== value) {
+                this.filters[key] = value;
+
+                this.reload();
+            }
+        }
+    }, {
+        key: "getFilters",
+        value: function getFilters() {
+            var r = Object.assign({}, this.filters);
+            r.page = this.page;
+            r.pageLength = this.pageLength;
+            return r;
+        }
+    }, {
+        key: "setFilters",
+        value: function setFilters(filters) {
+            if (this.filters !== filters) {
+                this.filters = filters;
+                this.reload();
+            }
+        }
+    }, {
+        key: "setPage",
+        value: function setPage(page) {
+            if (this.page !== page) {
+                this.page = page;
+                this.reload();
+            }
+        }
+    }, {
+        key: "setData",
+        value: function setData(data) {
+            if (this.data !== data) {
+                this.data = data;
+                this.reload();
+            }
+        }
+    }, {
+        key: "setPageLength",
+        value: function setPageLength(pageLength) {
+            if (this.pageLength !== pageLength) {
+                this.pageLength = pageLength;
+                this.reload();
+            }
+        }
+    }, {
+        key: "reload",
+        value: function reload() {
+            var _this9 = this;
+
+            if (this._reloadId || this.disabled) return;
+
+            this._reloadId = window.requestAnimationFrame(function () {
+                _this9._reloadId = null;
+                _this9.abort();
+                _this9.status = 'loading';
+                _this9.trigger('loading-start', _this9);
+
+                return new Promise(function (resolve, reject) {
+                    var abort = (0, _abortable2.default)(reject);
+                    _this9._abort = abort;
+
+                    $.ajax({
+                        url: _this9.endpoint,
+                        cache: false,
+                        type: _this9.method,
+                        timeout: _this9.timeout,
+
+                        dataType: 'json',
+                        data: JSON.stringify(_this9.getFilters()),
+
+                        complete: _this9._abort.wrap(function (response) {
+                            // noinspection JSUnusedGlobalSymbols
+                            _this9.status = "loaded";
+
+                            if (_this9._abort === abort) {
+                                _this9._abort = null;
+                            }
+
+                            _this9.trigger('loading-complete', _this9, response);
+                        }),
+
+                        success: _this9._abort.wrap(function (response) {
+                            _this9.handleResponse(response);
+                            resolve(response);
+                        })
+                    });
+                });
+            });
+        }
+
+        /**
+         * Will abort the open ajax request.
+         * @returns {boolean}
+         */
+
+    }, {
+        key: "abort",
+        value: function abort() {
+            if (this._abort) {
+                this._abort();
+                this._abort = null;
+                this.trigger('loading-abort', this);
+                return true;
+            }
+
+            return false;
+        }
+    }, {
+        key: "handleResponse",
+        value: function handleResponse(response) {
+            this.data = response.data;
+            this.total = response.total;
+            this.refresh();
+        }
+    }, {
+        key: "length",
+        get: function get() {
+            return this.data.length;
+        }
+    }, {
+        key: "total",
+        get: function get() {
+            return this._total;
+        },
+        set: function set(value) {
+            this._total = value;
+        }
+    }]);
+
+    return DataServiceModel;
+}(DataModel);
 
 /***/ }),
 
