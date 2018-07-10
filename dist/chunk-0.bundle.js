@@ -263,7 +263,7 @@ var DataInterface = exports.DataInterface = function (_ObjectEvents) {
     }, {
         key: "setFilter",
         value: function setFilter(name, value) {
-            var changed = this.getFilter(name) === value;
+            var changed = this.getFilter(name) !== value;
             this.filters[name] = value;
 
             if (changed) {
@@ -675,12 +675,14 @@ var DummyPagedData = exports.DummyPagedData = function (_PagedDataInterface) {
 
                         _this5.trigger('loading-complete', _this5, response);
                         _this5.handleResponse(response);
+                        _this5._abort = null;
                         resolve(response);
                     }, _this5.latency);
 
                     // noinspection JSUnusedGlobalSymbols
                     _this5._abort = function () {
                         clearTimeout(timer);
+                        _this5._abort = null;
                         reject();
                     };
                 });
@@ -888,7 +890,7 @@ var EVENTS = {
     'pageChange': PREFIX + '.pageChanged'
 };
 
-var PAGINATOR_TEMPLATE = '\n<form method="post" action="javascript:void(0);">\n    <div class="pane-left">\n        <span class="page-btn btn-page-back" data-go="previous"><i class="fas fa-step-backward"></i></span>\n        <span class="page-btn btn-page-first" data-go="first"><i class="fas fa-fast-backward"></i></span>\n    </div>\n    <div class="pages">\n        <div>Page </div>\n        <input type="text" value="" title="Page" name="page" />\n        <div>of <span class="pageCount"></span></div></div>\n    <div class="pane-right">\n        <span class="page-btn btn-page-last" data-go="last"><i class="fas fa-fast-forward"></i></span>\n        <span class="page-btn btn-page-next" data-go="next"><i class="fas fa-step-forward"></i></span>\n    </div>\n</form>\n';
+var PAGINATOR_TEMPLATE = '\n<form method="post" class="paginator" action="javascript:void(0);">\n    <div class="pane-left">\n        <span class="page-btn btn-page-back" data-go="previous"><i class="fas fa-step-backward"></i></span>\n        <span class="page-btn btn-page-first" data-go="first"><i class="fas fa-fast-backward"></i></span>\n    </div>\n    <div class="pages">\n        <div>Page </div>\n        <input type="number" value="" title="Page" name="page" />\n        <div>of <span class="pageCount"></span></div></div>\n    <div class="pane-right">\n        <span class="page-btn btn-page-last" data-go="last"><i class="fas fa-fast-forward"></i></span>\n        <span class="page-btn btn-page-next" data-go="next"><i class="fas fa-step-forward"></i></span>\n    </div>\n</form>\n';
 
 var Paginator = (_temp = _class = function () {
     function Paginator(service) {
@@ -921,15 +923,17 @@ var Paginator = (_temp = _class = function () {
 
             if (cmd === 'first') {
                 _this.service.page = 1;
+                _this.render();
             } else if (cmd === 'next') {
                 _this.service.page += 1;
+                _this.render();
             } else if (cmd === 'previous') {
                 _this.service.page -= 1;
+                _this.render();
             } else if (cmd === 'last') {
                 _this.service.page = _this.service.pageCount;
+                _this.render();
             }
-
-            _this.render();
         };
 
         this._onSubmit = function () {
@@ -941,7 +945,6 @@ var Paginator = (_temp = _class = function () {
                 _this.render();
             } else if (value !== _this.service.page) {
                 _this.service.page = value;
-                _this.render();
             }
         };
 
@@ -957,10 +960,20 @@ var Paginator = (_temp = _class = function () {
         this.$element.on('submit', this._onSubmit);
         this.$input.on('blur', this._onSubmit);
 
+        this.service.on('loading-start', function () {
+            console.log('loading-start');
+        });
+
+        this.service.on('loading-abort', function () {
+            console.log("loading-abort");
+        });
+
         this.service.on('data-changed', this._render);
         this.service.on('loading-start', this._disable);
         this.service.on('loading-complete', this._enabled);
         this.service.on('loading-abort', this._enabled);
+
+        this.render();
     }
 
     _createClass(Paginator, [{
@@ -979,8 +992,8 @@ var Paginator = (_temp = _class = function () {
 
             this._animationId = window.requestAnimationFrame(function () {
                 _this2._animationId = null;
-                _this2.$pageCount.text(_this2.service.pageCount);
-                _this2.$input.val(_this2.service.page);
+                _this2.$pageCount.text(_this2.service.pageCount || '?');
+                _this2.$input.val(_this2.service.page || 1);
 
                 if (_this2.service.page <= 1) {
                     _this2.$btnBack.addClass('disabled');

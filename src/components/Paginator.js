@@ -10,14 +10,14 @@ const EVENTS = {
 
 
 const PAGINATOR_TEMPLATE = `
-<form method="post" action="javascript:void(0);">
+<form method="post" class="paginator" action="javascript:void(0);">
     <div class="pane-left">
         <span class="page-btn btn-page-back" data-go="previous"><i class="fas fa-step-backward"></i></span>
         <span class="page-btn btn-page-first" data-go="first"><i class="fas fa-fast-backward"></i></span>
     </div>
     <div class="pages">
         <div>Page </div>
-        <input type="text" value="" title="Page" name="page" />
+        <input type="number" value="" title="Page" name="page" />
         <div>of <span class="pageCount"></span></div></div>
     <div class="pane-right">
         <span class="page-btn btn-page-last" data-go="last"><i class="fas fa-fast-forward"></i></span>
@@ -54,15 +54,17 @@ export default class Paginator {
 
             if(cmd === 'first') {
                 this.service.page = 1;
+                this.render();
             } else if(cmd === 'next') {
                 this.service.page += 1;
+                this.render();
             } else if(cmd === 'previous') {
                 this.service.page -= 1;
+                this.render();
             } else if(cmd === 'last') {
                 this.service.page = this.service.pageCount;
+                this.render();
             }
-
-            this.render();
         };
 
         this._onSubmit = () => {
@@ -74,7 +76,6 @@ export default class Paginator {
                 this.render();
             } else if(value !== this.service.page) {
                 this.service.page = value;
-                this.render();
             }
         };
 
@@ -90,10 +91,20 @@ export default class Paginator {
         this.$element.on('submit', this._onSubmit);
         this.$input.on('blur', this._onSubmit);
 
+        this.service.on('loading-start', () => {
+            console.log('loading-start');
+        });
+
+        this.service.on('loading-abort', () => {
+            console.log("loading-abort");
+        });
+
         this.service.on('data-changed', this._render);
         this.service.on('loading-start', this._disable);
         this.service.on('loading-complete', this._enabled);
         this.service.on('loading-abort', this._enabled);
+
+        this.render();
     }
 
     appendTo(selector) {
@@ -107,8 +118,8 @@ export default class Paginator {
 
         this._animationId = window.requestAnimationFrame(() => {
             this._animationId = null;
-            this.$pageCount.text(this.service.pageCount);
-            this.$input.val(this.service.page);
+            this.$pageCount.text(this.service.pageCount || '?');
+            this.$input.val(this.service.page || 1);
 
             if(this.service.page <= 1) {
                 this.$btnBack.addClass('disabled');

@@ -1,7 +1,7 @@
 @import "../../modules/colors";
 
 
-.menubar-control {
+.menubar {
   list-style: none;
   display: flex;
   flex-direction: row;
@@ -29,6 +29,7 @@
 .menuitem, .item {
   position: relative;
   cursor: pointer;
+  user-select: none;
 }
 
 

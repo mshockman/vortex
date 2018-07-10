@@ -443,6 +443,22 @@
   padding-left: 2rem !important;
 }
 
+.mr-auto {
+  margin-right: auto;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
+.mt-auto {
+  margin-top: auto;
+}
+
+.mb-auto {
+  margin-bottom: auto;
+}
+
 .text-right {
   text-align: right;
 }
@@ -580,34 +596,36 @@ select.form-control {
   flex-direction: row;
   position: relative;
   align-items: center;
+  height: 2rem;
 }
-
+.navbar.navbar-lg {
+  height: 2.5rem;
+}
 .navbar.navbar-secondary {
   background-color: #cccccc;
   color: #000000;
 }
 
-.navbar.navbar-lg .navbar-nav, .navbar.navbar-lg .navbar-item {
-  padding: 0.75rem 1rem;
-}
-
-.navbar-item {
+.navbar-item, .navbar-nav {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 0.5rem;
   color: #ffffff;
-  padding: 0.25rem 0.5rem;
-}
-
-.navbar-item.active {
-  background-color: #1e425d;
 }
 
 .navbar-nav {
-  color: #ffffff;
   text-decoration: none;
-  padding: 0.25rem 0.5rem;
-  display: block;
   cursor: pointer;
 }
-.navbar-nav:hover, .navbar-nav.active {
+.navbar-nav:hover {
+  background-color: #1e425d;
+}
+
+/**
+ * Menubar items that are also a navbar-item
+ */
+.navbar-item.menuitem.active {
   background-color: #1e425d;
 }
 
@@ -732,7 +750,7 @@ select.form-control {
   padding: 0.5rem;
 }
 
-.menubar-control {
+.menubar {
   list-style: none;
   display: flex;
   flex-direction: row;
@@ -758,6 +776,7 @@ select.form-control {
 .menuitem, .item {
   position: relative;
   cursor: pointer;
+  user-select: none;
 }
 
 .menuitem > a {
@@ -838,6 +857,27 @@ select.form-control {
   left: 0;
   height: auto;
   cursor: w-resize;
+}
+
+.paginator {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.paginator .pages {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0 0.25rem;
+}
+.paginator .page-btn {
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 0 0.1rem;
+}
+.paginator input[name=page] {
+  margin: 0 0.25rem;
+  width: 3rem;
 }
 
 * {

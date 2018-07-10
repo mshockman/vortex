@@ -119,7 +119,7 @@ export class DataInterface extends ObjectEvents {
      * @returns {boolean} - True if changed.
      */
     setFilter(name, value) {
-        let changed = this.getFilter(name) === value;
+        let changed = this.getFilter(name) !== value;
         this.filters[name] = value;
 
         if(changed) {
@@ -399,12 +399,14 @@ export class DummyPagedData extends PagedDataInterface {
 
                     this.trigger('loading-complete', this, response);
                     this.handleResponse(response);
+                    this._abort = null;
                     resolve(response);
                 }, this.latency);
 
                 // noinspection JSUnusedGlobalSymbols
                 this._abort = () => {
                     clearTimeout(timer);
+                    this._abort = null;
                     reject();
                 }
             });
