@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" class="fluid">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="../dist/chunk-vendors.bundle.js"></script>
+    <script type="text/javascript" src="../dist/test-app.bundle.js"></script>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="../dist/css/style.css" />
+</head>
+<body class="fluid">
+
+
+<div class="vbox fluid">
+    <nav class="navbar navbar-top navbar-lg">
+        <div class="navbar-item">Test</div>
+    </nav>
+    <div class="pane-1">
+        <div class="hbox fluid" data-init="panes" data-pane="x">
+            <div data-init="resizeable" data-resize="x" data-handle=".resize-handle" class="pane sidebar-pane resize-right"><div>Pane #1</div><div class="resize-handle"></div></div>
+            <div class="pane-1 vbox fluid">
+                <div id="header-container"></div>
+                <div id="dataview-container" class="pane-1"></div>
+                <div class="hbox">
+                    <div class="mr-auto ml-auto" id="paginator-container"></div>
+                </div>
+            </div>
+            <div class="sidebar-pane pane resize-left" data-init="resizeable" data-resize="-x" data-handle=".resize-handle"><div>Pane #3</div><div class="resize-handle"></div></div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    app.init('data-table-test');
+</script>
+
+</body>
+</html>

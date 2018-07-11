@@ -25,6 +25,10 @@
     background-color: $silver;
     color: $black;
   }
+
+  &.navbar-top {
+    border-bottom: 1px solid darken($calypso, 15%);
+  }
 }
 
 

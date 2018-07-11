@@ -5,7 +5,7 @@
   position: absolute;
   width: 0.3125rem;
   height: 0.3125rem;
-  background-color: $black;
+  background-color: darken($mercury, 20%);
   bottom: 0;
   right: 0;
   cursor: nwse-resize;
