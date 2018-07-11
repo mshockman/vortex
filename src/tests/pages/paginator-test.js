@@ -1,11 +1,26 @@
 import Paginator from '../../components/Paginator';
-import {DummyPagedData} from '../../common/Data';
+import {DataModel} from '../../common/Data';
 
 
 export default class PaginatorTest {
     constructor(context) {
-        this.service = new DummyPagedData(500, 2222, 1000);
-        this.paginator = new Paginator(this.service);
+        this.model = this.buildDataModel(5221);
+        this.paginator = new Paginator(this.model);
+    }
+
+    buildDataModel(size) {
+        let r = [];
+
+        for(let i = 0; i < size; i++) {
+            r.push({
+                id: i,
+                name: `Test Item ${i}`,
+                random: Math.round(Math.random()*1000),
+                price: '$' + (Math.random()*1000).toFixed(2)
+            })
+        }
+
+        return new DataModel({rows:r}, 1, 100);
     }
 
     load() {

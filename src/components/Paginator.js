@@ -53,16 +53,16 @@ export default class Paginator {
             if($btn.hasClass('disabled')) return;
 
             if(cmd === 'first') {
-                this.service.page = 1;
+                this.service.setPage(1);
                 this.render();
             } else if(cmd === 'next') {
-                this.service.page += 1;
+                this.service.setPage(this.service.page + 1);
                 this.render();
             } else if(cmd === 'previous') {
-                this.service.page -= 1;
+                this.service.setPage(this.service.page - 1);
                 this.render();
             } else if(cmd === 'last') {
-                this.service.page = this.service.pageCount;
+                this.service.setPage(this.service.pageCount);
                 this.render();
             }
         };
@@ -75,7 +75,7 @@ export default class Paginator {
             if(Number.isNaN(value)) {
                 this.render();
             } else if(value !== this.service.page) {
-                this.service.page = value;
+                this.service.setPage(value);
             }
         };
 
