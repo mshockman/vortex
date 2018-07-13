@@ -1,3 +1,13 @@
 .tab:not(.open) {
   display: none;
 }
+
+
+.tab-item {
+  cursor: pointer;
+}
+
+
+.tab-item.active {
+  margin-bottom: -1px;
+}

@@ -21,9 +21,25 @@
     height: 2.5rem;
   }
 
+  &.navbar-small {
+    height: 1.75rem;
+  }
+
   &.navbar-secondary {
-    background-color: $silver;
+    background-color: $mercury;
     color: $black;
+
+    .navbar-item {
+      color: $black;
+    }
+
+    .navbar-item.active {
+      background-color: $gallery;
+    }
+
+    &.navbar-top {
+      border-bottom: 1px solid darken($mercury, 10%);
+    }
   }
 
   &.navbar-top {
@@ -38,6 +54,10 @@
   align-items: center;
   padding: 0 0.5rem;
   color: $white;
+
+  &.active {
+    background-color: $calypso;
+  }
 }
 
 
@@ -45,7 +65,7 @@
   text-decoration: none;
   cursor: pointer;
 
-  &:hover {
+  &.hover:hover {
     background-color: darken($calypso, 10%);
   }
 }

@@ -120,7 +120,7 @@
 }
 
 .sidebar-pane {
-  background-color: #e5e5e5;
+  background-color: #ffffff;
   width: 250px;
   min-width: 100px;
 }
@@ -611,9 +611,21 @@ select.form-control {
 .navbar.navbar-lg {
   height: 2.5rem;
 }
+.navbar.navbar-small {
+  height: 1.75rem;
+}
 .navbar.navbar-secondary {
-  background-color: #cccccc;
+  background-color: #e5e5e5;
   color: #000000;
+}
+.navbar.navbar-secondary .navbar-item {
+  color: #000000;
+}
+.navbar.navbar-secondary .navbar-item.active {
+  background-color: #fafafa;
+}
+.navbar.navbar-secondary.navbar-top {
+  border-bottom: 1px solid #cccccc;
 }
 .navbar.navbar-top {
   border-bottom: 1px solid #18344a;
@@ -626,12 +638,15 @@ select.form-control {
   padding: 0 0.5rem;
   color: #ffffff;
 }
+.navbar-item.active, .navbar-nav.active {
+  background-color: #2A5D84;
+}
 
 .navbar-nav {
   text-decoration: none;
   cursor: pointer;
 }
-.navbar-nav:hover {
+.navbar-nav.hover:hover {
   background-color: #1e425d;
 }
 
@@ -845,6 +860,14 @@ select.form-control {
   display: none;
 }
 
+.tab-item {
+  cursor: pointer;
+}
+
+.tab-item.active {
+  margin-bottom: -1px;
+}
+
 .resize-handle {
   position: absolute;
   width: 0.3125rem;
@@ -905,6 +928,7 @@ select.form-control {
 }
 .data-table-view tbody tr td {
   border: 1px solid #cccccc;
+  height: 1.75rem;
 }
 
 .data-table-header {
@@ -930,6 +954,7 @@ select.form-control {
 .data-table-header.data-table-weld thead th, .data-table-header.data-table-weld thead td {
   border-top-width: 0;
   border-bottom-width: 0;
+  height: 1.75rem;
 }
 
 .b-0 {

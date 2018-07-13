@@ -21,7 +21,23 @@
     </nav>
     <div class="pane-1">
         <div class="hbox fluid" data-init="panes" data-pane="x">
-            <div data-init="resizeable" data-resize="x" data-handle=".resize-handle" class="pane sidebar-pane resize-right"><div>Pane #1</div><div class="resize-handle"></div></div>
+            <div data-init="resizeable" data-resize="x" data-handle=".resize-handle" class="pane sidebar-pane resize-right">
+                <div class="vbox">
+                    <div>
+                        <ul class="menubar navbar navbar-secondary navbar-small navbar-top" data-init="tabs">
+                            <li class="navbar-item tab-item active" data-tab="#tab-filter">Filters</li>
+                            <li class="navbar-item tab-item" data-tab="#tab-search">Search</li>
+                        </ul>
+                        <div id="tab-filter" class="pane-1 tab open">
+                            Pane #1 Tab #1
+                        </div>
+                        <div id="tab-search" class="pane-1 tab">
+                            Pane #1 Tab #2
+                        </div>
+                    </div>
+                </div>
+                <div class="resize-handle"></div>
+            </div>
             <div class="pane-1 vbox fluid">
                 <div class="viewport" id="header-viewport">
                     <div class="viewport-body" id="header-container"></div>
