@@ -3,6 +3,13 @@ import {clamp} from "../utility";
 import abortable from "./abortable";
 
 
+/**
+ * Events:
+ *  data-change
+ *  loading-start
+ *  loading-complete
+ *  loading-abort
+ */
 export class DataModel extends ObjectEvents {
     constructor(data, page=1, pageLength=100) {
         super();
@@ -89,7 +96,7 @@ export class DataModel extends ObjectEvents {
 
         this._queueId = window.requestAnimationFrame(() => {
             this._queueId = null;
-            this.trigger('data-changed', this);
+            this.trigger('data-change', this);
         });
     }
 

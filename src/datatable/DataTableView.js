@@ -51,6 +51,7 @@ export default class DataTableView extends ObjectEvents {
         this.$element = $(dataTableTemplate());
         this.pk = pk;
         this.$tbody = this.$element.find('tbody');
+        this._render = this.render.bind(this);
 
         if(header) {
             this.header = new DataTableHeader(this, null, null, inlineDataTableHeaderTemplate);
@@ -60,6 +61,8 @@ export default class DataTableView extends ObjectEvents {
         if(columns) {
             this.setVisibleColumns(columns);
         }
+
+        this.data.on('data-change', this._render);
     }
 
     registerColumn(...columns) {
@@ -72,6 +75,7 @@ export default class DataTableView extends ObjectEvents {
         if(this._queueId) return;
 
         this._queueId = window.requestAnimationFrame(() => {
+            this._queueId = null;
             this.$tbody.empty();
 
             let width = 0;

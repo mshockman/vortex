@@ -23,8 +23,10 @@
         <div class="hbox fluid" data-init="panes" data-pane="x">
             <div data-init="resizeable" data-resize="x" data-handle=".resize-handle" class="pane sidebar-pane resize-right"><div>Pane #1</div><div class="resize-handle"></div></div>
             <div class="pane-1 vbox fluid">
-                <div id="header-container"></div>
-                <div id="dataview-container" class="pane-1"></div>
+                <div class="viewport" id="header-viewport">
+                    <div class="viewport-body" id="header-container"></div>
+                </div>
+                <div id="dataview-container" class="pane-1 scroll-xy"></div>
                 <div class="hbox">
                     <div class="mr-auto ml-auto" id="paginator-container"></div>
                 </div>

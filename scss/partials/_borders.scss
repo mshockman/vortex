@@ -1,0 +1,26 @@
+@import "../modules/variables";
+
+
+@each $size in $borders {
+  $index: index($borders, $size) - 1;
+
+  .b-#{$index} {
+    border-width: #{$size}rem !important;
+  }
+
+  .bt-#{$index} {
+    border-top-width: #{$size}rem !important;;
+  }
+
+  .bb-#{$index} {
+    border-bottom-width: #{$size}rem !important;;
+  }
+
+  .bl-#{$index} {
+    border-left-width: #{$size}rem !important;;
+  }
+
+  .br-#{$index} {
+    border-right-width: #{$size}rem !important;;
+  }
+}

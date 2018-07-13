@@ -99,7 +99,7 @@ export default class Paginator {
             console.log("loading-abort");
         });
 
-        this.service.on('data-changed', this._render);
+        this.service.on('data-change', this._render);
         this.service.on('loading-start', this._disable);
         this.service.on('loading-complete', this._enabled);
         this.service.on('loading-abort', this._enabled);

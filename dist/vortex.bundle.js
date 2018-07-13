@@ -2354,6 +2354,7 @@ exports.parseBoolean = parseBoolean;
 exports.parseBooleanString = parseBooleanString;
 exports.parseBooleanOrNumber = parseBooleanOrNumber;
 exports.setDefaultValues = setDefaultValues;
+exports.randomChoice = randomChoice;
 var nill = {};
 
 function clamp(value) {
@@ -2458,6 +2459,10 @@ function setDefaultValues(target, defaults) {
             target[key] = defaults[key];
         }
     }
+}
+
+function randomChoice(list) {
+    return list[Math.floor(Math.random() * list.length)];
 }
 
 /***/ }),

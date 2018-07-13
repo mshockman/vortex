@@ -78,3 +78,8 @@ export function setDefaultValues(target, defaults) {
         }
     }
 }
+
+
+export function randomChoice(list) {
+    return list[Math.floor(Math.random() * list.length)];
+}
