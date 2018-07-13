@@ -45,6 +45,7 @@ export default class DataTableTest {
         this.table.registerColumn(
             {
                 'name': 'name',
+                'key': 'name',
                 'label': 'Name',
                 'width': 400,
                 'classes': 'column-name',
@@ -53,6 +54,7 @@ export default class DataTableTest {
 
             {
                 'name': 'random',
+                'key': 'random',
                 'label': 'Random',
                 'width': 400,
                 'classes': 'column-random',
@@ -61,6 +63,7 @@ export default class DataTableTest {
 
             {
                 'name': 'price',
+                'key': 'price',
                 'label': 'Price',
                 'width': 400,
                 'classes': 'column-price',
@@ -69,6 +72,7 @@ export default class DataTableTest {
 
             {
                 'name': 'full_name',
+                'key': 'full_name',
                 'label': 'Full Name',
                 'width': 400,
                 'classes': 'column-full-name',
@@ -77,6 +81,7 @@ export default class DataTableTest {
 
             {
                 'name': 'color',
+                'key': 'color',
                 'label': 'Rope Color',
                 'width': 400,
                 'classes': 'column-color',

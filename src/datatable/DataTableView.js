@@ -4,7 +4,8 @@
  * Example column descriptor.
  *
  * {
- *      name: 'test_column',
+ *      name: 'test_column',      // The name of the column must be unique to the table.
+ *      key: 'test_column',      // The key used to lookup the value.
  *      label: 'Test Column,
  *      cellRenderer: null, // Use default.  Should be a callable(column, row, dataTable)
  *      renderer: null, // Renders the column itself in the head. null use default. Should be a callable(column, dataTable)
@@ -123,7 +124,7 @@ export default class DataTableView extends ObjectEvents {
             return column.cellRenderer(column, row, this);
         } else {
             let $td = $('<td>');
-            $td.html(row[column.name]);
+            $td.html(row[column.key]);
 
             if(typeof column.width === 'number') {
                 $td.css("width", column.width);
