@@ -4,6 +4,7 @@ import DataTableHeader from '../../datatable/DataTableHeader';
 import Paginator from "../../components/Paginator";
 import {randomChoice} from "../../utility";
 import Viewport from '../../components/Viewport';
+import PageLengthChooser from "../../datatable/PageLengthChooser";
 
 
 const names = [
@@ -37,6 +38,7 @@ export default class DataTableTest {
         this.table = new DataTableView(this.model, null, false, 'id');
         this.paginator = new Paginator(this.model);
         this.header = new DataTableHeader(this.table, null, 'data-table-weld br-1');
+        this.pageLengthChooser = new PageLengthChooser(this.model);
 
         this.table.registerColumn(
             {
@@ -105,6 +107,7 @@ export default class DataTableTest {
         this.header.appendTo("#header-container");
         this.viewport = new Viewport("#dataview-container");
         this.viewport.mirror("#header-viewport", 100);
+        this.pageLengthChooser.appendTo("#paginator-container");
         this.table.render();
     }
 }
