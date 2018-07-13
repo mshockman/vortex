@@ -6,6 +6,7 @@ import {randomChoice} from "../../utility";
 import Viewport from '../../components/Viewport';
 import PageLengthChooser from "../../datatable/PageLengthChooser";
 import DataPositionView from "../../datatable/DataPositionView";
+import RowCheckboxColumn from "../../datatable/RowCheckboxColumn";
 
 
 const names = [
@@ -43,6 +44,8 @@ export default class DataTableTest {
         this.dataPositionView = new DataPositionView(this.model);
 
         this.table.registerColumn(
+            new RowCheckboxColumn('checkbox'),
+
             {
                 'name': 'name',
                 'key': 'name',
@@ -108,7 +111,7 @@ export default class DataTableTest {
     }
 
     load() {
-        this.table.setVisibleColumns(['name', 'random', 'price', 'full_name', 'color']);
+        this.table.setVisibleColumns(['checkbox', 'name', 'random', 'price', 'full_name', 'color']);
         this.table.appendTo("#dataview-container");
         this.paginator.appendTo('#paginator-container');
         this.header.appendTo("#header-container");

@@ -77,6 +77,16 @@ export default class DataTableView extends ObjectEvents {
 
         this._queueId = window.requestAnimationFrame(() => {
             this._queueId = null;
+
+            this.$tbody.children("td, th").each((x, element) => {
+                const column = $(element).data('column');
+
+                // Call destroy function of all current columns.
+                if(column && column.destroy) {
+                    column.destroy();
+                }
+            });
+
             this.$tbody.empty();
 
             let width = 0;
@@ -110,6 +120,14 @@ export default class DataTableView extends ObjectEvents {
 
                 this.$tbody.append($tr);
             }
+
+            this.trigger('render', this);
+
+            for(let column of this.columns) {
+                if(column.init) {
+                    column.init(this);
+                }
+            }
         });
 
         this.trigger('refresh', this);
@@ -120,26 +138,28 @@ export default class DataTableView extends ObjectEvents {
     }
 
     cellRenderer(column, row) {
+        let $td;
+
         if(column.cellRenderer) {
-            return column.cellRenderer(column, row, this);
+            $td = column.cellRenderer(column, row, this);
         } else {
-            let $td = $('<td>');
+            $td = $('<td>');
             $td.html(row[column.key]);
-
-            if(typeof column.width === 'number') {
-                $td.css("width", column.width);
-            }
-
-            $td.data({
-                column: column
-            });
-
-            if(column.cellClasses) {
-                $td.addClass(column.cellClasses);
-            }
-
-            return $td;
         }
+
+        if(typeof column.width === 'number') {
+            $td.css("width", column.width);
+        }
+
+        if(column.cellClasses) {
+            $td.addClass(column.cellClasses);
+        }
+
+        $td.data({
+            column: column
+        });
+
+        return $td;
     }
 
     setVisibleColumns(columns) {

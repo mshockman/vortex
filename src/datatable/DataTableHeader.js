@@ -44,33 +44,48 @@ export default class DataTableHeader {
         }
 
         this._render = this.render.bind(this);
+
         // Queue a rerender on col-change, col-resize and refresh events from the table.
-        this.table.on('col-change', this._render);
-        this.table.on('col-resize', this._render);
-        this.table.on('refresh', this._render);
+        this.table.on('render', this._render);
     }
 
     appendTo(selector) {
         return this.$element.appendTo(selector);
     }
 
+    /**
+     * Renders the components nodes.
+     */
     render() {
+        if(this._queueId) {
+            window.cancelAnimationFrame(this._queueId);
+            this._queueId = null;
+        }
+
+        this.$thead.empty();
+        let width = 0;
+
+        let $tr = $("<tr>");
+
+        for(let column of this.table.columns) {
+            width += column.width;
+            let $th = this.columnRenderer(column);
+            $tr.append($th);
+        }
+
+        this.$element.css('width', width);
+        this.$thead.append($tr);
+    }
+
+    /**
+     * Queue a rerender of the component.
+     */
+    refresh() {
         if(this._queueId) return;
 
         this._queueId = window.requestAnimationFrame(() => {
-            this.$thead.empty();
-            let width = 0;
-
-            let $tr = $("<tr>");
-
-            for(let column of this.table.columns) {
-                width += column.width;
-                let $th = this.columnRenderer(column);
-                $tr.append($th);
-            }
-
-            this.$element.css('width', width);
-            this.$thead.append($tr);
+            this._queueId = null;
+            this.render();
         });
     }
 
