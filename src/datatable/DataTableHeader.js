@@ -1,4 +1,5 @@
 import $ from "jquery";
+import ObjectEvents from "../common/ObjectEvents";
 
 
 /**
@@ -24,8 +25,9 @@ export function inlineDataTableHeaderTemplate() {
 
 
 
-export default class DataTableHeader {
+export default class DataTableHeader extends ObjectEvents {
     constructor(table, id, classes, template=dataTableHeaderTemplate) {
+        super();
         this.table = table;
         this.$element = $(template());
 
@@ -44,9 +46,11 @@ export default class DataTableHeader {
         }
 
         this._render = this.render.bind(this);
+        this._resize = this.resize.bind(this);
 
         // Queue a rerender on col-change, col-resize and refresh events from the table.
         this.table.on('render', this._render);
+        this.table.on('resize', this._resize);
     }
 
     appendTo(selector) {
@@ -75,6 +79,7 @@ export default class DataTableHeader {
 
         this.$element.css('width', width);
         this.$thead.append($tr);
+        this.trigger('render', this);
     }
 
     /**
@@ -89,28 +94,52 @@ export default class DataTableHeader {
         });
     }
 
-    columnRenderer(column) {
-        if(column.renderer) {
-            return column.renderer(this);
-        } else {
-            let $th = $('<th>');
-            $th.html(column.label);
+    resize() {
+        if(this._resizeQueueId) return;
 
-            $th.css("width", column.width);
+        this._resizeQueueId = window.requestAnimationFrame(() => {
+            this._resizeQueueId = null;
+            let width = 0;
 
-            $th.data({
-                column: column
+            this.$thead.find('td, th').each((x, element) => {
+                element = $(element);
+                let column = element.data('column');
+                element.css('width', column.width);
+                width += column.width;
             });
 
-            if(column.id) {
-                $th.attr('id', column.id);
-            }
+            this.$element.css('width', width);
+        });
+    }
 
-            if(column.classes) {
-                $th.addClass(column.classes);
-            }
+    columnRenderer(column) {
+        let $th;
 
-            return $th;
+        if(column.renderer) {
+            $th = column.renderer(this);
+        } else {
+            $th = $('<th>');
+            $th.html(column.label);
         }
+
+        $th.css("width", column.width);
+
+        $th.data({
+            column: column
+        });
+
+        if(column.id) {
+            $th.attr('id', column.id);
+        }
+
+        if(column.classes) {
+            $th.addClass(column.classes);
+        }
+
+        return $th;
+    }
+
+    getColumns() {
+        return this.$element.find('td, th');
     }
 }

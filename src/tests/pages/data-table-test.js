@@ -7,6 +7,7 @@ import Viewport from '../../components/Viewport';
 import PageLengthChooser from "../../datatable/PageLengthChooser";
 import DataPositionView from "../../datatable/DataPositionView";
 import RowCheckboxColumn from "../../datatable/RowCheckboxColumn";
+import ColumnResize from "../../datatable/ColumnResize";
 
 
 const names = [
@@ -42,6 +43,7 @@ export default class DataTableTest {
         this.header = new DataTableHeader(this.table, null, 'data-table-weld br-1');
         this.pageLengthChooser = new PageLengthChooser(this.model);
         this.dataPositionView = new DataPositionView(this.model);
+        this.columnResizer = new ColumnResize(this.header, "#data-view-resize-helper");
 
         this.table.registerColumn(
             new RowCheckboxColumn('checkbox'),
@@ -52,7 +54,8 @@ export default class DataTableTest {
                 'label': 'Name',
                 'width': 400,
                 'classes': 'column-name',
-                'cellClasses': 'cell-name'
+                'cellClasses': 'cell-name',
+                'resizeable': true
             },
 
             {
@@ -61,7 +64,8 @@ export default class DataTableTest {
                 'label': 'Random',
                 'width': 400,
                 'classes': 'column-random',
-                'cellClasses': 'cell-random'
+                'cellClasses': 'cell-random',
+                'resizeable': true
             },
 
             {
@@ -70,7 +74,8 @@ export default class DataTableTest {
                 'label': 'Price',
                 'width': 400,
                 'classes': 'column-price',
-                'cellClasses': 'cell-price'
+                'cellClasses': 'cell-price',
+                'resizeable': true
             },
 
             {
@@ -79,7 +84,8 @@ export default class DataTableTest {
                 'label': 'Full Name',
                 'width': 400,
                 'classes': 'column-full-name',
-                'cellClasses': 'cell-full-name'
+                'cellClasses': 'cell-full-name',
+                'resizeable': true
             },
 
             {
@@ -88,7 +94,8 @@ export default class DataTableTest {
                 'label': 'Rope Color',
                 'width': 400,
                 'classes': 'column-color',
-                'cellClasses': 'cell-color'
+                'cellClasses': 'cell-color',
+                'resizeable': true
             },
         );
     }

@@ -29,3 +29,34 @@
   height: auto;
   cursor: w-resize;
 }
+
+
+.resizeable {
+  position: relative;
+}
+
+
+.col-resize {
+  position: relative;
+
+  .resize-handle {
+    margin-right: -2.5px;
+    z-index: 2;
+    background-color: transparent;
+  }
+}
+
+
+.resize-helper-x {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  display: none;
+
+  &.resizing {
+    display: block;
+  }
+}

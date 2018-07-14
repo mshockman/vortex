@@ -31,6 +31,7 @@ import {inlineDataTableHeaderTemplate} from './DataTableHeader';
 function dataTableTemplate() {
     return `
         <table class="data-table-view">
+            <colgroup></colgroup>
             <tbody></tbody>
         </table>
     `;
@@ -52,6 +53,7 @@ export default class DataTableView extends ObjectEvents {
         this.$element = $(dataTableTemplate());
         this.pk = pk;
         this.$tbody = this.$element.find('tbody');
+        this.$colgroup = this.$element.find('colgroup');
         this._render = this.render.bind(this);
 
         if(header) {
@@ -72,6 +74,37 @@ export default class DataTableView extends ObjectEvents {
         }
     }
 
+    setColumnWidth(column, width) {
+        if(typeof column === 'number') {
+            column = this.getColumnByIndex(column).data('column');
+        }
+
+        column.width = width;
+
+        if(this._resizeQueueId) return;
+
+        this._resizeQueueId = window.requestAnimationFrame(() => {
+            this._resizeQueueId = null;
+
+            let width = 0;
+
+            this.$colgroup.children('col').each((x, element) => {
+                element = $(element);
+                let column = element.data('column');
+                element.css('width', column.width);
+                width += column.width;
+            });
+
+            this.$element.css('width', width);
+
+            this.trigger('resize');
+        });
+    }
+
+    getColumnByIndex(index) {
+        return this.$colgroup.children('col').eq(index);
+    }
+
     render() {
         if(this._queueId) return;
 
@@ -88,11 +121,17 @@ export default class DataTableView extends ObjectEvents {
             });
 
             this.$tbody.empty();
+            this.$colgroup.empty();
 
             let width = 0;
 
             for(let column of this.columns) {
                 width += column.width;
+
+                let $col = $("<col>");
+                $col.data('column', column);
+                $col.css('width', column.width);
+                this.$colgroup.append($col);
             }
 
             this.$element.css('width', width);
@@ -145,10 +184,6 @@ export default class DataTableView extends ObjectEvents {
         } else {
             $td = $('<td>');
             $td.html(row[column.key]);
-        }
-
-        if(typeof column.width === 'number') {
-            $td.css("width", column.width);
         }
 
         if(column.cellClasses) {
