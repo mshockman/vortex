@@ -52,6 +52,10 @@ export default class Modal {
             this.open();
         }
     }
+
+    appendTo(selector) {
+        return this.$element.appendTo(selector);
+    }
 }
 
 

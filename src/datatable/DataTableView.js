@@ -74,6 +74,10 @@ export default class DataTableView extends ObjectEvents {
         }
     }
 
+    getColumn(name) {
+        return this.registry.columns[name];
+    }
+
     setColumnWidth(column, width) {
         if(typeof column === 'number') {
             column = this.getColumnByIndex(column).data('column');
@@ -177,14 +181,8 @@ export default class DataTableView extends ObjectEvents {
     }
 
     cellRenderer(column, row) {
-        let $td;
-
-        if(column.cellRenderer) {
-            $td = column.cellRenderer(column, row, this);
-        } else {
-            $td = $('<td>');
-            $td.html(row[column.key]);
-        }
+        /**@type jQuery*/
+        let $td = column.cellRenderer(row, this);
 
         if(column.cellClasses) {
             $td.addClass(column.cellClasses);

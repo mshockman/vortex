@@ -10,13 +10,13 @@ import $ from 'jquery';
 
 
 export default class RowCheckboxColumn {
-    constructor(name) {
+    constructor(name, required=true) {
         this.name = name;
         this.resizeable = false;
         this.width = 25;
         this.sortable = false;
         this.orderable = false;
-        this.required = true;
+        this.required = required;
         this.priority = 0;
         this.$column = $(`<td><input type="checkbox" /></td>`);
 

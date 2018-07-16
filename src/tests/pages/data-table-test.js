@@ -8,6 +8,11 @@ import PageLengthChooser from "../../datatable/PageLengthChooser";
 import DataPositionView from "../../datatable/DataPositionView";
 import RowCheckboxColumn from "../../datatable/RowCheckboxColumn";
 import ColumnResize from "../../datatable/ColumnResize";
+import ColumnPicker from '../../datatable/ColumnPicker';
+import 'jquery';
+import 'jquery-ui/ui/core';
+import 'jquery-ui/ui/widgets/sortable';
+import Column from "../../datatable/Column";
 
 
 const names = [
@@ -48,56 +53,70 @@ export default class DataTableTest {
         this.table.registerColumn(
             new RowCheckboxColumn('checkbox'),
 
-            {
-                'name': 'name',
-                'key': 'name',
-                'label': 'Name',
-                'width': 400,
-                'classes': 'column-name',
-                'cellClasses': 'cell-name',
-                'resizeable': true
-            },
+            new Column(
+                {
+                    'name': 'name',
+                    'key': 'name',
+                    'label': 'Name',
+                    'width': 400,
+                    'classes': 'column-name',
+                    'cellClasses': 'cell-name',
+                    'resizeable': true
+                }
+            ),
 
-            {
-                'name': 'random',
-                'key': 'random',
-                'label': 'Random',
-                'width': 400,
-                'classes': 'column-random',
-                'cellClasses': 'cell-random',
-                'resizeable': true
-            },
+            new Column(
+                {
+                    'name': 'random',
+                    'key': 'random',
+                    'label': 'Random',
+                    'width': 400,
+                    'classes': 'column-random',
+                    'cellClasses': 'cell-random',
+                    'resizeable': true
+                }
+            ),
 
-            {
-                'name': 'price',
-                'key': 'price',
-                'label': 'Price',
-                'width': 400,
-                'classes': 'column-price',
-                'cellClasses': 'cell-price',
-                'resizeable': true
-            },
+            new Column(
+                {
+                    'name': 'price',
+                    'key': 'price',
+                    'label': 'Price',
+                    'width': 400,
+                    'classes': 'column-price',
+                    'cellClasses': 'cell-price',
+                    'resizeable': true
+                }
+            ),
 
-            {
-                'name': 'full_name',
-                'key': 'full_name',
-                'label': 'Full Name',
-                'width': 400,
-                'classes': 'column-full-name',
-                'cellClasses': 'cell-full-name',
-                'resizeable': true
-            },
+            new Column(
+                {
+                    'name': 'full_name',
+                    'key': 'full_name',
+                    'label': 'Full Name',
+                    'width': 400,
+                    'classes': 'column-full-name',
+                    'cellClasses': 'cell-full-name',
+                    'resizeable': true
+                }
+            ),
 
-            {
-                'name': 'color',
-                'key': 'color',
-                'label': 'Rope Color',
-                'width': 400,
-                'classes': 'column-color',
-                'cellClasses': 'cell-color',
-                'resizeable': true
-            },
+            new Column(
+                {
+                    'name': 'color',
+                    'key': 'color',
+                    'label': 'Rope Color',
+                    'width': 400,
+                    'classes': 'column-color',
+                    'cellClasses': 'cell-color',
+                    'resizeable': true
+                }
+            )
         );
+
+        this.columnPicker = new ColumnPicker([
+
+        ], this.table);
     }
 
     buildDataModel(size) {
@@ -126,6 +145,8 @@ export default class DataTableTest {
         this.viewport.mirror("#header-viewport", 100);
         this.pageLengthChooser.appendTo("#paginator-container");
         this.dataPositionView.appendTo("#data-position-container");
+        this.columnPicker.appendTo(document.body);
+        this.columnPicker.modal.open();
         this.table.render();
     }
 }

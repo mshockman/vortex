@@ -113,14 +113,7 @@ export default class DataTableHeader extends ObjectEvents {
     }
 
     columnRenderer(column) {
-        let $th;
-
-        if(column.renderer) {
-            $th = column.renderer(this);
-        } else {
-            $th = $('<th>');
-            $th.html(column.label);
-        }
+        let $th = column.renderer();
 
         $th.css("width", column.width);
 
