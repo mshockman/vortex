@@ -10,9 +10,11 @@
   top: 0;
   overflow: auto;
   display: none;
+  align-items: center;
+  justify-content: center;
 
   &.open {
-    display: block;
+    display: flex;
   }
 }
 
@@ -26,6 +28,7 @@
   box-shadow: $black 0 0 10px;
   border: 1px solid $black;
   overflow: hidden;
+  margin: auto;
 
   .modal-body {
     flex: 1;

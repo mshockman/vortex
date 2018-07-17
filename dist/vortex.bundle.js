@@ -432,6 +432,11 @@ var Modal = function () {
             }
         }
     }, {
+        key: 'appendTo',
+        value: function appendTo(selector) {
+            return this.$element.appendTo(selector);
+        }
+    }, {
         key: 'isOpen',
         get: function get() {
             return this.$element.hasClass('open');

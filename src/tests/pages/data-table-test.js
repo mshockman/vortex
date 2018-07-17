@@ -115,7 +115,11 @@ export default class DataTableTest {
         );
 
         this.columnPicker = new ColumnPicker([
-
+            this.table.getColumn('name'),
+            this.table.getColumn('random'),
+            this.table.getColumn('price'),
+            this.table.getColumn('full_name'),
+            this.table.getColumn('color')
         ], this.table);
     }
 
