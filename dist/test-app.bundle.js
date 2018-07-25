@@ -214,7 +214,7 @@
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([0,2]);
+/******/ 	deferredModules.push([0,"vendors"]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
@@ -2488,10 +2488,10 @@ var _index = __webpack_require__(/*! ../index */ "./src/index.js");
 
 window.app = new _index.Application({
     'paginator-test': function paginatorTest() {
-        return Promise.all(/*! import() */[__webpack_require__.e(1), __webpack_require__.e(0)]).then(__webpack_require__.t.bind(null, /*! ./pages/paginator-test.js */ "./src/tests/pages/paginator-test.js", 7));
+        return Promise.all(/*! import() */[__webpack_require__.e(2), __webpack_require__.e(0)]).then(__webpack_require__.t.bind(null, /*! ./pages/paginator-test.js */ "./src/tests/pages/paginator-test.js", 7));
     },
     'data-table-test': function dataTableTest() {
-        return Promise.all(/*! import() */[__webpack_require__.e(2), __webpack_require__.e(1), __webpack_require__.e(3)]).then(__webpack_require__.t.bind(null, /*! ./pages/data-table-test.js */ "./src/tests/pages/data-table-test.js", 7));
+        return Promise.all(/*! import() */[__webpack_require__.e("vendors"), __webpack_require__.e(2), __webpack_require__.e(1)]).then(__webpack_require__.t.bind(null, /*! ./pages/data-table-test.js */ "./src/tests/pages/data-table-test.js", 7));
     }
 });
 

@@ -129,6 +129,14 @@
   overflow: scroll;
 }
 
+.scroll-y {
+  overflow-y: scroll;
+}
+
+.scroll-x {
+  overflow-x: scroll;
+}
+
 .viewport {
   overflow: hidden;
 }
@@ -553,6 +561,14 @@ h6, .h6 {
   font-weight: 700;
 }
 
+.small {
+  font-size: 0.8rem;
+}
+
+.x-small {
+  font-size: 0.7rem;
+}
+
 .form-group label {
   display: block;
   margin-bottom: 3px;
@@ -945,6 +961,44 @@ select.form-control {
   width: 3rem;
 }
 
+.column-picker .modal-window {
+  width: 450px;
+  height: 300px;
+  user-select: none;
+}
+.column-picker .modal-window .modal-body {
+  background-color: #ffffff;
+}
+.column-picker .modal-window .modal-head {
+  background-color: #F5F5F5;
+  color: #157FCC;
+}
+.column-picker .modal-window .modal-footer {
+  background-color: #F5F5F5;
+  color: #157FCC;
+}
+.column-picker .modal-window .header-ext {
+  background-color: #F5F5F5;
+}
+.column-picker .modal-window .add-btn, .column-picker .modal-window .remove-btn, .column-picker .modal-window .btn {
+  cursor: pointer;
+}
+.column-picker .modal-window .add-btn:hover, .column-picker .modal-window .remove-btn:hover, .column-picker .modal-window .btn:hover {
+  color: #157FCC;
+}
+.column-picker .modal-window .list-item {
+  user-select: none;
+}
+.column-picker .modal-window .list-item:last-child {
+  border-bottom-width: 1px;
+}
+.column-picker .modal-window .selected {
+  outline-color: #4d90fe;
+  outline-offset: -2px;
+  outline-style: auto;
+  outline-width: 5px;
+}
+
 .data-table-view {
   border: 1px solid #cccccc;
   border-collapse: collapse;
@@ -1064,6 +1118,10 @@ select.form-control {
 
 .br-3 {
   border-right-width: 0.25rem !important;
+}
+
+.bbr-0 {
+  border-radius: 0 !important;
 }
 
 * {

@@ -1,0 +1,51 @@
+@import "../../modules/colors";
+
+
+.column-picker {
+  .modal-window {
+    width: 450px;
+    height: 300px;
+    user-select: none;
+
+    .modal-body {
+      background-color: $white;
+    }
+
+    .modal-head {
+      background-color: $wild-sand;
+      color: $denim;
+    }
+
+    .modal-footer {
+      background-color: $wild-sand;
+      color: $denim;
+    }
+
+    .header-ext {
+      background-color: $wild-sand;
+    }
+
+    .add-btn, .remove-btn, .btn {
+      cursor: pointer;
+
+      &:hover {
+        color: $denim;
+      }
+    }
+
+    .list-item {
+      user-select: none;
+    }
+
+    .list-item:last-child {
+      border-bottom-width: 1px;
+    }
+
+    .selected {
+      outline-color: rgb(77, 144, 254); // #4D90FE
+      outline-offset: -2px;
+      outline-style: auto;
+      outline-width: 5px;
+    }
+  }
+}
