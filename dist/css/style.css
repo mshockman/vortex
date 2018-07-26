@@ -1007,6 +1007,17 @@ select.form-control {
   outline-width: 5px;
 }
 
+.filters-component .filter {
+  padding-bottom: 0.3125rem;
+  width: 250px;
+}
+.filters-component .input-filter input {
+  width: 100%;
+}
+.filters-component .select-filter select {
+  width: 100%;
+}
+
 .data-table-view {
   border: 1px solid #cccccc;
   border-collapse: collapse;

@@ -21,7 +21,7 @@
     </nav>
     <div class="pane-1">
         <div class="hbox fluid" data-init="panes" data-pane="x">
-            <div data-init="resizeable" data-resize="x" data-handle=".resize-handle" class="pane sidebar-pane resize-right">
+            <div data-init="resizeable" data-resize="x" data-handle=".resize-handle" class="pane sidebar-pane resize-right" style="width: 270px;">
                 <div class="vbox">
                     <div>
                         <ul class="menubar navbar navbar-secondary navbar-small navbar-top" data-init="tabs">
@@ -31,9 +31,7 @@
                         <div id="tab-filter" class="pane-1 tab open">
                             Pane #1 Tab #1
                         </div>
-                        <div id="tab-search" class="pane-1 tab">
-                            Pane #1 Tab #2
-                        </div>
+                        <div id="tab-search" class="pane-1 tab p-1"></div>
                     </div>
                 </div>
                 <div class="resize-handle"></div>
@@ -44,15 +42,15 @@
                     <div class="viewport-body" id="header-container"></div>
                 </div>
                 <div id="dataview-container" class="pane-1 scroll-xy"></div>
-                <div class="hbox">
-                    <div>
+                <div class="hbox navbar navbar-secondary">
+                    <div class="p-1">
                         <button type="button" id="show-column-picker"><i class="fas fa-columns"></i></button>
                     </div>
                     <div class="mr-auto hbox" id="paginator-container"></div>
-                    <div id="data-position-container"></div>
+                    <div id="data-position-container" class="p-1"></div>
                 </div>
             </div>
-            <div class="sidebar-pane pane resize-left" data-init="resizeable" data-resize="-x" data-handle=".resize-handle"><div>Pane #3</div><div class="resize-handle"></div></div>
+            <div class="sidebar-pane pane resize-left" data-init="resizeable" data-resize="-x" data-handle=".resize-handle" style="width: 270px;"><div>Pane #3</div><div class="resize-handle"></div></div>
         </div>
     </div>
 </div>

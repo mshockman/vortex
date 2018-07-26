@@ -13,6 +13,7 @@ import 'jquery';
 import 'jquery-ui/ui/core';
 import 'jquery-ui/ui/widgets/sortable';
 import Column from "../../datatable/Column";
+import {FiltersWidget, InputFilter, RangeInputFilter, SelectFilter} from '../../datatable/filters';
 
 
 const names = [
@@ -182,6 +183,22 @@ export default class DataTableTest {
             selected = ['checkbox', ...selected];
             this.table.setVisibleColumns(selected);
         });
+
+        this.filters = new FiltersWidget();
+
+        this.filters.addFilter(
+            new InputFilter('name', 'Name'),
+            new InputFilter('random', 'Random', 'number'),
+            new InputFilter('full_name', 'Full Name'),
+            new RangeInputFilter('order_date', 'Order Date', 'date'),
+            new SelectFilter('test', 'Test', [
+                {value: 'test 1', label: "Test 1"},
+                {value: 'test 2', label: "Test 2"},
+                {value: 'test 3', label: "Test 3"},
+                {value: 'test 4', label: "Test 4"},
+                {value: 'test 5', label: "Test 5"}
+            ])
+        );
     }
 
     buildDataModel(size) {
@@ -217,5 +234,6 @@ export default class DataTableTest {
         this.columnPicker.appendTo(document.body);
         this.columnPicker.value(this.table.columns);
         this.table.render();
+        this.filters.appendTo("#tab-search");
     }
 }
