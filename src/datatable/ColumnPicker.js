@@ -1,5 +1,6 @@
 import Modal from "../components/Modal";
 import $ from 'jquery';
+import ObjectEvents from "../common/ObjectEvents";
 
 
 const TEMPLATE = `
@@ -11,9 +12,11 @@ const TEMPLATE = `
                     <div class="header-ext">
                         <div class="hbox"><div class="pane-1 p-1">Available</div><div class="pane-1 text-right p-1">Selected</div></div>
                     </div>
-                    <div class="hbox pane-1">
-                        <div class="pane-1 scroll-y"><ul class="list-group bbr-0 fill sortable available"></ul> </div>
-                        <div class="pane-1 scroll-y"><ul class="list-group bbr-0 fill sortable selected"></ul> </div> 
+                    <div class="pane-1">
+                        <div class="hbox fluid-abs">
+                            <div class="pane-1 scroll-y"><ul class="list-group bbr-0 fill sortable available"></ul> </div>
+                            <div class="pane-1 scroll-y"><ul class="list-group bbr-0 fill sortable selected"></ul> </div>         
+                        </div>
                     </div>
                 </div>
             </div>
@@ -23,8 +26,8 @@ const TEMPLATE = `
                    <button type="button" class="mr-auto" data-action="move-down">Down</button>
                </div>
                <div>
-                    <button type="button">Close</button>
-                    <button type="button">Save</button>
+                    <button type="button" data-action="dismiss">Close</button>
+                    <button type="button" data-action="save">Save</button>
                </div>
            </div>
     </div>
@@ -32,17 +35,17 @@ const TEMPLATE = `
 `;
 
 
-export default class ColumnPicker {
-    constructor(columns, table) {
+export default class ColumnPicker extends ObjectEvents {
+    constructor(columns) {
+        super();
         this.modal = new Modal(TEMPLATE);
-        this.table = table;
 
         this.$available = this.modal.$element.find(".available");
         this.$selected = this.modal.$element.find('.selected');
         this.columns = {};
 
         for(let column of columns) {
-            this.columns[column.name] = column.label;
+            this.columns[column.name] = column;
             this.addUnselectedItem(column.name, column.label);
         }
 
@@ -54,7 +57,7 @@ export default class ColumnPicker {
                    name = $item.attr('data-name');
 
                $item.remove();
-               this.addSelectedItem(name, this.columns[name]);
+               this.addSelectedItem(name, this.columns[name].label);
            }
         });
 
@@ -70,11 +73,11 @@ export default class ColumnPicker {
                     name = $item.attr('data-name');
 
                 $item.remove();
-                this.addUnselectedItem(name, this.columns[name]);
+                this.addUnselectedItem(name, this.columns[name].label);
             }
         });
 
-        this.modal.$element.find('[data-action="move-up"]').on('click', (event) => {
+        this.modal.$element.find('[data-action="move-up"]').on('click', () => {
             let $item = this.$selected.find('li.selected');
 
             if($item.length) {
@@ -83,13 +86,18 @@ export default class ColumnPicker {
             }
         });
 
-        this.modal.$element.find('[data-action="move-down"]').on('click', (event) => {
+        this.modal.$element.find('[data-action="move-down"]').on('click', () => {
             let $item = this.$selected.find('li.selected');
 
             if($item.length) {
                 let nextSibling = $item.next('li');
                 $item.insertAfter(nextSibling);
             }
+        });
+
+        this.modal.$element.find('[data-action="save"]').on('click', () => {
+            this.trigger('save', this.getSelected());
+            this.modal.close();
         });
     }
 
@@ -120,10 +128,80 @@ export default class ColumnPicker {
     }
 
     getSelected() {
+        let r = [];
 
+        this.$selected.find("li[data-name]").each((x, element) => {
+            r.push($(element).attr('data-name'));
+        });
+
+        return r;
     }
 
     setSelected(columns) {
+        let selected = this.getSelected();
 
+        // Deselect any columns that are not in the new selected columns.
+        for(let column of selected) {
+            if(typeof column === 'object') {
+                column = column.name;
+            }
+
+            if(columns.indexOf(column) === -1) {
+                this.deselect(column);
+            }
+        }
+
+        for(let column of columns) {
+            this.select(column);
+        }
+    }
+
+    deselect(column) {
+        if(typeof column === 'object') {
+            column = column.name;
+        }
+
+        this.$selected.find(`li[data-name="${column}"]`).remove();
+
+        let $li = this.$available.find(`li[data-name="${column}"]`);
+
+        if(!$li.length && this.columns[column]) {
+            this.addUnselectedItem(column, this.columns[column].label);
+        }
+    }
+
+    select(column) {
+        if(typeof column === 'object') {
+            column = column.name;
+        }
+
+        this.$available.find(`li[data-name="${column}"]`).remove();
+
+        let $li = this.$selected.find(`li[data-name="${column}"]`);
+
+        if(!$li.length && this.columns[column]) {
+            this.addSelectedItem(column, this.columns[column].label);
+        }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    isSelected(option) {
+        return !!this.$selected.find(`li[data-name="${option}"]`).length;
+    }
+
+    value(value) {
+        if(!arguments.length) {
+            return this.getSelected();
+        } else {
+            return this.setSelected(value);
+        }
+    }
+
+    open() {
+        return this.modal.open();
+    }
+
+    close() {
+        return this.modal.close();
     }
 }

@@ -111,6 +111,54 @@ export default class DataTableTest {
                     'cellClasses': 'cell-color',
                     'resizeable': true
                 }
+            ),
+
+            new Column(
+                {
+                    'name': 'length',
+                    'key': 'length',
+                    'label': 'Length',
+                    'width': 400,
+                    'classes': 'column-color',
+                    'cellClasses': 'cell-color',
+                    'resizeable': true
+                }
+            ),
+
+            new Column(
+                {
+                    'name': 'width',
+                    'key': 'width',
+                    'label': 'Width',
+                    'width': 400,
+                    'classes': 'column-color',
+                    'cellClasses': 'cell-color',
+                    'resizeable': true
+                }
+            ),
+
+            new Column(
+                {
+                    'name': 'height',
+                    'key': 'height',
+                    'label': 'Height',
+                    'width': 400,
+                    'classes': 'column-color',
+                    'cellClasses': 'cell-color',
+                    'resizeable': true
+                }
+            ),
+
+            new Column(
+                {
+                    'name': 'weight',
+                    'key': 'weight',
+                    'label': 'Weight',
+                    'width': 400,
+                    'classes': 'column-color',
+                    'cellClasses': 'cell-color',
+                    'resizeable': true
+                }
             )
         );
 
@@ -119,8 +167,21 @@ export default class DataTableTest {
             this.table.getColumn('random'),
             this.table.getColumn('price'),
             this.table.getColumn('full_name'),
-            this.table.getColumn('color')
+            this.table.getColumn('color'),
+            this.table.getColumn('length'),
+            this.table.getColumn('width'),
+            this.table.getColumn('height'),
+            this.table.getColumn('weight')
         ], this.table);
+
+        $('#show-column-picker').on('click', () => {
+            this.columnPicker.open();
+        });
+
+        this.columnPicker.on('save', (selected) => {
+            selected = ['checkbox', ...selected];
+            this.table.setVisibleColumns(selected);
+        });
     }
 
     buildDataModel(size) {
@@ -133,7 +194,11 @@ export default class DataTableTest {
                 random: Math.round(Math.random()*1000),
                 price: '$' + (Math.random()*1000).toFixed(2),
                 full_name: randomChoice(names),
-                color: randomChoice(colors)
+                color: randomChoice(colors),
+                length: Math.round(Math.random()*100),
+                width: Math.round(Math.random()*100),
+                height: Math.round(Math.random()*100),
+                weight: Math.round(Math.random()*100)
             });
         }
 
@@ -150,7 +215,7 @@ export default class DataTableTest {
         this.pageLengthChooser.appendTo("#paginator-container");
         this.dataPositionView.appendTo("#data-position-container");
         this.columnPicker.appendTo(document.body);
-        this.columnPicker.modal.open();
+        this.columnPicker.value(this.table.columns);
         this.table.render();
     }
 }
