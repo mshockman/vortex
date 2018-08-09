@@ -12,6 +12,8 @@
  * any element that isn't marked with a data-role attribute is ignored.  Their are three types of nodes in the menu.
  * Those nodes are:
  *
+ * DATA-ROLE MARKERS
+ *
  * - menu;
  * - item;
  * - dropdown;
@@ -32,29 +34,37 @@
  * Menu attributes
  * - openDelay {Number} Default 0
  *   Adds a delay after an item activates before it shows it's menu.
+ *
  * - multiple {boolean} Default false
  *   If true multiple items can be active at the same time for the menu.
+ *
  * - autoActivate {Number|boolean} Default true
  *   Controls if child items activate when the mouse moves over them when the menu is not active.  This is mostly used
  *   for root elements because most of the time menus are hidden when they are not active so child items cannot be hovered
  *   over.  If a number greater than or equal to 0 The item will activate after the given amount of time in milliseconds.
  *   If true if item will activate instantly.  If anything else the item will never activate on mouse over.
  *   This can be overidden by autoActivate at the item level.
+ *
  * - itemDelay {Number|boolean} Default 0
  *   Controls if child items activate when the mouse moves over them when the menu is already active.  If >= 0 the item
  *   will activate after the given amount of time.  If true if item will never activate.  This attribute can be overridden
  *   at the item level by setting the delay attribute.
+ *
  * - toggleItems {boolean|'on'|'off'|'both'}
  *   Controls how the menu's child items behave when clicked.  This can be overridden by the items toggle property.
  *   If true or 'both' the item will toggle on and off when clicked.  If 'on' the item will only toggle on.  If 'off'
  *   the item will only toggle off.  If false the item will never toggle on or off.  This is primarily used by dropdown
  *   items as items will be selected when clicked and turn off the menu if close on select is true.
+ *
  * - menuToggle
+ *
  * - positioner
  *
  * Item attributes
  * - selectable
+ *
  * - autoActivate
+ *
  * - toggle
  */
 
@@ -263,7 +273,6 @@ export default class Menu {
                 if(this.isActive($parentMenu) && !this.getActiveChildren($parentMenu).length) {
                     this.deactivate($parentMenu);
                 }
-
             }
         }
     }

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="../dist/vortex.bundle.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="../dist/css/style.css" />
+
+    <style type="text/css">
+        .test-m {
+            width: 400px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <select>
+        <option>Test #1</option>
+        <option>Test #2</option>
+        <option>Test #3</option>
+        <option>Test #4</option>
+        <option>Test #5</option>
+        <option>Test #6</option>
+    </select>
+
+    <select multiple class="test-m">
+        <option>Test #1</option>
+        <option>Test #2</option>
+        <option>Test #3</option>
+        <option>Test #4</option>
+        <option>Test #5</option>
+        <option>Test #6</option>
+    </select>
+
+
+    <ul data-init="menu" class="menubar" data-role="menu">
+       <li data-role="dropdown">
+           <a>Root #1</a>
+           <div data-role="menu">
+               <ul>
+                   <li data-role="item">Sub Item #1</li>
+                   <li data-role="item">Sub Item #2</li>
+                   <li data-role="item">Sub Item #3</li>
+                   <li data-role="item">Sub Item #4</li>
+                   <li data-role="item">Sub Item #5</li>
+               </ul>
+           </div>
+       </li>
+        <li data-role="dropdown">
+            <a>Root #2</a>
+            <div data-role="menu">
+                <ul>
+                    <li data-role="item">Sub Item #1</li>
+                    <li data-role="item">Sub Item #2</li>
+                    <li data-role="item">Sub Item #3</li>
+                    <li data-role="item">Sub Item #4</li>
+                    <li data-role="item">Sub Item #5</li>
+                </ul>
+            </div>
+        </li>
+        <li data-role="dropdown">
+            <a>Root #3</a>
+            <div data-role="menu">
+                <ul>
+                    <li data-role="item">Sub Item #1</li>
+                    <li data-role="item">Sub Item #2</li>
+                    <li data-role="item">Sub Item #3</li>
+                    <li data-role="item">Sub Item #4</li>
+                    <li data-role="item">Sub Item #5</li>
+                </ul>
+            </div>
+        </li>
+        <li data-role="dropdown">
+            <a>Root #4</a>
+            <div data-role="menu">
+                <ul>
+                    <li data-role="item">Sub Item #1</li>
+                    <li data-role="item">Sub Item #2</li>
+                    <li data-role="item">Sub Item #3</li>
+                    <li data-role="item">Sub Item #4</li>
+                    <li data-role="item">Sub Item #5</li>
+                </ul>
+            </div>
+        </li>
+        <li data-role="dropdown">
+            <a>Root #5</a>
+            <div data-role="menu">
+                <ul>
+                    <li data-role="item">Sub Item #1</li>
+                    <li data-role="item">Sub Item #2</li>
+                    <li id="testitem" data-role="item">Sub Item #3</li>
+                    <li data-role="item">Sub Item #4</li>
+                    <li data-role="item">Sub Item #5</li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+
+
+    <script type="text/javascript">
+        var i = new MenuItem($("#testitem"));
+    </script>
+</body>
+</html>

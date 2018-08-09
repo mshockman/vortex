@@ -253,6 +253,116 @@ exports.default = Mouse;
 
 /***/ }),
 
+/***/ "./src/common/ObjectEvents.js":
+/*!************************************!*\
+  !*** ./src/common/ObjectEvents.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * @method trigger
+ * @mixin
+ */
+var ObjectEvents = function () {
+    function ObjectEvents() {
+        _classCallCheck(this, ObjectEvents);
+
+        this.events = {};
+    }
+
+    _createClass(ObjectEvents, [{
+        key: 'on',
+        value: function on(event, fn) {
+            if (!this.events[event]) {
+                this.events[event] = [];
+            }
+
+            if (typeof fn !== 'function') {
+                throw new TypeError('Callback was not a function.');
+            }
+
+            if (this.events[event].indexOf(fn) === -1) {
+                this.events[event].push(fn);
+            }
+        }
+    }, {
+        key: 'indexOf',
+        value: function indexOf(event, fn) {
+            if (this.events && this.events[event]) {
+                return this.events[event].indexOf(fn);
+            }
+
+            return -1;
+        }
+    }, {
+        key: 'off',
+        value: function off(event, fn) {
+            var i = this.indexOf(event, fn);
+
+            if (i !== -1) {
+                return this.events[event].splice(i, 1)[0];
+            }
+        }
+    }, {
+        key: 'trigger',
+        value: function trigger(event) {
+            if (this.events && this.events[event]) {
+                for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+                    args[_key - 1] = arguments[_key];
+                }
+
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = this.events[event][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var fn = _step.value;
+
+                        if (fn.apply(undefined, args) === ObjectEvents.BREAK) {
+                            break;
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            }
+        }
+    }]);
+
+    return ObjectEvents;
+}();
+
+exports.default = ObjectEvents;
+
+
+ObjectEvents.BREAK = {};
+
+/***/ }),
+
 /***/ "./src/common/matricies.js":
 /*!*********************************!*\
   !*** ./src/common/matricies.js ***!
@@ -1044,7 +1154,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Application = exports.Loader = undefined;
 
-__webpack_require__(/*! ./menus */ "./src/menus/index.js");
+__webpack_require__(/*! ./menus/menuWidget */ "./src/menus/menuWidget/index.js");
 
 var _loader = __webpack_require__(/*! ./loader */ "./src/loader.js");
 
@@ -1209,10 +1319,10 @@ Loader.init();
 
 /***/ }),
 
-/***/ "./src/menus/Menu.js":
-/*!***************************!*\
-  !*** ./src/menus/Menu.js ***!
-  \***************************/
+/***/ "./src/menus/menuWidget/Menu.js":
+/*!**************************************!*\
+  !*** ./src/menus/menuWidget/Menu.js ***!
+  \**************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1224,868 +1334,93 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Package for create menus.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Menus are defined and controlled using their dom structure.  Attributes are stored on the individual nodes and are
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * accessed and retrieved using jQueries data method.  So you can use manual data-attribute html attributes in your code
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * or programmically assign attributes using the data method.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * All events are attached to the root element of the menu.  Any incoming events are delegated from their to the
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * necessary menu nodes if needed.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * The data-role attribute determines what kind of menu node an element is.  When looking for child and parent nodes
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * any element that isn't marked with a data-role attribute is ignored.  Their are three types of nodes in the menu.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Those nodes are:
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - menu;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - item;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - dropdown;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * A menu is a collection of dropdown items and items.  A dropdown will add another layer to the menu tree.  An item
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * is a selectable item and shouldn't have a submenu.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * There are three places where attributes can be set.  On the root element, on the menu elements or on the item elements.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Each of these nodes have different attributes that can be modified.  Some attributes are inherited from their parents
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * if they are not manually set on child element.  All attributes come with sensible defaults.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Root attribute
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - closeOnSelect
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - closeOnBlur
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - timeout
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - positioner
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Menu attributes
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - openDelay {Number} Default 0
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   Adds a delay after an item activates before it shows it's menu.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - multiple {boolean} Default false
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   If true multiple items can be active at the same time for the menu.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - autoActivate {Number|boolean} Default true
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   Controls if child items activate when the mouse moves over them when the menu is not active.  This is mostly used
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   for root elements because most of the time menus are hidden when they are not active so child items cannot be hovered
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   over.  If a number greater than or equal to 0 The item will activate after the given amount of time in milliseconds.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   If true if item will activate instantly.  If anything else the item will never activate on mouse over.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   This can be overidden by autoActivate at the item level.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - itemDelay {Number|boolean} Default 0
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   Controls if child items activate when the mouse moves over them when the menu is already active.  If >= 0 the item
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   will activate after the given amount of time.  If true if item will never activate.  This attribute can be overridden
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   at the item level by setting the delay attribute.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - toggleItems {boolean|'on'|'off'|'both'}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   Controls how the menu's child items behave when clicked.  This can be overridden by the items toggle property.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   If true or 'both' the item will toggle on and off when clicked.  If 'on' the item will only toggle on.  If 'off'
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   the item will only toggle off.  If false the item will never toggle on or off.  This is primarily used by dropdown
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *   items as items will be selected when clicked and turn off the menu if close on select is true.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - menuToggle
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - positioner
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Item attributes
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - selectable
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - autoActivate
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * - toggle
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _jquery = __webpack_require__(/*! jquery */ "jquery");
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _utility = __webpack_require__(/*! ../utility */ "./src/utility.js");
+var _MenuNode2 = __webpack_require__(/*! ./MenuNode */ "./src/menus/menuWidget/MenuNode.js");
 
-var _core = __webpack_require__(/*! ./core */ "./src/menus/core.js");
+var _MenuNode3 = _interopRequireDefault(_MenuNode2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var POSITIONER_REGISTRY = {};
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function menuTemplate() {
-    return '<div class=\'menu\' data-role=\'menu\'>';
-}
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-/**
- * A grouping of items that act in sync together.
- */
+var Menu = function (_MenuNode) {
+    _inherits(Menu, _MenuNode);
 
-var Menu = function () {
-    function Menu(_ref) {
-        var _ref$target = _ref.target,
-            target = _ref$target === undefined ? menuTemplate : _ref$target,
-            _ref$timeout = _ref.timeout,
-            timeout = _ref$timeout === undefined ? null : _ref$timeout,
-            _ref$closeOnBlur = _ref.closeOnBlur,
-            closeOnBlur = _ref$closeOnBlur === undefined ? null : _ref$closeOnBlur,
-            _ref$closeOnSelect = _ref.closeOnSelect,
-            closeOnSelect = _ref$closeOnSelect === undefined ? null : _ref$closeOnSelect,
-            _ref$positioner = _ref.positioner,
-            positioner = _ref$positioner === undefined ? null : _ref$positioner,
-            _ref$role = _ref.role,
-            role = _ref$role === undefined ? null : _ref$role;
-
+    function Menu(selector) {
         _classCallCheck(this, Menu);
 
-        this._onMouseOver = this.onMouseOver.bind(this);
-        this._onMouseOut = this.onMouseOut.bind(this);
-        this._onClick = this.onClick.bind(this);
-        this._onSelect = this.onSelect.bind(this);
-        this._onDocumentClick = this.onDocumentClick.bind(this);
+        var _this = _possibleConstructorReturn(this, (Menu.__proto__ || Object.getPrototypeOf(Menu)).call(this, selector));
 
-        if (typeof target === 'function') {
-            this.setElement(target(this));
-        } else {
-            this.setElement(target);
+        if (!(0, _MenuNode2.hasRole)('menu')) {
+            (0, _MenuNode2.addRoles)('menu');
         }
-
-        var config = {
-            timeout: timeout,
-            closeOnBlur: closeOnBlur,
-            closeOnSelect: closeOnSelect,
-            positioner: positioner
-        };
-
-        for (var key in config) {
-            if (config.hasOwnProperty(key) && config[key] !== null && config[key] !== undefined) {
-                this.$element.data(key, config[key]);
-            }
-        }
-
-        if (role) {
-            (0, _core.addRole)(this.$element, role);
-        }
+        return _this;
     }
 
     _createClass(Menu, [{
-        key: 'setElement',
-        value: function setElement(element) {
-            if (this.$element) {
-                this.destroy();
-            }
+        key: 'open',
 
-            this.$element = (0, _jquery2.default)(element);
-            this.$element.data(_core.CONTROLLER, this);
-            this.$element.on('click', this._onClick);
-            this.$element.on('mouseover', this._onMouseOver);
-            this.$element.on('mouseout', this._onMouseOut);
-            this.$element.on(_core.EVENTS.select, this._onSelect);
-        }
-    }, {
-        key: 'destroy',
-        value: function destroy() {
-            this.$element.off('click', this._onClick);
-            this.$element.off('mouseover', this._onMouseOver);
-            this.$element.off('mouseout', this._onMouseOut);
-            this.$element.off(_core.EVENTS.select, this._onSelect);
-
-            if (this.$doc) {
-                this.$doc.off('click', this._onDocumentClick);
-                this.$doc = null;
-            }
-
-            this.$element.data(_core.CONTROLLER, null);
-            this.$element = null;
-        }
-
-        // noinspection JSUnusedGlobalSymbols
-        /**
-         * Appends the menu to the selector.
-         * @param selector
-         * @return {*}
-         */
-
-    }, {
-        key: 'appendTo',
-        value: function appendTo(selector) {
-            return this.$element.appendTo(selector);
-        }
-
-        // noinspection JSUnusedGlobalSymbols
-
-    }, {
-        key: 'getInstance',
-        value: function getInstance(selector) {
-            return (0, _jquery2.default)(selector).data(_core.CONTROLLER);
-        }
 
         //------------------------------------------------------------------------------------------------------------------
         // Actions
 
+        value: function open() {}
     }, {
-        key: 'activate',
-        value: function activate(node) {
-            var _this = this;
-
-            var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-            node = (0, _jquery2.default)(node, this.$element);
-
-            if (delay === true) {
-                return;
-            }
-
-            var activate = function activate() {
-                var parent = _this.getParentNode(node),
-                    type = _this.getNodeType(node);
-
-                // Clear _activateTimer reference.
-                node.data('_cancelActivationTimer', null);
-
-                // If parent exists activate it if it is not.
-                if (parent.length && !_this.isActive(parent)) {
-                    _this.activate(parent);
-                }
-
-                // Add class and trigger events.
-                node.addClass(_core.CLASSNAMES.active);
-                node.trigger(_core.EVENTS.activate, _this);
-
-                // Clear other active items if multiple is not true.
-                if (parent.length && !_this.getMultiple(parent)) {
-                    _this.getActiveChildren(parent).not(node).each(function (x, item) {
-                        return _this.deactivate(item);
-                    });
-                }
-
-                // If it is a dropdown the menu should be shown.
-                if (type === 'dropdown') {
-                    var submenu = _this.getItemSubMenu(node);
-
-                    if (submenu.length) {
-                        _this.openMenu(submenu, _this.getMenuOpenDelay(submenu));
-                    }
-                }
-
-                // If activating the root node attach document click handler to document to watch
-                // for clicks outside the root element.
-                if (node.is(_this.$element) && _this.closeOnBlur && !_this.$doc) {
-                    _this.$doc = (0, _jquery2.default)(document);
-                    _this.$doc.on('click', _this._onDocumentClick);
-                }
-            };
-
-            var activateTimer = node.data("_cancelActivationTimer");
-
-            if (activateTimer) {
-                activateTimer();
-            }
-
-            var cancel = null;
-
-            var r = new Promise(function (resolve) {
-                if (typeof delay === 'number' && Number.isFinite(delay) && delay >= 0) {
-                    var timer = setTimeout(function () {
-                        activate();
-                        resolve('activated');
-                    }, delay);
-
-                    cancel = function cancel() {
-                        if (timer) {
-                            node.data('_cancelActivationTimer', null);
-                            clearTimeout(timer);
-                            timer = null;
-                            resolve('canceled');
-                        }
-                    };
-
-                    node.data('_cancelActivationTimer', cancel);
-                } else {
-                    activate();
-                    resolve('activated');
-                }
-            });
-
-            r.cancel = cancel;
-
-            return r;
-        }
-    }, {
-        key: 'deactivate',
-        value: function deactivate(node) {
-            var _this2 = this;
-
-            node = (0, _jquery2.default)(node);
-            var type = this.getNodeType(node);
-            var activateTimer = node.data("_cancelActivationTimer");
-
-            if (activateTimer) {
-                activateTimer();
-            }
-
-            if (this.isActive(node)) {
-                node.removeClass(_core.CLASSNAMES.active);
-                node.trigger(_core.EVENTS.deactivate, this);
-
-                if (node.is(this.$element) && this.$doc) {
-                    this.$doc.off('click', this._onDocumentClick);
-                    this.$doc = null;
-                }
-
-                this.getActiveChildren(node).each(function (x, child) {
-                    return _this2.deactivate(child);
-                });
-
-                if (type === 'dropdown') {
-                    this.closeMenu(this.getItemSubMenu(node));
-                }
-
-                if (type === 'item' || type === 'dropdown') {
-                    var $parentMenu = this.getParentNode(node, 'menu');
-
-                    if (this.isActive($parentMenu) && !this.getActiveChildren($parentMenu).length) {
-                        this.deactivate($parentMenu);
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'openMenu',
-        value: function openMenu(menu) {
-            var _this3 = this;
-
-            var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-            menu = (0, _jquery2.default)(menu, this.$element);
-
-            if (!this.isOpen(menu)) {
-                var open = function open() {
-                    menu.data("_cancelOpenTimer", null);
-                    menu.addClass(_core.CLASSNAMES.open);
-
-                    var positioner = _this3.getPositioner(menu);
-
-                    if (positioner) {
-                        positioner(menu, _this3);
-                    }
-
-                    menu.trigger(_core.EVENTS.open, _this3);
-                };
-
-                var openTimer = menu.data("_cancelOpenTimer");
-
-                if (openTimer) {
-                    openTimer();
-                }
-
-                var cancel = null;
-
-                var r = new Promise(function (resolve) {
-                    if (typeof delay === 'number' && delay >= 0 && Number.isFinite(delay)) {
-                        var timer = setTimeout(function () {
-                            timer = null;
-                            open();
-                            resolve('opened');
-                        }, delay);
-
-                        cancel = function cancel() {
-                            if (timer) {
-                                clearTimeout(timer);
-                                timer = null;
-                                resolve("canceled");
-                            }
-                        };
-
-                        menu.data("_cancelOpenTimer", cancel);
-                    } else {
-                        open();
-                        resolve("opened");
-                    }
-                });
-
-                r.cancel = cancel;
-                return r;
-            }
-        }
-    }, {
-        key: 'closeMenu',
-        value: function closeMenu(menu) {
-            menu = (0, _jquery2.default)(menu, this.$element);
-            var openTimer = menu.data("_cancelOpenTimer");
-
-            if (openTimer) {
-                openTimer();
-            }
-
-            if (this.isOpen(menu)) {
-                menu.removeClass(_core.CLASSNAMES.open);
-                menu.trigger(_core.EVENTS.close, this);
-            }
-        }
-    }, {
-        key: 'select',
-        value: function select(node) {
-            return (0, _jquery2.default)(node, this.$element).trigger(_core.EVENTS.select, this);
-        }
-
-        //------------------------------------------------------------------------------------------------------------------
-        // Node Transversing
-
-        // noinspection JSUnusedGlobalSymbols
-        /**
-         * Returns the child items for menu nodes and the submenu for dropdown nodes.
-         * @param node
-         * @return {*}
-         */
-
-    }, {
-        key: 'getChildren',
-        value: function getChildren(node) {
-            var type = this.getNodeType(node);
-
-            if (type === 'dropdown') {
-                return this.getItemSubMenu(node);
-            } else if (type === 'menu') {
-                return this.getChildMenuItems(node);
-            }
-        }
-    }, {
-        key: 'getChildMenuItems',
-        value: function getChildMenuItems(node) {
-            var _this4 = this;
-
-            node = (0, _jquery2.default)(node, this.$element);
-            var children = node.find(_core.SELECTORS.menuitem);
-
-            return children.filter(function (x, item) {
-                return _this4.getParentNode(item).is(node);
-            });
-        }
-
-        // noinspection JSUnusedGlobalSymbols
-        /**
-         * Returns the direct child menus for the node.
-         * @param node
-         * @return {*}
-         */
-
-    }, {
-        key: 'getChildMenus',
-        value: function getChildMenus(node) {
-            var _this5 = this;
-
-            node = (0, _jquery2.default)(node, this.$element);
-            var type = this.getNodeType(node);
-            var children = node.find(_core.SELECTORS.menu);
-
-            if (type === 'dropdown') {
-                return children.filter(function (x, item) {
-                    return _this5.getParentNode(item).is(node);
-                });
-            } else if (type === 'menu') {
-                return children.filter(function (x, item) {
-                    return _this5.getParentNode(item).is(node);
-                });
-            } else {
-                return (0, _jquery2.default)();
-            }
-        }
-    }, {
-        key: 'getItemSubMenu',
-        value: function getItemSubMenu(item) {
-            return (0, _jquery2.default)(item, this.$element).children(_core.SELECTORS.menu).eq(0);
-        }
-    }, {
-        key: 'getParentNode',
-        value: function getParentNode(node) {
-            var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'all';
-
-            return (0, _jquery2.default)(node, this.$element).parent().closest(_core.SELECTORS[type], this.$element);
-        }
-    }, {
-        key: 'getClosestNode',
-        value: function getClosestNode(node) {
-            var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'all';
-
-            var selector = _core.SELECTORS[type];
-            node = (0, _jquery2.default)(node, this.$element);
-            return node.closest(selector, this.$element);
-        }
-    }, {
-        key: 'getActiveChildren',
-        value: function getActiveChildren(node) {
-            var _this6 = this;
-
-            node = (0, _jquery2.default)(node, this.$element);
-            return node.find(_core.SELECTORS.all).filter(function (x, child) {
-                return _this6.getParentNode(child).is(node) && (0, _jquery2.default)(child).hasClass(_core.CLASSNAMES.active);
-            });
-        }
-
-        //------------------------------------------------------------------------------------------------------------------
-        // State testing
-
-    }, {
-        key: 'isActive',
-        value: function isActive(node) {
-            return (0, _jquery2.default)(node, this.$element).hasClass(_core.CLASSNAMES.active);
-        }
-    }, {
-        key: 'isOpen',
-        value: function isOpen(node) {
-            return (0, _jquery2.default)(node, this.$element).hasClass(_core.CLASSNAMES.open);
-        }
-    }, {
-        key: 'isDisabled',
-        value: function isDisabled(node) {
-            return !!(0, _jquery2.default)(node).closest('.' + _core.CLASSNAMES.disabled, this.$element).length;
-        }
-
-        /**
-         * Return the type of the given node.
-         * @param node {{length, is}}
-         * @return {null|'menu'|'dropdown'|'item'}
-         */
-
-    }, {
-        key: 'getNodeType',
-        value: function getNodeType(node) {
-            node = (0, _jquery2.default)(node, this.$element);
-
-            if (!node.length) {
-                return null;
-            } else if (node.is(_core.SELECTORS.menu)) {
-                return 'menu';
-            } else if (node.is(_core.SELECTORS.dropdown)) {
-                return 'dropdown';
-            } else if (node.is(_core.SELECTORS.item)) {
-                return 'item';
-            }
-        }
-    }, {
-        key: 'isMenuItem',
-        value: function isMenuItem(node) {
-            var type = this.getNodeType(node);
-            return type === 'dropdown' || type === 'item';
-        }
-    }, {
-        key: 'isDropDown',
-        value: function isDropDown(node) {
-            return this.getNodeType(node) === 'dropdown';
-        }
-    }, {
-        key: 'isMenu',
-        value: function isMenu(node) {
-            return this.getNodeType(node) === 'menu';
-        }
-
-        //------------------------------------------------------------------------------------------------------------------
-        // Events
-
-    }, {
-        key: 'onClick',
-        value: function onClick(event) {
-            if (this.isDisabled(event.target)) return;
-
-            var $target = this.getClosestNode(event.target);
-
-            if (this.isMenuItem($target)) {
-                return this._onClickMenuItem(event);
-            } else if (this.isMenu($target)) {
-                return this._onClickMenu(event);
-            }
-        }
-    }, {
-        key: 'onMouseOver',
-        value: function onMouseOver(event) {
-            if (this.isDisabled(event.target)) return;
-
-            var $target = this.getClosestNode(event.target);
-
-            if (this._timer) {
-                clearTimeout(this._timer);
-                this._timer = null;
-            }
-
-            if ($target[0].contains(event.relatedTarget)) return;
-
-            if (this.isMenuItem($target)) {
-                return this._onMouseOverMenuItem(event);
-            } else if (this.isMenu($target)) {
-                return this._onMouseOverMenu(event);
-            }
-        }
-    }, {
-        key: 'onMouseOut',
-        value: function onMouseOut(event) {
-            var _this7 = this;
-
-            if (this.isDisabled(event.target)) return;
-
-            // If the mouse leaves the root item and timeout is set start the timer.
-            if (!this._timer && typeof this.timeout === 'number' && this.timeout >= 0 && !this.$element[0].contains(event.relatedTarget)) {
-                this._timer = setTimeout(function () {
-                    _this7._timer = null;
-                    _this7.deactivate(_this7.$element);
-                }, this.timeout);
-            }
-
-            var $target = this.getClosestNode(event.target);
-
-            if ($target[0].contains(event.relatedTarget)) return;
-
-            if (this.isMenuItem($target)) {
-                return this._onMouseOutMenuItem(event);
-            } else if (this.isMenu($target)) {
-                return this._onMouseOutMenu(event);
-            }
-        }
-    }, {
-        key: 'onDocumentClick',
-        value: function onDocumentClick(event) {
-            if (!this.$element[0].contains(event.target)) {
-                this.$doc.off('click', this._onDocumentClick);
-                this.$doc = null;
-                this.deactivate(this.$element);
-            } else if (!this.isActive(this.$element)) {
-                this.$doc = null;
-                this.deactivate(this.$element);
-            }
-        }
-    }, {
-        key: 'onSelect',
-        value: function onSelect() {
-            if (this.isActive(this.$element) && this.closeOnSelect) {
-                this.deactivate(this.$element);
-            }
-        }
-    }, {
-        key: '_onClickMenuItem',
-        value: function _onClickMenuItem(event) {
-            var $target = this.getClosestNode(event.target),
-                type = this.getNodeType($target),
-                isActive = this.isActive($target),
-                $parent = this.getParentNode($target, 'menu'),
-                toggle = this.getItemToggle($parent, $target);
-
-            if (type === 'item') {
-                if (this.getSelectable($target)) {
-                    this.select($target);
-                }
-            } else {
-                if (!isActive && (toggle === 'both' || toggle === true || toggle === 'on')) {
-                    this.activate($target);
-                } else if (isActive && (toggle === 'off' || toggle === 'both' || toggle === true)) {
-                    this.deactivate($target);
-                }
-            }
-        }
-    }, {
-        key: '_onMouseOverMenuItem',
-        value: function _onMouseOverMenuItem(event) {
-            var $target = this.getClosestNode(event.target),
-                $parent = this.getParentNode($target, 'menu');
-
-            if (!this.isActive($target)) {
-                var delay = this.getItemActivationDelay($parent, $target);
-                var timer = this.activate($target, delay);
-
-                if (timer && timer.cancel) {
-                    var cancel = function cancel(event) {
-                        if (!$target[0].contains(event.relatedTarget)) {
-                            timer.cancel();
-                        }
-                    };
-
-                    $target.on('mouseout', cancel);
-
-                    timer.then(function () {
-                        $target.off('mouseout', cancel);
-                    });
-                }
-            }
-        }
-    }, {
-        key: '_onMouseOutMenuItem',
-        value: function _onMouseOutMenuItem(event) {
-            var $target = this.getClosestNode(event.target);
-
-            if (!this.isDropDown($target)) {
-                this.deactivate($target);
-            }
-        }
-    }, {
-        key: '_onClickMenu',
-        value: function _onClickMenu(event) {
-            var $target = this.getClosestNode(event.target),
-                toggle = (0, _utility.parseBooleanString)($target.data('menuToggle'));
-
-            if (this.isActive($target)) {
-                if (toggle === 'off' || toggle === 'both' || toggle === true) {
-                    this.deactivate($target);
-                }
-            } else {
-                if (toggle === 'on' || toggle === 'both' || toggle === true) {
-                    this.activate($target);
-                }
-            }
-        }
-    }, {
-        key: '_onMouseOverMenu',
-        value: function _onMouseOverMenu(event) {}
-    }, {
-        key: '_onMouseOutMenu',
-        value: function _onMouseOutMenu(event) {}
-
-        //------------------------------------------------------------------------------------------------------------------
-        // Getter functions
-
-    }, {
-        key: 'getItemToggle',
-        value: function getItemToggle(menu, item) {
-            menu = (0, _jquery2.default)(menu);
-            item = (0, _jquery2.default)(item);
-
-            var toggle = (0, _utility.firstValue)([item.data('toggle'), menu.data('toggleItems'), 'both']);
-
-            if (toggle === 'true' || toggle === 'false') {
-                return toggle === 'true';
-            } else {
-                return toggle;
-            }
-        }
-    }, {
-        key: 'getMenuOpenDelay',
-        value: function getMenuOpenDelay(menu) {
-            menu = (0, _jquery2.default)(menu);
-            var value = menu.data('openDelay');
-
-            if (value === 'true' || value === 'false') {
-                return value === 'true';
-            } else if (typeof value === 'number') {
-                return (0, _utility.parseInteger)(value, null, 10);
-            } else {
-                return value;
-            }
-        }
-    }, {
-        key: 'getItemActivationDelay',
-        value: function getItemActivationDelay(menu, item) {
-            menu = (0, _jquery2.default)(menu);
-            item = (0, _jquery2.default)(item);
-
-            var isParentActive = this.isActive(menu);
-
-            if (!isParentActive) {
-                var value = (0, _utility.firstValue)([item.data('autoActivate'), menu.data('autoActivate'), 0]);
-
-                if (value === 'true' || value === 'false') {
-                    return value !== 'true';
-                } else if (typeof value === 'string') {
-                    return parseInt(value, 10);
-                } else if (typeof value === 'boolean') {
-                    return !value;
-                } else {
-                    return value;
-                }
-            } else {
-                var delay = (0, _utility.firstValue)([item.data('delay'), menu.data('itemDelay'), false]);
-
-                if (delay === 'true' || delay === 'false') {
-                    return delay === 'true';
-                } else if (typeof delay === 'string') {
-                    return parseInt(delay, 10);
-                } else {
-                    return delay;
-                }
-            }
-        }
-    }, {
-        key: 'getMultiple',
-        value: function getMultiple(menu) {
-            return (0, _utility.parseBoolean)((0, _jquery2.default)(menu).data("multiple"), false);
-        }
-    }, {
-        key: 'getSelectable',
-        value: function getSelectable(item) {
-            var value = (0, _jquery2.default)(item).data("selectable");
-
-            if (value === undefined || value === null) {
-                return true;
-            } else if (value === 'true' || value === 'false') {
-                return value === 'true';
-            } else {
-                return value;
-            }
-        }
-    }, {
-        key: 'getPositioner',
-        value: function getPositioner(menu) {
-            menu = (0, _jquery2.default)(menu);
-            var value = (0, _utility.firstValue)([menu.data("positioner"), this.$element.data("positioner")]);
-
-            if (typeof value === 'string') {
-                return POSITIONER_REGISTRY[value];
-            } else {
-                return value;
-            }
-        }
+        key: 'close',
+        value: function close() {}
 
         //------------------------------------------------------------------------------------------------------------------
         // Properties
 
     }, {
-        key: 'timeout',
+        key: 'isDisabled',
         get: function get() {
-            var value = this.$element.data("timeout");
-
-            if (typeof value === 'string') {
-                value = parseInt(value, 10);
-
-                if (!Number.isNaN(value) && value >= 0) {
-                    return value;
-                }
-            } else if (typeof value === 'number') {
-                if (value >= 0 && !Number.isNaN(value)) {
-                    return value;
-                }
-            }
-
-            return null;
-        }
-    }, {
-        key: 'closeOnBlur',
-        get: function get() {
-            var value = this.$element.data("closeOnBlur");
-
-            if (value === 'true' || value === 'false') {
-                return value === 'true';
-            } else if (value !== undefined && value !== null) {
-                return value;
+            return !!this.$element.hasClass('disabled');
+        },
+        set: function set(value) {
+            if (value) {
+                this.$element.addClass('disabled');
             } else {
-                return true;
+                this.$element.removeClass('disabled');
             }
         }
-    }, {
-        key: 'closeOnSelect',
-        get: function get() {
-            var value = this.$element.data("closeOnSelect");
+    }], [{
+        key: 'getInstance',
+        value: function getInstance(node) {
+            node = (0, _jquery2.default)(node);
+            var r = node.data('controller');
 
-            if (value === 'true' || value === 'false') {
-                return value === 'true';
-            } else if (value !== undefined && value !== null) {
-                return value;
+            if (r) {
+                return r;
             } else {
-                return true;
+                return new this(node);
             }
         }
     }]);
 
     return Menu;
-}();
+}(_MenuNode3.default);
 
 exports.default = Menu;
 
 
-Menu.EVENTS = _core.EVENTS;
-Menu.PREFIX = _core.PREFIX;
-Menu.CONTROLLER = _core.CONTROLLER;
-Menu.CLASSNAMES = _core.CLASSNAMES;
-Menu.SELECTORS = _core.SELECTORS;
-Menu.POSITIONER_REGISTRY = POSITIONER_REGISTRY;
+_MenuNode3.default.prototype.MenuClass = Menu;
 
 /***/ }),
 
-/***/ "./src/menus/core.js":
-/*!***************************!*\
-  !*** ./src/menus/core.js ***!
-  \***************************/
+/***/ "./src/menus/menuWidget/MenuItem.js":
+/*!******************************************!*\
+  !*** ./src/menus/menuWidget/MenuItem.js ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2095,12 +1430,120 @@ Menu.POSITIONER_REGISTRY = POSITIONER_REGISTRY;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.addRole = addRole;
-exports.removeRole = removeRole;
-exports.hasRoles = hasRoles;
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jquery = __webpack_require__(/*! jquery */ "jquery");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _MenuNode2 = __webpack_require__(/*! ./MenuNode */ "./src/menus/menuWidget/MenuNode.js");
+
+var _MenuNode3 = _interopRequireDefault(_MenuNode2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MenuItem = function (_MenuNode) {
+    _inherits(MenuItem, _MenuNode);
+
+    function MenuItem(element) {
+        _classCallCheck(this, MenuItem);
+
+        return _possibleConstructorReturn(this, (MenuItem.__proto__ || Object.getPrototypeOf(MenuItem)).call(this, element));
+    }
+
+    _createClass(MenuItem, [{
+        key: 'onClick',
+        value: function onClick(event) {
+            console.log('click ' + this.$element.text());
+        }
+    }, {
+        key: 'onMouseOver',
+        value: function onMouseOver(event) {
+            console.log('mouseover ' + this.$element.text());
+        }
+    }, {
+        key: 'onMouseOut',
+        value: function onMouseOut(event) {
+            console.log('mouseout ' + this.$element.text());
+        }
+    }], [{
+        key: 'getInstance',
+        value: function getInstance(node) {
+            node = (0, _jquery2.default)(node);
+            var r = node.data('controller');
+
+            if (r) {
+                return r;
+            } else {
+                return new this(node);
+            }
+        }
+    }]);
+
+    return MenuItem;
+}(_MenuNode3.default);
+
+exports.default = MenuItem;
+
+
+_MenuNode3.default.prototype.MenuItemClass = MenuItem;
+
+/***/ }),
+
+/***/ "./src/menus/menuWidget/MenuNode.js":
+/*!******************************************!*\
+  !*** ./src/menus/menuWidget/MenuNode.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = exports.SELECTORS = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 exports.getRoles = getRoles;
-var PREFIX = exports.PREFIX = 'menus.',
-    CONTROLLER = exports.CONTROLLER = PREFIX + "menu";
+exports.hasRole = hasRole;
+exports.addRoles = addRoles;
+exports.removeRoles = removeRoles;
+exports.getNodeType = getNodeType;
+exports.getClosestNode = getClosestNode;
+exports.getClosestItem = getClosestItem;
+exports.getClosestMenu = getClosestMenu;
+exports.getRoot = getRoot;
+
+var _jquery = __webpack_require__(/*! jquery */ "jquery");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _ObjectEvents2 = __webpack_require__(/*! ../../common/ObjectEvents */ "./src/common/ObjectEvents.js");
+
+var _ObjectEvents3 = _interopRequireDefault(_ObjectEvents2);
+
+var _Menu = __webpack_require__(/*! ./Menu */ "./src/menus/menuWidget/Menu.js");
+
+var _Menu2 = _interopRequireDefault(_Menu);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var SELECTORS = exports.SELECTORS = {
     menu: "[data-role~='menu']",
@@ -2108,26 +1551,25 @@ var SELECTORS = exports.SELECTORS = {
     dropdown: "[data-role~='dropdown']"
 };
 
-SELECTORS.all = SELECTORS.menu + ", " + SELECTORS.item + ", " + SELECTORS.dropdown;
-SELECTORS.menuitem = SELECTORS.item + ", " + SELECTORS.dropdown;
+SELECTORS.all = SELECTORS.menu + ', ' + SELECTORS.item + ', ' + SELECTORS.dropdown;
+SELECTORS.menuitem = SELECTORS.item + ', ' + SELECTORS.dropdown;
 
-var CLASSNAMES = exports.CLASSNAMES = {
-    open: 'open',
-    active: 'active',
-    disabled: 'disabled'
-};
+function getRoles(element) {
+    var roles = (0, _jquery2.default)(element).attr('data-role');
 
-var EVENTS = exports.EVENTS = {
-    select: PREFIX + "select",
-    activate: PREFIX + "activate",
-    deactivate: PREFIX + "deactivate",
-    open: PREFIX + "open",
-    close: PREFIX + "close"
-};
+    if (roles) {
+        return roles.split(/\s+/);
+    } else {
+        return [];
+    }
+}
 
-function addRole(element) {
-    element = $(element);
-    var r = getRoles(element);
+function hasRole(element, role) {
+    return getRoles(element).indexOf(role) !== -1;
+}
+
+function addRoles(element) {
+    var current = getRoles(element);
 
     for (var _len = arguments.length, roles = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         roles[_key - 1] = arguments[_key];
@@ -2139,12 +1581,35 @@ function addRole(element) {
 
     try {
         for (var _iterator = roles[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var item = _step.value;
+            var role = _step.value;
 
-            var i = r.indexOf(item);
+            role = role.split(/\s+/);
 
-            if (i === -1) {
-                r.push(item);
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = role[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var r = _step2.value;
+
+                    if (current.indexOf(r) === -1) {
+                        current.push(r);
+                    }
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
             }
         }
     } catch (err) {
@@ -2162,59 +1627,14 @@ function addRole(element) {
         }
     }
 
-    r = r.join(' ');
-    element.attr("data-role", r);
-    return r;
+    (0, _jquery2.default)(element).attr('data-role', current.join(" "));
 }
 
-function removeRole(element) {
-    element = $(element);
-    var r = getRoles(element);
+function removeRoles(element) {
+    var current = this.getRoles();
 
     for (var _len2 = arguments.length, roles = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
         roles[_key2 - 1] = arguments[_key2];
-    }
-
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
-
-    try {
-        for (var _iterator2 = roles[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var item = _step2.value;
-
-            var i = r.indexOf(item);
-
-            if (i !== -1) {
-                r.splice(i, 1);
-            }
-        }
-    } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
-            }
-        } finally {
-            if (_didIteratorError2) {
-                throw _iteratorError2;
-            }
-        }
-    }
-
-    r = r.join(' ');
-    element.attr("data-role", r);
-    return r;
-}
-
-function hasRoles(element) {
-    element = $(element);
-    var r = getRoles(element);
-
-    for (var _len3 = arguments.length, roles = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-        roles[_key3 - 1] = arguments[_key3];
     }
 
     var _iteratorNormalCompletion3 = true;
@@ -2223,12 +1643,35 @@ function hasRoles(element) {
 
     try {
         for (var _iterator3 = roles[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var item = _step3.value;
+            var role = _step3.value;
 
-            var i = r.indexOf(item);
+            role = role.split(/\s+/);
 
-            if (i === -1) {
-                return false;
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
+
+            try {
+                for (var _iterator4 = role[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var r = _step4.value;
+
+                    if (current.indexOf(r) === -1) {
+                        current.push(r);
+                    }
+                }
+            } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
+                    }
+                } finally {
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
+                    }
+                }
             }
         }
     } catch (err) {
@@ -2246,96 +1689,259 @@ function hasRoles(element) {
         }
     }
 
-    return true;
+    this.$element.attr('data-role', current.join(" "));
 }
 
-function getRoles(element) {
-    element = $(element);
-    var r = element.attr("data-role");
+function getNodeType(element) {
+    var roles = getRoles(element);
 
-    if (!r) {
-        r = [];
-    } else {
-        r = r.split('/s+/');
+    if (roles.indexOf('menu') !== -1) {
+        return 'menu';
+    } else if (roles.indexOf('item') !== -1) {
+        return 'item';
+    } else if (roles.indexOf('dropdown') !== -1) {
+        return 'dropdown';
+    }
+}
+
+function getClosestNode(target) {
+    var r = (0, _jquery2.default)(target).closest(SELECTORS.all, this.getRoot().$element);
+
+    if (r.length) {
+        return this.getNodeInstance(r);
+    }
+}
+
+function getClosestItem(target) {}
+
+function getClosestMenu(target) {}
+
+function getRoot(target) {}
+
+var MenuNode = function (_ObjectEvents) {
+    _inherits(MenuNode, _ObjectEvents);
+
+    function MenuNode(selector) {
+        _classCallCheck(this, MenuNode);
+
+        var _this = _possibleConstructorReturn(this, (MenuNode.__proto__ || Object.getPrototypeOf(MenuNode)).call(this));
+
+        _this.$element = (0, _jquery2.default)(selector);
+        return _this;
     }
 
-    return r;
-}
+    _createClass(MenuNode, [{
+        key: 'init',
+        value: function init() {
+            this._handleOnClickEvent = this.handleOnClickEvent.bind(this);
+            this._handleOnMouseOverEvent = this.handleOnMouseOverEvent.bind(this);
+            this._handleOnMouseOutEvent = this.handleOnMouseOutEvent.bind(this);
+            this._handleOnDocumentClickEvent = this.handleOnDocumentClickEvent.bind(this);
+
+            this.$element.on('click', this._handleOnClickEvent);
+            this.$element.on('mouseover', this._handleOnMouseOverEvent);
+            this.$element.on('mouseout', this._handleOnMouseOutEvent);
+            this.$element.data('menuController', this);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Global Event handlers.
+
+    }, {
+        key: 'handleOnClickEvent',
+        value: function handleOnClickEvent(event) {
+            var target = this._getClosestNode(event.target);
+
+            if (target.onClick) {
+                target.onClick(event);
+            }
+        }
+    }, {
+        key: 'handleOnMouseOverEvent',
+        value: function handleOnMouseOverEvent(event) {
+            var target = this._getClosestNode(event.target);
+
+            if (target.$element[0].contains(event.relatedTarget)) {
+                return;
+            }
+
+            if (target.onMouseOver) {
+                target.onMouseOver(event);
+            }
+        }
+    }, {
+        key: 'handleOnMouseOutEvent',
+        value: function handleOnMouseOutEvent(event) {
+            var target = this._getClosestNode(event.target);
+
+            if (target.$element[0].contains(event.relatedTarget)) {
+                return;
+            }
+
+            if (target.onMouseOut) {
+                target.onMouseOut(event);
+            }
+        }
+    }, {
+        key: 'handleOnDocumentClickEvent',
+        value: function handleOnDocumentClickEvent(event) {}
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Private Functions
+
+    }, {
+        key: '_getClosestNode',
+        value: function _getClosestNode(target) {
+            var r = (0, _jquery2.default)(target).closest(SELECTORS.all, this._getRootElement(target));
+
+            if (r.length) {
+                return this._getNodeInstance(r);
+            }
+        }
+    }, {
+        key: '_getClosestMenu',
+        value: function _getClosestMenu(target) {
+            var r = (0, _jquery2.default)(target).closest(SELECTORS.menu, this._getRootElement(target));
+
+            if (r.length) {
+                return this.MenuClass.getInstance(r);
+            }
+        }
+    }, {
+        key: '_getClosestItem',
+        value: function _getClosestItem(target) {
+            var r = (0, _jquery2.default)(target).closest(SELECTORS.menuitem, this._getRootElement(target));
+
+            if (r.length) {
+                return this.MenuItemClass.getInstance(r);
+            }
+        }
+    }, {
+        key: '_getRootElement',
+        value: function _getRootElement(target) {
+            var o = this.$element;
+
+            while (o.length) {
+                var menuController = o.data('menuController');
+
+                if (menuController) {
+                    return menuController.$element;
+                }
+
+                o = o.parent();
+            }
+        }
+    }, {
+        key: '_getNodeInstance',
+        value: function _getNodeInstance(node) {
+            var type = getNodeType(node);
+
+            if (type === 'menu') {
+                return this.MenuClass.getInstance(node);
+            } else if (type === 'dropdown' || type === 'item') {
+                return this.MenuItemClass.getInstance(node);
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Navigation
+
+    }, {
+        key: 'getParent',
+        value: function getParent() {
+            var r = this.$element.parent().closest(SELECTORS.all, this.getRoot().$element);
+
+            if (r.length) {
+                return this._getNodeInstance(r);
+            }
+        }
+    }, {
+        key: 'getParentMenu',
+        value: function getParentMenu() {
+            var r = this.$element.parent().closest(SELECTORS.menu, this.getRoot().$element);
+
+            if (r.length) {
+                return this.MenuClass.getInstance(r);
+            }
+        }
+    }, {
+        key: 'getParentItem',
+        value: function getParentItem() {
+            var r = this.$element.parent().closest(SELECTORS.menuitem, this.getRoot().$element);
+
+            if (r.length) {
+                return this.MenuItemClass.getInstance(r);
+            }
+        }
+    }, {
+        key: 'getRoot',
+        value: function getRoot() {
+            var o = this.$element;
+
+            while (o.length) {
+                var menuController = o.data('menuController');
+
+                if (menuController) {
+                    return menuController;
+                }
+
+                o = o.parent();
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Properties
+
+    }]);
+
+    return MenuNode;
+}(_ObjectEvents3.default);
+
+exports.default = MenuNode;
+
+
+MenuNode.SELECTORS = SELECTORS;
 
 /***/ }),
 
-/***/ "./src/menus/index.js":
-/*!****************************!*\
-  !*** ./src/menus/index.js ***!
-  \****************************/
+/***/ "./src/menus/menuWidget/index.js":
+/*!***************************************!*\
+  !*** ./src/menus/menuWidget/index.js ***!
+  \***************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.Menu = undefined;
-
-var _Menu = __webpack_require__(/*! ./Menu */ "./src/menus/Menu.js");
-
-var _Menu2 = _interopRequireDefault(_Menu);
-
-__webpack_require__(/*! ./loaders */ "./src/menus/loaders.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.Menu = _Menu2.default;
-
-
-window.Menu = _Menu2.default;
-
-/***/ }),
-
-/***/ "./src/menus/loaders.js":
-/*!******************************!*\
-  !*** ./src/menus/loaders.js ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _loader = __webpack_require__(/*! ../loader */ "./src/loader.js");
+var _loader = __webpack_require__(/*! ../../loader */ "./src/loader.js");
 
 var _loader2 = _interopRequireDefault(_loader);
 
-var _Menu = __webpack_require__(/*! ./Menu */ "./src/menus/Menu.js");
+var _Menu = __webpack_require__(/*! ./Menu */ "./src/menus/menuWidget/Menu.js");
 
 var _Menu2 = _interopRequireDefault(_Menu);
 
-var _utility = __webpack_require__(/*! ../utility */ "./src/utility.js");
+var _MenuNode = __webpack_require__(/*! ./MenuNode */ "./src/menus/menuWidget/MenuNode.js");
+
+var _MenuNode2 = _interopRequireDefault(_MenuNode);
+
+var _MenuItem = __webpack_require__(/*! ./MenuItem */ "./src/menus/menuWidget/MenuItem.js");
+
+var _MenuItem2 = _interopRequireDefault(_MenuItem);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_loader2.default.register('menu', function (target, config) {
-    config.target = target;
-    return new _Menu2.default(config);
+_loader2.default.register('menu', function (element, context) {
+    var m = new _Menu2.default(element, context);
+    m.init();
+    window.testMenu = m;
+    return m;
 });
 
-_loader2.default.register('dropdown', function (target, config) {
-    config.role = "dropdown";
-    config.target = target;
-    var r = new _Menu2.default(config);
-
-    (0, _utility.setDefaultValues)(r.$element.data(), {
-        timeout: false,
-        closeOnBlur: true,
-        closeOnSelect: true,
-        toggle: true,
-        autoActivate: false
-    });
-
-    return r;
-});
+window.Menu = _Menu2.default;
+window.MenuItem = _MenuItem2.default;
+window.MenuNode = _MenuNode2.default;
 
 /***/ }),
 
