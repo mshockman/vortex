@@ -8,100 +8,68 @@
     <script type="text/javascript" src="../dist/vortex.bundle.js"></script>
 
     <link type="text/css" rel="stylesheet" href="../dist/css/style.css" />
-
-    <style type="text/css">
-        .test-m {
-            width: 400px;
-            height: 200px;
-        }
-    </style>
 </head>
 <body>
-    <select>
-        <option>Test #1</option>
-        <option>Test #2</option>
-        <option>Test #3</option>
-        <option>Test #4</option>
-        <option>Test #5</option>
-        <option>Test #6</option>
-    </select>
-
-    <select multiple class="test-m">
-        <option>Test #1</option>
-        <option>Test #2</option>
-        <option>Test #3</option>
-        <option>Test #4</option>
-        <option>Test #5</option>
-        <option>Test #6</option>
-    </select>
 
 
-    <ul data-init="menu" class="menubar" data-role="menu">
-       <li data-role="dropdown">
-           <a>Root #1</a>
-           <div data-role="menu">
-               <ul>
-                   <li data-role="item">Sub Item #1</li>
-                   <li data-role="item">Sub Item #2</li>
-                   <li data-role="item">Sub Item #3</li>
-                   <li data-role="item">Sub Item #4</li>
-                   <li data-role="item">Sub Item #5</li>
-               </ul>
-           </div>
-       </li>
-        <li data-role="dropdown">
-            <a>Root #2</a>
-            <div data-role="menu">
-                <ul>
-                    <li data-role="item">Sub Item #1</li>
-                    <li data-role="item">Sub Item #2</li>
-                    <li data-role="item">Sub Item #3</li>
-                    <li data-role="item">Sub Item #4</li>
-                    <li data-role="item">Sub Item #5</li>
-                </ul>
-            </div>
+<div class="navbar navbar-lg">
+    <ul class="menubar navbar-item" data-init="menu" data-activate-event="dblclick" data-toggle-items="false" data-auto-activate-items="0" data-toggle="dblclick">
+        <li class="navbar-nav menuitem" data-role="dropdown">
+            <a>DropDown #1</a>
+            <ul class="menu" data-role="menu">
+                <li data-role="item" class="menuitem">Test Item #1</li>
+                <li data-role="item" class="menuitem">Test Item #2</li>
+                <li data-role="item" class="menuitem">Test Item #3</li>
+                <li data-role="item" class="menuitem">Test Item #4</li>
+                <li data-role="item" class="menuitem">Test Item #5</li>
+            </ul>
         </li>
-        <li data-role="dropdown">
-            <a>Root #3</a>
-            <div data-role="menu">
-                <ul>
-                    <li data-role="item">Sub Item #1</li>
-                    <li data-role="item">Sub Item #2</li>
-                    <li data-role="item">Sub Item #3</li>
-                    <li data-role="item">Sub Item #4</li>
-                    <li data-role="item">Sub Item #5</li>
-                </ul>
-            </div>
+        <li class="navbar-nav menuitem" data-role="dropdown">
+            <a>DropDown #2</a>
+            <ul class="menu list-group" data-role="menu">
+                <li data-role="item" class="menuitem">Test Item #1</li>
+                <li data-role="item" class="menuitem">Test Item #2</li>
+                <li data-role="item" class="menuitem">Test Item #3</li>
+                <li data-role="item" class="menuitem">Test Item #4</li>
+                <li data-role="item" class="menuitem">Test Item #5</li>
+            </ul>
         </li>
-        <li data-role="dropdown">
-            <a>Root #4</a>
-            <div data-role="menu">
-                <ul>
-                    <li data-role="item">Sub Item #1</li>
-                    <li data-role="item">Sub Item #2</li>
-                    <li data-role="item">Sub Item #3</li>
-                    <li data-role="item">Sub Item #4</li>
-                    <li data-role="item">Sub Item #5</li>
-                </ul>
-            </div>
+        <li class="menuitem navbar-nav" data-role="dropdown">
+            <a>DropDown #3</a>
+            <ul class="menu" data-role="menu">
+                <li data-role="item" class="menuitem">Test Item #1</li>
+                <li data-role="item" class="menuitem">Test Item #2</li>
+                <li data-role="item" class="menuitem">Test Item #3</li>
+                <li data-role="item" class="menuitem">Test Item #4</li>
+                <li data-role="item" class="menuitem">Test Item #5</li>
+            </ul>
         </li>
-        <li data-role="dropdown">
-            <a>Root #5</a>
-            <div data-role="menu">
-                <ul>
-                    <li data-role="item">Sub Item #1</li>
-                    <li data-role="item">Sub Item #2</li>
-                    <li id="testitem" data-role="item">Sub Item #3</li>
-                    <li data-role="item">Sub Item #4</li>
-                    <li data-role="item">Sub Item #5</li>
-                </ul>
-            </div>
+        <li class="menuitem navbar-nav" data-role="dropdown">
+            <a>DropDown #4</a>
+            <ul class="menu" data-role="menu">
+                <li data-role="item" class="menuitem">Test Item #1</li>
+                <li data-role="item" class="menuitem">Test Item #2</li>
+                <li data-role="item" class="menuitem">Test Item #3</li>
+                <li data-role="item" class="menuitem">Test Item #4</li>
+                <li data-role="item" class="menuitem">Test Item #5</li>
+            </ul>
+        </li>
+        <li class="menuitem navbar-nav" data-role="dropdown">
+            <a>DropDown #5</a>
+            <ul class="menu" data-role="menu">
+                <li data-role="item" class="menuitem">Test Item #1</li>
+                <li data-role="item" class="menuitem">Test Item #2</li>
+                <li data-role="item" class="menuitem">Test Item #3</li>
+                <li data-role="item" class="menuitem">Test Item #4</li>
+                <li data-role="item" class="menuitem">Test Item #5</li>
+            </ul>
         </li>
     </ul>
+</div>
 
 
-    <script type="text/javascript">
-        var i = new MenuItem($("#testitem"));
-    </script>
+<script type="text/javascript">
+
+</script>
 </body>
 </html>

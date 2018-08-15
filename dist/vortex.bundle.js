@@ -461,6 +461,181 @@ function matrixProduct(m1, m2) {
 
 /***/ }),
 
+/***/ "./src/common/types.js":
+/*!*****************************!*\
+  !*** ./src/common/types.js ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.parseBooleanValue = parseBooleanValue;
+exports.parseIntegerValue = parseIntegerValue;
+exports.parseFloatValue = parseFloatValue;
+exports.choiceType = choiceType;
+exports.nullValue = nullValue;
+exports.ifChoiceThen = ifChoiceThen;
+exports.castType = castType;
+exports.compoundType = compoundType;
+var nill = {};
+
+function parseBooleanValue(value) {
+    if (typeof value === 'boolean') {
+        return value;
+    } else if (typeof value === 'string') {
+        value = value.toLowerCase();
+
+        if (value === 'true') {
+            return true;
+        } else if (value === 'false') {
+            return false;
+        }
+    }
+
+    throw new TypeError("Could not convert value to boolean.");
+}
+
+function parseIntegerValue(value) {
+    var radix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10;
+
+    value = parseInt(value, radix);
+
+    if (!Number.isNaN(value)) {
+        return value;
+    }
+
+    throw new TypeError("Could not convert value to integer.");
+}
+
+function parseFloatValue(value) {
+    value = parseFloat(value);
+
+    if (!Number.isNaN(value)) {
+        return value;
+    }
+
+    throw new TypeError("Could not convert value to float.");
+}
+
+function choiceType() {
+    for (var _len = arguments.length, choices = Array(_len), _key = 0; _key < _len; _key++) {
+        choices[_key] = arguments[_key];
+    }
+
+    return function (value) {
+        if (choices.indexOf(value) === -1) {
+            throw new TypeError("Invalid choice.");
+        } else {
+            return value;
+        }
+    };
+}
+
+function nullValue(value) {
+    if (value === null) {
+        return value;
+    } else {
+        throw new TypeError("Value was not null.");
+    }
+}
+
+function ifChoiceThen(choices, value) {
+    return function (v) {
+        if (choices.indexOf(v) !== -1) {
+            return value;
+        } else {
+            throw new TypeError("Was not a choice.");
+        }
+    };
+}
+
+function castType(value, types, defaultValue) {
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = types[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var type = _step.value;
+
+            try {
+                return type(value);
+            } catch (e) {
+                if (!(e instanceof TypeError)) {
+                    throw e;
+                }
+            }
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+
+    if (defaultValue === nill) {
+        throw new TypeError("Could not convert value.");
+    } else {
+        return defaultValue;
+    }
+}
+
+function compoundType() {
+    for (var _len2 = arguments.length, types = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        types[_key2] = arguments[_key2];
+    }
+
+    return function (value) {
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+            for (var _iterator2 = types[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var t = _step2.value;
+
+                try {
+                    return t(value);
+                } catch (e) {
+                    if (!(e instanceof TypeError)) {
+                        throw e;
+                    }
+                }
+            }
+        } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                    _iterator2.return();
+                }
+            } finally {
+                if (_didIteratorError2) {
+                    throw _iteratorError2;
+                }
+            }
+        }
+
+        throw new TypeError("Could not convert value to type.");
+    };
+}
+
+/***/ }),
+
 /***/ "./src/components/Modal.js":
 /*!*********************************!*\
   !*** ./src/components/Modal.js ***!
@@ -1319,6 +1494,188 @@ Loader.init();
 
 /***/ }),
 
+/***/ "./src/menus/core.js":
+/*!***************************!*\
+  !*** ./src/menus/core.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.addRole = addRole;
+exports.removeRole = removeRole;
+exports.hasRoles = hasRoles;
+exports.getRoles = getRoles;
+var PREFIX = exports.PREFIX = 'menus.',
+    CONTROLLER = exports.CONTROLLER = PREFIX + "menu";
+
+var SELECTORS = exports.SELECTORS = {
+    menu: "[data-role~='menu']",
+    item: "[data-role~='item']",
+    dropdown: "[data-role~='dropdown']"
+};
+
+SELECTORS.all = SELECTORS.menu + ", " + SELECTORS.item + ", " + SELECTORS.dropdown;
+SELECTORS.menuitem = SELECTORS.item + ", " + SELECTORS.dropdown;
+
+var CLASSNAMES = exports.CLASSNAMES = {
+    open: 'open',
+    active: 'active',
+    disabled: 'disabled'
+};
+
+var EVENTS = exports.EVENTS = {
+    select: PREFIX + "select",
+    activate: PREFIX + "activate",
+    deactivate: PREFIX + "deactivate",
+    open: PREFIX + "open",
+    close: PREFIX + "close"
+};
+
+function addRole(element) {
+    element = $(element);
+    var r = getRoles(element);
+
+    for (var _len = arguments.length, roles = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        roles[_key - 1] = arguments[_key];
+    }
+
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = roles[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var item = _step.value;
+
+            var i = r.indexOf(item);
+
+            if (i === -1) {
+                r.push(item);
+            }
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+
+    r = r.join(' ');
+    element.attr("data-role", r);
+    return r;
+}
+
+function removeRole(element) {
+    element = $(element);
+    var r = getRoles(element);
+
+    for (var _len2 = arguments.length, roles = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        roles[_key2 - 1] = arguments[_key2];
+    }
+
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+        for (var _iterator2 = roles[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var item = _step2.value;
+
+            var i = r.indexOf(item);
+
+            if (i !== -1) {
+                r.splice(i, 1);
+            }
+        }
+    } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+            }
+        } finally {
+            if (_didIteratorError2) {
+                throw _iteratorError2;
+            }
+        }
+    }
+
+    r = r.join(' ');
+    element.attr("data-role", r);
+    return r;
+}
+
+function hasRoles(element) {
+    element = $(element);
+    var r = getRoles(element);
+
+    for (var _len3 = arguments.length, roles = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+        roles[_key3 - 1] = arguments[_key3];
+    }
+
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+        for (var _iterator3 = roles[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var item = _step3.value;
+
+            var i = r.indexOf(item);
+
+            if (i === -1) {
+                return false;
+            }
+        }
+    } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
+            }
+        } finally {
+            if (_didIteratorError3) {
+                throw _iteratorError3;
+            }
+        }
+    }
+
+    return true;
+}
+
+function getRoles(element) {
+    element = $(element);
+    var r = element.attr("data-role");
+
+    if (!r) {
+        r = [];
+    } else {
+        r = r.split('/s+/');
+    }
+
+    return r;
+}
+
+/***/ }),
+
 /***/ "./src/menus/menuWidget/Menu.js":
 /*!**************************************!*\
   !*** ./src/menus/menuWidget/Menu.js ***!
@@ -1336,15 +1693,27 @@ exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jquery = __webpack_require__(/*! jquery */ "jquery");
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8;
 
-var _jquery2 = _interopRequireDefault(_jquery);
+var _core = __webpack_require__(/*! ./core */ "./src/menus/menuWidget/core.js");
 
 var _MenuNode2 = __webpack_require__(/*! ./MenuNode */ "./src/menus/menuWidget/MenuNode.js");
 
 var _MenuNode3 = _interopRequireDefault(_MenuNode2);
 
+var _types = __webpack_require__(/*! ../../common/types */ "./src/common/types.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _initDefineProp(target, property, descriptor, context) {
+    if (!descriptor) return;
+    Object.defineProperty(target, property, {
+        enumerable: descriptor.enumerable,
+        configurable: descriptor.configurable,
+        writable: descriptor.writable,
+        value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+    });
+}
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1352,68 +1721,347 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Menu = function (_MenuNode) {
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+    var desc = {};
+    Object['ke' + 'ys'](descriptor).forEach(function (key) {
+        desc[key] = descriptor[key];
+    });
+    desc.enumerable = !!desc.enumerable;
+    desc.configurable = !!desc.configurable;
+
+    if ('value' in desc || desc.initializer) {
+        desc.writable = true;
+    }
+
+    desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+        return decorator(target, property, desc) || desc;
+    }, desc);
+
+    if (context && desc.initializer !== void 0) {
+        desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+        desc.initializer = undefined;
+    }
+
+    if (desc.initializer === void 0) {
+        Object['define' + 'Property'](target, property, desc);
+        desc = null;
+    }
+
+    return desc;
+}
+
+function _initializerWarningHelper(descriptor, context) {
+    throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+}
+
+/**
+ * @class
+ *
+ * @property {Boolean} autoDeactivate
+ * If true, the menu will deactivate any active child items when it closes.
+ *
+ * @property {Boolean} selectableItems
+ * If true child items are selectable by default.
+ *
+ * @property {Number} delayItems
+ * If activateEvent is mouseover then property add a delay between when the user mouses over the item and when the item
+ * will activate.
+ *
+ * @property {String} toggle
+ * Controls what event the item will toggle of on.  Can either be blank for no toggle or click or dblclick.
+ *
+ * @property {Number} autoActivateItems
+ * If the value is an integer greater then or equal to 0, the item will activate automatically on mouse over
+ * if the parent menu is already active.
+ *
+ * @property {Number} submenuOpenDelay
+ * Add a delay between when the active activate and the submenu opens.
+ *
+ * @property {String} activateEvent
+ * Controls the event that the item will activate the menu.  Can be either click, mouseover or dblclick.
+ *
+ * @property {boolean} disabled
+ * If true the item is disabled.
+ *
+ * @property {boolean} isActive
+ * A flag that is true when the item is active.
+ *
+ * @property parent
+ * Pointer to the menus parent item.
+ *
+ * @property {Array} children
+ * An array of all the menus children.
+ *
+ * @property {Boolean} multiple
+ * If true multiple child item can be active at the same time.
+ */
+var Menu = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec2 = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec3 = (0, _core.menuProperty)(_types.parseIntegerValue, 0), _dec4 = (0, _core.menuProperty)(_core.toggleType, false), _dec5 = (0, _core.menuProperty)(_core.autoActivateType, 0), _dec6 = (0, _core.menuProperty)(_types.parseIntegerValue, 0), _dec7 = (0, _core.menuProperty)((0, _types.choiceType)('click', 'dblclick', 'mouseover'), 'mouseover'), _dec8 = (0, _core.menuProperty)(_types.parseBooleanValue, false), (_class = function (_MenuNode) {
     _inherits(Menu, _MenuNode);
 
-    function Menu(selector) {
+    function Menu(selector, root) {
         _classCallCheck(this, Menu);
 
-        var _this = _possibleConstructorReturn(this, (Menu.__proto__ || Object.getPrototypeOf(Menu)).call(this, selector));
+        var _this = _possibleConstructorReturn(this, (Menu.__proto__ || Object.getPrototypeOf(Menu)).call(this, selector, root));
 
-        if (!(0, _MenuNode2.hasRole)('menu')) {
-            (0, _MenuNode2.addRoles)('menu');
-        }
+        _initDefineProp(_this, "autoDeactivate", _descriptor, _this);
+
+        _initDefineProp(_this, "selectableItems", _descriptor2, _this);
+
+        _initDefineProp(_this, "delayItems", _descriptor3, _this);
+
+        _initDefineProp(_this, "toggle", _descriptor4, _this);
+
+        _initDefineProp(_this, "autoActivateItems", _descriptor5, _this);
+
+        _initDefineProp(_this, "submenuOpenDelay", _descriptor6, _this);
+
+        _initDefineProp(_this, "activateEvent", _descriptor7, _this);
+
+        _initDefineProp(_this, "multiple", _descriptor8, _this);
+
+        (0, _core.addRoles)(_this.$element, 'menu');
         return _this;
     }
 
-    _createClass(Menu, [{
-        key: 'open',
+    //------------------------------------------------------------------------------------------------------------------
+    // Actions
 
+    _createClass(Menu, [{
+        key: "activate",
+        value: function activate() {
+            if (!this.isActive) {
+                this.$element.addClass('active');
+
+                var parent = this.getParent();
+
+                if (parent && !parent.isActive) {
+                    parent.activate();
+                }
+
+                this.$element.trigger('activate', this);
+            }
+        }
+    }, {
+        key: "deactivate",
+        value: function deactivate() {
+            if (this.isActive) {
+                this.$element.removeClass('active');
+
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = this.getActiveItems()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var item = _step.value;
+
+                        item.deactivate();
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+
+                this.$element.trigger('deactivate', this);
+            }
+        }
+    }, {
+        key: "open",
+        value: function open() {
+            if (!this.isOpen) {
+                this.showFX(this);
+
+                this.$element.trigger("open", this);
+            }
+        }
+
+        // noinspection JSUnusedGlobalSymbols
+
+    }, {
+        key: "close",
+        value: function close() {
+            if (this.isOpen) {
+                this.hideFX(this);
+
+                this.$element.trigger("close", this);
+
+                if (this.isActive && this.autoDeactivate) {
+                    this.deactivate();
+                }
+            }
+        }
+
+        /**
+         * Handles showing the menu.  Can be overridden if needed.
+         * @param self
+         */
+
+    }, {
+        key: "showFX",
+        value: function showFX(self) {
+            this.$element.addClass('open');
+        }
+
+        /**
+         * Handles hiding the menu.  Can be overridden if needed.
+         * @param self
+         */
+
+    }, {
+        key: "hideFX",
+        value: function hideFX(self) {
+            this.$element.removeClass('open');
+        }
 
         //------------------------------------------------------------------------------------------------------------------
-        // Actions
+        // Events
 
-        value: function open() {}
     }, {
-        key: 'close',
-        value: function close() {}
+        key: "onMouseOver",
+        value: function onMouseOver(event) {}
+    }, {
+        key: "onMouseOut",
+        value: function onMouseOut(event) {}
+    }, {
+        key: "onClick",
+        value: function onClick(event) {}
+    }, {
+        key: "onDBLClick",
+        value: function onDBLClick(event) {}
+
+        //------------------------------------------------------------------------------------------------------------------
+        //
+
+    }, {
+        key: "getActiveItems",
+        value: function getActiveItems() {
+            return this.getChildren('menuitem').filter(function (i) {
+                return i.isActive;
+            });
+        }
 
         //------------------------------------------------------------------------------------------------------------------
         // Properties
 
+        // noinspection JSUnusedGlobalSymbols
+
     }, {
-        key: 'isDisabled',
-        get: function get() {
-            return !!this.$element.hasClass('disabled');
-        },
-        set: function set(value) {
-            if (value) {
-                this.$element.addClass('disabled');
-            } else {
-                this.$element.removeClass('disabled');
+        key: "_addActiveItem",
+
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Private methods
+
+        value: function _addActiveItem(item) {
+            var activeItems = this.getActiveItems();
+
+            if (!this.multiple) {
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
+
+                try {
+                    for (var _iterator2 = activeItems[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var i = _step2.value;
+
+                        if (!i.is(item)) {
+                            i.deactivate();
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                            _iterator2.return();
+                        }
+                    } finally {
+                        if (_didIteratorError2) {
+                            throw _iteratorError2;
+                        }
+                    }
+                }
+            }
+
+            if (!this.isActive) {
+                this.activate();
             }
         }
-    }], [{
-        key: 'getInstance',
-        value: function getInstance(node) {
-            node = (0, _jquery2.default)(node);
-            var r = node.data('controller');
 
-            if (r) {
-                return r;
+        /**
+         * @param item The item that was removed.
+         * @private
+         */
+
+    }, {
+        key: "_removeActiveItem",
+        value: function _removeActiveItem(item) {
+            if (this.isActive && this.getActiveItems().length === 0) {
+                this.deactivate();
+            }
+        }
+    }, {
+        key: "children",
+        get: function get() {
+            return this.getChildren('menuitem');
+        }
+    }, {
+        key: "isOpen",
+        get: function get() {
+            return this.$element.hasClass('open');
+        }
+
+        // noinspection JSUnusedGlobalSymbols
+
+    }, {
+        key: "parent",
+        get: function get() {
+            if (this.root === this) {
+                return null;
             } else {
-                return new this(node);
+                return this.getParent('dropdown');
             }
         }
     }]);
 
     return Menu;
-}(_MenuNode3.default);
-
+}(_MenuNode3.default), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "autoDeactivate", [_dec], {
+    enumerable: true,
+    initializer: null
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "selectableItems", [_dec2], {
+    enumerable: true,
+    initializer: null
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "delayItems", [_dec3], {
+    enumerable: true,
+    initializer: null
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "toggle", [_dec4], {
+    enumerable: true,
+    initializer: null
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "autoActivateItems", [_dec5], {
+    enumerable: true,
+    initializer: null
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "submenuOpenDelay", [_dec6], {
+    enumerable: true,
+    initializer: null
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "activateEvent", [_dec7], {
+    enumerable: true,
+    initializer: null
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, "multiple", [_dec8], {
+    enumerable: true,
+    initializer: null
+})), _class));
 exports.default = Menu;
-
-
-_MenuNode3.default.prototype.MenuClass = Menu;
 
 /***/ }),
 
@@ -1434,15 +2082,27 @@ exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jquery = __webpack_require__(/*! jquery */ "jquery");
-
-var _jquery2 = _interopRequireDefault(_jquery);
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6;
 
 var _MenuNode2 = __webpack_require__(/*! ./MenuNode */ "./src/menus/menuWidget/MenuNode.js");
 
 var _MenuNode3 = _interopRequireDefault(_MenuNode2);
 
+var _types = __webpack_require__(/*! ../../common/types */ "./src/common/types.js");
+
+var _core = __webpack_require__(/*! ./core */ "./src/menus/menuWidget/core.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _initDefineProp(target, property, descriptor, context) {
+    if (!descriptor) return;
+    Object.defineProperty(target, property, {
+        enumerable: descriptor.enumerable,
+        configurable: descriptor.configurable,
+        writable: descriptor.writable,
+        value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+    });
+}
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1450,51 +2110,272 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var MenuItem = function (_MenuNode) {
-    _inherits(MenuItem, _MenuNode);
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+    var desc = {};
+    Object['ke' + 'ys'](descriptor).forEach(function (key) {
+        desc[key] = descriptor[key];
+    });
+    desc.enumerable = !!desc.enumerable;
+    desc.configurable = !!desc.configurable;
 
-    function MenuItem(element) {
-        _classCallCheck(this, MenuItem);
-
-        return _possibleConstructorReturn(this, (MenuItem.__proto__ || Object.getPrototypeOf(MenuItem)).call(this, element));
+    if ('value' in desc || desc.initializer) {
+        desc.writable = true;
     }
 
-    _createClass(MenuItem, [{
-        key: 'onClick',
-        value: function onClick(event) {
-            console.log('click ' + this.$element.text());
-        }
-    }, {
-        key: 'onMouseOver',
-        value: function onMouseOver(event) {
-            console.log('mouseover ' + this.$element.text());
-        }
-    }, {
-        key: 'onMouseOut',
-        value: function onMouseOut(event) {
-            console.log('mouseout ' + this.$element.text());
-        }
-    }], [{
-        key: 'getInstance',
-        value: function getInstance(node) {
-            node = (0, _jquery2.default)(node);
-            var r = node.data('controller');
+    desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+        return decorator(target, property, desc) || desc;
+    }, desc);
 
-            if (r) {
-                return r;
-            } else {
-                return new this(node);
+    if (context && desc.initializer !== void 0) {
+        desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+        desc.initializer = undefined;
+    }
+
+    if (desc.initializer === void 0) {
+        Object['define' + 'Property'](target, property, desc);
+        desc = null;
+    }
+
+    return desc;
+}
+
+function _initializerWarningHelper(descriptor, context) {
+    throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+}
+
+/**
+ * @property activateEvent
+ * Controls the event that the item will activate the menu.  Can be either click, mouseover or dblclick.
+ *
+ * @property {Number} submenuOpenDelay
+ * Add a delay between when the active activate and the submenu opens.
+ *
+ * @property {Number} autoActivate
+ * If the value is an integer greater then or equal to 0, the item will activate automatically on mouse over
+ * if the parent menu is already active.
+ *
+ * @property {String} toggle
+ * Controls what event the item will toggle of on.  Can either be blank for no toggle or click or dblclick.
+ *
+ * @property {Number} delay
+ * If activateEvent is mouseover then property add a delay between when the user mouses over the item and when the item
+ * will activate.
+ *
+ * @property {boolean} selectable
+ * If true the item is selectable.
+ *
+ * @property {boolean} disabled
+ * If true the item is disabled.
+ *
+ * @property {boolean} isDropDown
+ * If true the item is a drop down item and has a submenu.
+ *
+ * @property {boolean} isActive
+ * A flag that is true when the item is active.
+ *
+ * @property parent
+ * Pointer to the item parent menu.
+ *
+ * @property submenu
+ * If the item is a dropdown item, this is a pointer to the item sub menu.
+ */
+var MenuItem = (_dec = (0, _core.menuItemProperty)('activateEvent', (0, _types.choiceType)('click', 'mouseover', 'dblclick'), 'click'), _dec2 = (0, _core.menuItemProperty)('submenuOpenDelay', _types.parseIntegerValue, 0), _dec3 = (0, _core.menuItemProperty)('autoActivateItems', _types.parseIntegerValue, 0), _dec4 = (0, _core.menuItemProperty)('toggle', _core.toggleType, true), _dec5 = (0, _core.menuItemProperty)('delayItems', _types.parseIntegerValue, 0), _dec6 = (0, _core.menuItemProperty)('selectableItems', _types.parseBooleanValue, true), (_class = function (_MenuNode) {
+    _inherits(MenuItem, _MenuNode);
+
+    function MenuItem(selector, root) {
+        _classCallCheck(this, MenuItem);
+
+        var _this = _possibleConstructorReturn(this, (MenuItem.__proto__ || Object.getPrototypeOf(MenuItem)).call(this, selector, root));
+
+        _initDefineProp(_this, "activateEvent", _descriptor, _this);
+
+        _initDefineProp(_this, "submenuOpenDelay", _descriptor2, _this);
+
+        _initDefineProp(_this, "autoActivate", _descriptor3, _this);
+
+        _initDefineProp(_this, "toggle", _descriptor4, _this);
+
+        _initDefineProp(_this, "delay", _descriptor5, _this);
+
+        _initDefineProp(_this, "selectable", _descriptor6, _this);
+
+        return _this;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Event Listeners
+
+    _createClass(MenuItem, [{
+        key: "onMouseOver",
+        value: function onMouseOver() {
+            if (this.disabled) return;
+
+            if (!this.isActive) {
+                if (this.parent.isActive) {
+                    if (this.autoActivate >= 0) {
+                        this.startTimer('activateTimer', this.activate.bind(this), this.autoActivate);
+                    }
+                } else if (this.activateEvent === 'mouseover') {
+                    this.startTimer('activateTimer', this.activate.bind(this), this.delay);
+                }
             }
+        }
+    }, {
+        key: "onMouseOut",
+        value: function onMouseOut() {
+            this.clearTimer('activateTimer');
+
+            if (this.disabled) return;
+
+            if (this.isActive) {
+                if (!this.isDropDown) {
+                    this.deactivate();
+                }
+            }
+        }
+    }, {
+        key: "onClick",
+        value: function onClick() {
+            if (this.disabled) return;
+
+            if (this.isDropDown) {
+                if (this.isActive && this.toggle === 'click') {
+                    this.deactivate();
+
+                    if (this.parent.isActive && !this.parent.getActiveItems().length) {
+                        this.parent.deactivate();
+                    }
+                } else if (!this.isActive && this.activateEvent === 'click') {
+                    this.activate();
+                }
+            } else {
+                if (this.selectable) {
+                    this.select();
+                }
+            }
+        }
+    }, {
+        key: "onDBLClick",
+        value: function onDBLClick() {
+            if (this.disabled) return;
+
+            if (this.isDropDown) {
+                if (!this.isActive && this.activateEvent === 'dblclick') {
+                    this.activate();
+                } else if (this.isActive && this.toggle === 'dblclick') {
+                    this.deactivate();
+                }
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Actions
+
+    }, {
+        key: "activate",
+        value: function activate() {
+            if (!this.isActive) {
+                this.$element.addClass('active');
+
+                this.clearTimer('openDelay');
+
+                if (this.isDropDown && this.submenu) {
+                    this.startTimer('openDelay', this.submenu.open.bind(this.submenu), this.submenuOpenDelay);
+                }
+
+                if (this.parent) {
+                    this.parent._addActiveItem(this);
+                }
+
+                this.$element.trigger('activate', this);
+            }
+        }
+    }, {
+        key: "deactivate",
+        value: function deactivate() {
+            this.clearTimer('openDelay');
+
+            if (this.isActive) {
+                this.$element.removeClass('active');
+
+                if (this.isDropDown && this.submenu && this.submenu.isOpen) {
+                    this.submenu.close();
+                }
+
+                if (this.parent) {
+                    this.parent._removeActiveItem(this);
+                }
+
+                this.$element.trigger('deactivate', this);
+            }
+        }
+    }, {
+        key: "select",
+        value: function select() {
+            this.$element.trigger('select', this);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Properties
+
+    }, {
+        key: "parent",
+        get: function get() {
+            if (!this._parent) {
+                this._parent = this.getParent('menu');
+            }
+
+            return this._parent;
+        }
+    }, {
+        key: "submenu",
+        get: function get() {
+            if (!this._submenu && this.isDropDown) {
+                this._submenu = this.getChildren('menu')[0];
+            }
+
+            return this._submenu;
+        }
+
+        // noinspection JSUnusedGlobalSymbols
+
+    }, {
+        key: "children",
+        get: function get() {
+            if (this.submenu) {
+                return [this.submenu];
+            } else {
+                return [];
+            }
+        }
+    }, {
+        key: "isDropDown",
+        get: function get() {
+            return (0, _core.hasRole)(this.$element, 'dropdown');
         }
     }]);
 
     return MenuItem;
-}(_MenuNode3.default);
-
+}(_MenuNode3.default), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "activateEvent", [_dec], {
+    enumerable: true,
+    initializer: null
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "submenuOpenDelay", [_dec2], {
+    enumerable: true,
+    initializer: null
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "autoActivate", [_dec3], {
+    enumerable: true,
+    initializer: null
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "toggle", [_dec4], {
+    enumerable: true,
+    initializer: null
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "delay", [_dec5], {
+    enumerable: true,
+    initializer: null
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "selectable", [_dec6], {
+    enumerable: true,
+    initializer: null
+})), _class));
 exports.default = MenuItem;
-
-
-_MenuNode3.default.prototype.MenuItemClass = MenuItem;
 
 /***/ }),
 
@@ -1511,19 +2392,9 @@ _MenuNode3.default.prototype.MenuItemClass = MenuItem;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = exports.SELECTORS = undefined;
+exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-exports.getRoles = getRoles;
-exports.hasRole = hasRole;
-exports.addRoles = addRoles;
-exports.removeRoles = removeRoles;
-exports.getNodeType = getNodeType;
-exports.getClosestNode = getClosestNode;
-exports.getClosestItem = getClosestItem;
-exports.getClosestMenu = getClosestMenu;
-exports.getRoot = getRoot;
 
 var _jquery = __webpack_require__(/*! jquery */ "jquery");
 
@@ -1533,9 +2404,7 @@ var _ObjectEvents2 = __webpack_require__(/*! ../../common/ObjectEvents */ "./src
 
 var _ObjectEvents3 = _interopRequireDefault(_ObjectEvents2);
 
-var _Menu = __webpack_require__(/*! ./Menu */ "./src/menus/menuWidget/Menu.js");
-
-var _Menu2 = _interopRequireDefault(_Menu);
+var _core = __webpack_require__(/*! ../core */ "./src/menus/core.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1545,23 +2414,436 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var MenuNode = function (_ObjectEvents) {
+    _inherits(MenuNode, _ObjectEvents);
+
+    function MenuNode(selector, root) {
+        _classCallCheck(this, MenuNode);
+
+        var _this = _possibleConstructorReturn(this, (MenuNode.__proto__ || Object.getPrototypeOf(MenuNode)).call(this));
+
+        _this.root = root;
+
+        if (typeof selector === 'function') {
+            _this.$element = (0, _jquery2.default)(selector());
+        } else {
+            _this.$element = (0, _jquery2.default)(selector);
+        }
+        return _this;
+    }
+
+    _createClass(MenuNode, [{
+        key: "getParent",
+        value: function getParent() {
+            var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'all';
+
+            var $parent = this.$element.parent(_core.SELECTORS[type], this.root.$element);
+
+            if ($parent.length) {
+                return this.root._getInstance($parent);
+            }
+        }
+    }, {
+        key: "getChildren",
+        value: function getChildren() {
+            var _this2 = this;
+
+            var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'all';
+
+            var nodeType = this.componentType;
+            return this.getDescendants(type).filter(function (item) {
+                return item.getParent(nodeType).is(_this2);
+            });
+        }
+    }, {
+        key: "getDescendants",
+        value: function getDescendants() {
+            var _this3 = this;
+
+            var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'all';
+
+            var r = [];
+
+            this.$element.find(_core.SELECTORS[type], this.root.$element).each(function (x, element) {
+                r.push(_this3.root._getInstance(element));
+            });
+
+            return r;
+        }
+    }, {
+        key: "is",
+        value: function is(item) {
+            if (item.jquery || item.nodeType) {
+                return this.$element.is(item);
+            } else if (item === this) {
+                return true;
+            } else if (this.$element && item.$element) {
+                return this.$element.is(item.$element);
+            }
+        }
+    }, {
+        key: "startTimer",
+        value: function startTimer(name, fn, time) {
+            var _this4 = this;
+
+            // Don't create a timer of time < 0 or Infinite.
+            if (time < 0 || !Number.isFinite(time)) return;
+
+            var _timer = this.$element.data(name);
+
+            if (_timer) {
+                clearTimeout(_timer);
+                this.$element.data(name, null);
+            }
+
+            _timer = setTimeout(function () {
+                _this4.$element.data(name, null);
+                fn();
+            }, time);
+
+            this.$element.data(name, _timer);
+        }
+    }, {
+        key: "clearTimer",
+        value: function clearTimer(name) {
+            var _timer = this.$element.data(name);
+
+            if (_timer) {
+                clearTimeout(_timer);
+                this.$element.data(name, null);
+            }
+        }
+    }, {
+        key: "componentType",
+        get: function get() {
+            return this.root.getComponentType(this.$element);
+        }
+    }, {
+        key: "isActive",
+        get: function get() {
+            return this.$element.hasClass('active');
+        }
+    }, {
+        key: "disabled",
+        get: function get() {
+            return this.$element.hasClass('disabled');
+        }
+    }]);
+
+    return MenuNode;
+}(_ObjectEvents3.default);
+
+exports.default = MenuNode;
+
+/***/ }),
+
+/***/ "./src/menus/menuWidget/MenuView.js":
+/*!******************************************!*\
+  !*** ./src/menus/menuWidget/MenuView.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _core = __webpack_require__(/*! ./core */ "./src/menus/menuWidget/core.js");
+
+var _Menu2 = __webpack_require__(/*! ./Menu */ "./src/menus/menuWidget/Menu.js");
+
+var _Menu3 = _interopRequireDefault(_Menu2);
+
+var _MenuItem = __webpack_require__(/*! ./MenuItem */ "./src/menus/menuWidget/MenuItem.js");
+
+var _MenuItem2 = _interopRequireDefault(_MenuItem);
+
+var _jquery = __webpack_require__(/*! jquery */ "jquery");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _types = __webpack_require__(/*! ../../common/types */ "./src/common/types.js");
+
+var _core2 = __webpack_require__(/*! ../core */ "./src/menus/core.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MenuView = function (_Menu) {
+    _inherits(MenuView, _Menu);
+
+    function MenuView(selector) {
+        _classCallCheck(this, MenuView);
+
+        // noinspection JSUnusedGlobalSymbols
+        var _this = _possibleConstructorReturn(this, (MenuView.__proto__ || Object.getPrototypeOf(MenuView)).call(this, selector));
+
+        _this.root = _this;
+
+        _this._handleClickEvent = _this.handleClickEvent.bind(_this);
+        _this._handleMouseOverEvent = _this.handleMouseOverEvent.bind(_this);
+        _this._handleMouseOutEvent = _this.handleMouseOutEvent.bind(_this);
+        _this._handleDBLClickEvent = _this.handleDBLClickEvent.bind(_this);
+
+        _this.$element.on('click', _this._handleClickEvent);
+        _this.$element.on('mouseover', _this._handleMouseOverEvent);
+        _this.$element.on('mouseout', _this._handleMouseOutEvent);
+        _this.$element.on('dblclick', _this._handleDBLClickEvent);
+        _this.$element.data('menu-controller', _this);
+        return _this;
+    }
+
+    _createClass(MenuView, [{
+        key: 'activate',
+        value: function activate() {
+            var _this2 = this;
+
+            _get(MenuView.prototype.__proto__ || Object.getPrototypeOf(MenuView.prototype), 'activate', this).call(this);
+
+            // If closeOnBlur is is true attach the necessary events to the document to track outside
+            // mouse clicks.
+            if (this.isActive && this.closeOnBlur && !this._handleDocumentClickEvent) {
+                var $doc = (0, _jquery2.default)(document);
+
+                this._handleDocumentClickEvent = function (event) {
+                    if (!_this2.$element[0].contains(event.target)) {
+                        _this2._handleDocumentClickEvent.remove();
+                        _this2._handleDocumentClickEvent = null;
+                        _this2.deactivate();
+                    }
+                };
+
+                this._handleDocumentClickEvent.remove = function () {
+                    $doc.off('click', _this2._handleDocumentClickEvent);
+                };
+
+                this._handleDocumentClickEvent.$doc = $doc;
+
+                $doc.on('click', this._handleDocumentClickEvent);
+            }
+        }
+    }, {
+        key: 'deactivate',
+        value: function deactivate() {
+            _get(MenuView.prototype.__proto__ || Object.getPrototypeOf(MenuView.prototype), 'deactivate', this).call(this);
+
+            // Remove click tracking from the document.
+            if (this._handleDocumentClickEvent && !this.isActive) {
+                this._handleDocumentClickEvent.remove();
+                this._handleDocumentClickEvent = null;
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Methods
+
+    }, {
+        key: 'findNodes',
+        value: function findNodes(selector) {
+            var _this3 = this;
+
+            if (_core.SELECTORS[selector]) {
+                selector = _core.SELECTORS[selector];
+            }
+
+            var r = [];
+
+            this.$element.find(selector).each(function (x, element) {
+                r.push(_this3._getInstance(element));
+            });
+
+            return r;
+        }
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Event Handlers
+
+    }, {
+        key: 'handleClickEvent',
+        value: function handleClickEvent(event) {
+            var target = this._getClosestNode(event.target);
+
+            if (target && target.onClick && !this.disabled && !target.disabled) {
+                target.onClick(event);
+            }
+        }
+    }, {
+        key: 'handleMouseOverEvent',
+        value: function handleMouseOverEvent(event) {
+            var target = this._getClosestNode(event.target);
+
+            this.clearTimer('rootTimer');
+
+            if (target && target.onMouseOver && !this.disabled && !target.disabled) {
+                target.onMouseOver(event);
+            }
+        }
+    }, {
+        key: 'handleMouseOutEvent',
+        value: function handleMouseOutEvent(event) {
+            var target = this._getClosestNode(event.target);
+
+            if (this._timeoutTimer) {
+                clearTimeout(this._timeoutTimer);
+                this._timeoutTimer = null;
+            }
+
+            if (typeof this.timeout === 'number' && this.timeout >= 0 && !this.disabled && !target.disabled) {
+                this.startTimer('rootTimer', this.deactivate.bind(this), this.timeout);
+            }
+
+            if (target && target.onMouseOut) {
+                target.onMouseOut(event);
+            }
+        }
+    }, {
+        key: 'handleDBLClickEvent',
+        value: function handleDBLClickEvent(event) {
+            var target = this._getClosestNode(event.target);
+
+            if (target && target.onDBLClick && !this.disabled && !target.disabled) {
+                target.onDBLClick(event);
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Private functions
+
+    }, {
+        key: '_getClosestNode',
+        value: function _getClosestNode(target) {
+            var $target = (0, _jquery2.default)(target).closest(_core.SELECTORS.all, this.$element);
+
+            if ($target.length) {
+                return this._getInstance($target);
+            }
+        }
+    }, {
+        key: '_getInstance',
+        value: function _getInstance(node) {
+            var $node = (0, _jquery2.default)(node),
+                type = this.getComponentType(node);
+
+            if ($node[0] === this.$element[0]) {
+                return this;
+            }
+
+            if (type === "menu") {
+                return new this.MenuClass($node, this);
+            } else if (type === 'item' || type === 'dropdown') {
+                return new this.MenuItemClass(node, this);
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Test methods
+
+    }, {
+        key: 'getComponentType',
+        value: function getComponentType(node) {
+            var roles = (0, _core2.getRoles)(node);
+
+            if (roles.indexOf('menu') !== -1) {
+                return 'menu';
+            } else if (roles.indexOf('item') !== -1) {
+                return 'item';
+            } else if (roles.indexOf('dropdown') !== -1) {
+                return 'dropdown';
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Properties
+
+    }, {
+        key: 'timeout',
+        get: function get() {
+            return (0, _types.castType)(this.$element.data('timeout'), [(0, _types.ifChoiceThen)([null, undefined, ""], false), _types.parseIntegerValue, _types.parseBooleanValue]);
+        },
+        set: function set(value) {
+            this.$element.data('timeout', value);
+        }
+    }, {
+        key: 'closeOnBlur',
+        get: function get() {
+            return (0, _types.castType)(this.$element.data('closeOnBlur'), [(0, _types.ifChoiceThen)([null, undefined, ""], true), _types.parseBooleanValue]);
+        },
+        set: function set(value) {
+            this.$element.data('closeOnBlur', value);
+        }
+    }]);
+
+    return MenuView;
+}(_Menu3.default);
+
+exports.default = MenuView;
+
+
+MenuView.prototype.MenuClass = _Menu3.default;
+MenuView.prototype.MenuItemClass = _MenuItem2.default;
+
+/***/ }),
+
+/***/ "./src/menus/menuWidget/core.js":
+/*!**************************************!*\
+  !*** ./src/menus/menuWidget/core.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.SELECTORS = undefined;
+exports.getRoles = getRoles;
+exports.hasRole = hasRole;
+exports.addRoles = addRoles;
+exports.removeRoles = removeRoles;
+exports.getMenuNodeProperty = getMenuNodeProperty;
+exports.getMenuItemProperty = getMenuItemProperty;
+exports.menuProperty = menuProperty;
+exports.menuItemProperty = menuItemProperty;
+exports.toggleType = toggleType;
+exports.autoActivateType = autoActivateType;
+
+var _jquery = __webpack_require__(/*! jquery */ "jquery");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _types = __webpack_require__(/*! ../../common/types */ "./src/common/types.js");
+
+var _utility = __webpack_require__(/*! ../../utility */ "./src/utility.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var SELECTORS = exports.SELECTORS = {
     menu: "[data-role~='menu']",
     item: "[data-role~='item']",
     dropdown: "[data-role~='dropdown']"
 };
 
-SELECTORS.all = SELECTORS.menu + ', ' + SELECTORS.item + ', ' + SELECTORS.dropdown;
-SELECTORS.menuitem = SELECTORS.item + ', ' + SELECTORS.dropdown;
+SELECTORS.all = SELECTORS.menu + ", " + SELECTORS.item + ", " + SELECTORS.dropdown;
+SELECTORS.menuitem = SELECTORS.item + ", " + SELECTORS.dropdown;
 
 function getRoles(element) {
-    var roles = (0, _jquery2.default)(element).attr('data-role');
-
-    if (roles) {
-        return roles.split(/\s+/);
-    } else {
-        return [];
-    }
+    var $element = (0, _jquery2.default)(element);
+    return ($element.attr("data-role") || "").split(/\s+/);
 }
 
 function hasRole(element, role) {
@@ -1569,7 +2851,8 @@ function hasRole(element, role) {
 }
 
 function addRoles(element) {
-    var current = getRoles(element);
+    var $element = (0, _jquery2.default)(element),
+        r = getRoles($element);
 
     for (var _len = arguments.length, roles = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         roles[_key - 1] = arguments[_key];
@@ -1583,33 +2866,8 @@ function addRoles(element) {
         for (var _iterator = roles[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var role = _step.value;
 
-            role = role.split(/\s+/);
-
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
-
-            try {
-                for (var _iterator2 = role[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var r = _step2.value;
-
-                    if (current.indexOf(r) === -1) {
-                        current.push(r);
-                    }
-                }
-            } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
-                    }
-                } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
-                    }
-                }
+            if (r.indexOf(role) === -1) {
+                r.push(role);
             }
         }
     } catch (err) {
@@ -1627,280 +2885,177 @@ function addRoles(element) {
         }
     }
 
-    (0, _jquery2.default)(element).attr('data-role', current.join(" "));
+    r = r.join(" ").trim();
+    $element.attr('data-role', r);
+    return r;
 }
 
 function removeRoles(element) {
-    var current = this.getRoles();
+    var $element = (0, _jquery2.default)(element),
+        current = getRoles($element),
+        r = [];
 
     for (var _len2 = arguments.length, roles = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
         roles[_key2 - 1] = arguments[_key2];
     }
 
-    var _iteratorNormalCompletion3 = true;
-    var _didIteratorError3 = false;
-    var _iteratorError3 = undefined;
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
 
     try {
-        for (var _iterator3 = roles[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var role = _step3.value;
+        for (var _iterator2 = current[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var role = _step2.value;
 
-            role = role.split(/\s+/);
-
-            var _iteratorNormalCompletion4 = true;
-            var _didIteratorError4 = false;
-            var _iteratorError4 = undefined;
-
-            try {
-                for (var _iterator4 = role[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                    var r = _step4.value;
-
-                    if (current.indexOf(r) === -1) {
-                        current.push(r);
-                    }
-                }
-            } catch (err) {
-                _didIteratorError4 = true;
-                _iteratorError4 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                        _iterator4.return();
-                    }
-                } finally {
-                    if (_didIteratorError4) {
-                        throw _iteratorError4;
-                    }
-                }
+            if (roles.indexOf(role) === -1) {
+                r.push(role);
             }
         }
     } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
     } finally {
         try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
             }
         } finally {
-            if (_didIteratorError3) {
-                throw _iteratorError3;
+            if (_didIteratorError2) {
+                throw _iteratorError2;
             }
         }
     }
 
-    this.$element.attr('data-role', current.join(" "));
+    r = r.join(" ").trim();
+    $element.attr('data-role', r);
+    return r;
 }
 
-function getNodeType(element) {
-    var roles = getRoles(element);
+function getMenuNodeProperty(target, name, type, defaultValue) {
+    var data = [target.$element.data()],
+        keys = [name];
 
-    if (roles.indexOf('menu') !== -1) {
-        return 'menu';
-    } else if (roles.indexOf('item') !== -1) {
-        return 'item';
-    } else if (roles.indexOf('dropdown') !== -1) {
-        return 'dropdown';
-    }
-}
+    for (var i = 0, l = data.length; i < l; i++) {
+        var datum = data[i],
+            key = keys[i],
+            value = datum[key];
 
-function getClosestNode(target) {
-    var r = (0, _jquery2.default)(target).closest(SELECTORS.all, this.getRoot().$element);
-
-    if (r.length) {
-        return this.getNodeInstance(r);
-    }
-}
-
-function getClosestItem(target) {}
-
-function getClosestMenu(target) {}
-
-function getRoot(target) {}
-
-var MenuNode = function (_ObjectEvents) {
-    _inherits(MenuNode, _ObjectEvents);
-
-    function MenuNode(selector) {
-        _classCallCheck(this, MenuNode);
-
-        var _this = _possibleConstructorReturn(this, (MenuNode.__proto__ || Object.getPrototypeOf(MenuNode)).call(this));
-
-        _this.$element = (0, _jquery2.default)(selector);
-        return _this;
-    }
-
-    _createClass(MenuNode, [{
-        key: 'init',
-        value: function init() {
-            this._handleOnClickEvent = this.handleOnClickEvent.bind(this);
-            this._handleOnMouseOverEvent = this.handleOnMouseOverEvent.bind(this);
-            this._handleOnMouseOutEvent = this.handleOnMouseOutEvent.bind(this);
-            this._handleOnDocumentClickEvent = this.handleOnDocumentClickEvent.bind(this);
-
-            this.$element.on('click', this._handleOnClickEvent);
-            this.$element.on('mouseover', this._handleOnMouseOverEvent);
-            this.$element.on('mouseout', this._handleOnMouseOutEvent);
-            this.$element.data('menuController', this);
-        }
-
-        //------------------------------------------------------------------------------------------------------------------
-        // Global Event handlers.
-
-    }, {
-        key: 'handleOnClickEvent',
-        value: function handleOnClickEvent(event) {
-            var target = this._getClosestNode(event.target);
-
-            if (target.onClick) {
-                target.onClick(event);
-            }
-        }
-    }, {
-        key: 'handleOnMouseOverEvent',
-        value: function handleOnMouseOverEvent(event) {
-            var target = this._getClosestNode(event.target);
-
-            if (target.$element[0].contains(event.relatedTarget)) {
-                return;
-            }
-
-            if (target.onMouseOver) {
-                target.onMouseOver(event);
-            }
-        }
-    }, {
-        key: 'handleOnMouseOutEvent',
-        value: function handleOnMouseOutEvent(event) {
-            var target = this._getClosestNode(event.target);
-
-            if (target.$element[0].contains(event.relatedTarget)) {
-                return;
-            }
-
-            if (target.onMouseOut) {
-                target.onMouseOut(event);
-            }
-        }
-    }, {
-        key: 'handleOnDocumentClickEvent',
-        value: function handleOnDocumentClickEvent(event) {}
-
-        //------------------------------------------------------------------------------------------------------------------
-        // Private Functions
-
-    }, {
-        key: '_getClosestNode',
-        value: function _getClosestNode(target) {
-            var r = (0, _jquery2.default)(target).closest(SELECTORS.all, this._getRootElement(target));
-
-            if (r.length) {
-                return this._getNodeInstance(r);
-            }
-        }
-    }, {
-        key: '_getClosestMenu',
-        value: function _getClosestMenu(target) {
-            var r = (0, _jquery2.default)(target).closest(SELECTORS.menu, this._getRootElement(target));
-
-            if (r.length) {
-                return this.MenuClass.getInstance(r);
-            }
-        }
-    }, {
-        key: '_getClosestItem',
-        value: function _getClosestItem(target) {
-            var r = (0, _jquery2.default)(target).closest(SELECTORS.menuitem, this._getRootElement(target));
-
-            if (r.length) {
-                return this.MenuItemClass.getInstance(r);
-            }
-        }
-    }, {
-        key: '_getRootElement',
-        value: function _getRootElement(target) {
-            var o = this.$element;
-
-            while (o.length) {
-                var menuController = o.data('menuController');
-
-                if (menuController) {
-                    return menuController.$element;
+        if (value !== undefined) {
+            if (type) {
+                try {
+                    return type(value);
+                } catch (e) {
+                    if (!(e instanceof TypeError)) {
+                        throw e;
+                    }
                 }
-
-                o = o.parent();
+            } else {
+                return value;
             }
         }
-    }, {
-        key: '_getNodeInstance',
-        value: function _getNodeInstance(node) {
-            var type = getNodeType(node);
+    }
 
-            if (type === 'menu') {
-                return this.MenuClass.getInstance(node);
-            } else if (type === 'dropdown' || type === 'item') {
-                return this.MenuItemClass.getInstance(node);
-            }
-        }
+    return defaultValue;
+}
 
-        //------------------------------------------------------------------------------------------------------------------
-        // Navigation
+function getMenuItemProperty(target, propName, parentPropName, type, defaultValue) {
+    var data = [target.$element.data(), target.parent];
 
-    }, {
-        key: 'getParent',
-        value: function getParent() {
-            var r = this.$element.parent().closest(SELECTORS.all, this.getRoot().$element);
+    var keys = [propName, parentPropName];
 
-            if (r.length) {
-                return this._getNodeInstance(r);
-            }
-        }
-    }, {
-        key: 'getParentMenu',
-        value: function getParentMenu() {
-            var r = this.$element.parent().closest(SELECTORS.menu, this.getRoot().$element);
+    for (var i = 0, l = data.length; i < l; i++) {
+        var key = keys[i],
+            datum = data[i];
 
-            if (r.length) {
-                return this.MenuClass.getInstance(r);
-            }
-        }
-    }, {
-        key: 'getParentItem',
-        value: function getParentItem() {
-            var r = this.$element.parent().closest(SELECTORS.menuitem, this.getRoot().$element);
+        if (!key) continue;
 
-            if (r.length) {
-                return this.MenuItemClass.getInstance(r);
-            }
-        }
-    }, {
-        key: 'getRoot',
-        value: function getRoot() {
-            var o = this.$element;
+        var value = datum[key];
 
-            while (o.length) {
-                var menuController = o.data('menuController');
-
-                if (menuController) {
-                    return menuController;
+        if (value !== undefined) {
+            try {
+                if (type) {
+                    return type(value);
+                } else {
+                    return value;
                 }
-
-                o = o.parent();
+            } catch (e) {
+                if (!(e instanceof TypeError)) {
+                    throw e;
+                }
             }
         }
+    }
 
-        //------------------------------------------------------------------------------------------------------------------
-        // Properties
+    return defaultValue;
+}
 
-    }]);
+function menuProperty(type, defaultValue) {
+    return function (target, name, descriptor) {
+        return {
+            descriptor: descriptor,
 
-    return MenuNode;
-}(_ObjectEvents3.default);
+            get: function get() {
+                return getMenuNodeProperty(this, name, type, defaultValue);
+            },
+            set: function set(value) {
+                this.$element.data(name, value);
+            }
+        };
+    };
+}
 
-exports.default = MenuNode;
+function menuItemProperty(menuProperty, type, defaultValue) {
+    return function (target, name, descriptor) {
+        return {
+            descriptor: descriptor,
 
+            get: function get() {
+                return getMenuItemProperty(this, name, menuProperty, type, defaultValue);
+            },
+            set: function set(value) {
+                this.$element.data(name, value);
+            }
+        };
+    };
+}
 
-MenuNode.SELECTORS = SELECTORS;
+function toggleType(value) {
+    if (value === 'false' || value === 'true') {
+        value = value === 'true';
+    }
+
+    if (typeof value === 'boolean') {
+        return "";
+    } else if (value === 'click' || value === 'dblclick') {
+        return value;
+    } else {
+        throw new TypeError("Invalid value.");
+    }
+}
+
+function autoActivateType(value) {
+    if (typeof value === 'string') {
+        value = value.toLowerCase();
+
+        if (value === 'true') {
+            return 0;
+        } else if (value === 'false') {
+            return -1;
+        } else {
+            value = (0, _utility.parseInteger)(value, 10);
+
+            if (!Number.isNaN(value)) {
+                return value;
+            }
+        }
+    } else if (typeof value === 'boolean') {
+        return value ? 0 : -1;
+    } else if (typeof value === 'number' && !Number.isNaN(value)) {
+        return value;
+    }
+
+    throw new TypeError("Invalid value.");
+}
 
 /***/ }),
 
@@ -1918,13 +3073,13 @@ var _loader = __webpack_require__(/*! ../../loader */ "./src/loader.js");
 
 var _loader2 = _interopRequireDefault(_loader);
 
+var _MenuView = __webpack_require__(/*! ./MenuView */ "./src/menus/menuWidget/MenuView.js");
+
+var _MenuView2 = _interopRequireDefault(_MenuView);
+
 var _Menu = __webpack_require__(/*! ./Menu */ "./src/menus/menuWidget/Menu.js");
 
 var _Menu2 = _interopRequireDefault(_Menu);
-
-var _MenuNode = __webpack_require__(/*! ./MenuNode */ "./src/menus/menuWidget/MenuNode.js");
-
-var _MenuNode2 = _interopRequireDefault(_MenuNode);
 
 var _MenuItem = __webpack_require__(/*! ./MenuItem */ "./src/menus/menuWidget/MenuItem.js");
 
@@ -1933,15 +3088,14 @@ var _MenuItem2 = _interopRequireDefault(_MenuItem);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _loader2.default.register('menu', function (element, context) {
-    var m = new _Menu2.default(element, context);
-    m.init();
+    var m = new _MenuView2.default(element);
     window.testMenu = m;
     return m;
 });
 
+window.MenuView = _MenuView2.default;
 window.Menu = _Menu2.default;
 window.MenuItem = _MenuItem2.default;
-window.MenuNode = _MenuNode2.default;
 
 /***/ }),
 
