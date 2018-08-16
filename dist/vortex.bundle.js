@@ -1494,6 +1494,60 @@ Loader.init();
 
 /***/ }),
 
+/***/ "./src/menus/menuWidget/DropDown.js":
+/*!******************************************!*\
+  !*** ./src/menus/menuWidget/DropDown.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = undefined;
+
+var _MenuView2 = __webpack_require__(/*! ./MenuView */ "./src/menus/menuWidget/MenuView.js");
+
+var _MenuView3 = _interopRequireDefault(_MenuView2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DropDown = function (_MenuView) {
+    _inherits(DropDown, _MenuView);
+
+    function DropDown(selector, config) {
+        _classCallCheck(this, DropDown);
+
+        var _this = _possibleConstructorReturn(this, (DropDown.__proto__ || Object.getPrototypeOf(DropDown)).call(this, selector, config));
+
+        config = {
+            timeout: -1,
+            closeOnSelect: true,
+            activateEvent: 'click',
+            toggle: 'click'
+        };
+
+        config = Object.assign(config, _this.$element.data());
+        _this.$element.data(config);
+        return _this;
+    }
+
+    return DropDown;
+}(_MenuView3.default);
+
+exports.default = DropDown;
+
+/***/ }),
+
 /***/ "./src/menus/menuWidget/Menu.js":
 /*!**************************************!*\
   !*** ./src/menus/menuWidget/Menu.js ***!
@@ -2460,7 +2514,7 @@ function _initializerWarningHelper(descriptor, context) {
 }
 
 var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec2 = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec3 = (0, _core.menuProperty)(_core.autoActivateType, -1), (_class = function () {
-    function MenuView(selector) {
+    function MenuView(selector, config) {
         _classCallCheck(this, MenuView);
 
         _initDefineProp(this, 'closeOnSelect', _descriptor, this);
@@ -2473,6 +2527,10 @@ var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), 
             this.$element = (0, _jquery2.default)(selector());
         } else {
             this.$element = (0, _jquery2.default)(selector);
+        }
+
+        if (config) {
+            Object.assign(this, config);
         }
 
         this._handleClickEvent = this.handleClickEvent.bind(this);
@@ -3038,6 +3096,10 @@ var _MenuItem = __webpack_require__(/*! ./MenuItem */ "./src/menus/menuWidget/Me
 
 var _MenuItem2 = _interopRequireDefault(_MenuItem);
 
+var _DropDown = __webpack_require__(/*! ./DropDown */ "./src/menus/menuWidget/DropDown.js");
+
+var _DropDown2 = _interopRequireDefault(_DropDown);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _loader2.default.register('menu', function (element) {
@@ -3045,18 +3107,7 @@ _loader2.default.register('menu', function (element) {
 });
 
 _loader2.default.register('dropdown', function (element) {
-    var dropdown = new _MenuView2.default(element);
-    var config = {
-        timeout: -1,
-        closeOnSelect: true,
-        activateEvent: 'click',
-        toggle: 'click'
-    };
-
-    config = Object.assign(config, dropdown.$element.data());
-    dropdown.$element.data(config);
-
-    return dropdown;
+    return new _DropDown2.default(element);
 });
 
 window.MenuView = _MenuView2.default;

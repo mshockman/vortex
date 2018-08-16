@@ -2,6 +2,7 @@ import Loader from '../../loader';
 import MenuView from './MenuView';
 import Menu from './Menu';
 import MenuItem from './MenuItem';
+import DropDown from './DropDown';
 
 
 Loader.register('menu', (element) => {
@@ -10,18 +11,7 @@ Loader.register('menu', (element) => {
 
 
 Loader.register('dropdown', (element) => {
-    const dropdown = new MenuView(element);
-    let config = {
-        timeout: -1,
-        closeOnSelect: true,
-        activateEvent: 'click',
-        toggle: 'click'
-    };
-
-    config = Object.assign(config, dropdown.$element.data());
-    dropdown.$element.data(config);
-
-    return dropdown;
+    return new DropDown(element);
 });
 
 
