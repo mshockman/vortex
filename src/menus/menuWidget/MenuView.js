@@ -13,11 +13,15 @@ export default class MenuView {
 
     @menuProperty(autoActivateType, -1) timeout;
 
-    constructor(selector) {
+    constructor(selector, config) {
         if(typeof selector === 'function') {
             this.$element = $(selector());
         } else {
             this.$element = $(selector);
+        }
+
+        if(config) {
+            Object.assign(this, config);
         }
 
         this._handleClickEvent = this.handleClickEvent.bind(this);
@@ -42,7 +46,7 @@ export default class MenuView {
         this.$element.data('menu-controller', null);
         this.$element.off(events.select, this._handleSelectEvent);
     }
-
+    
     activate() {
         let node = this._getInstance(this.$element);
 
