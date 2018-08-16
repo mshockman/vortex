@@ -3044,7 +3044,7 @@ function getMenuItemProperty(target, propName, parentPropName, type, defaultValu
         var key = keys[i],
             datum = data[i];
 
-        if (!key) continue;
+        if (!key || !datum) continue;
 
         var value = datum[key];
 
@@ -3164,10 +3164,23 @@ var _MenuItem2 = _interopRequireDefault(_MenuItem);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_loader2.default.register('menu', function (element, context) {
-    var m = new _MenuView2.default(element);
-    window.testMenu = m;
-    return m;
+_loader2.default.register('menu', function (element) {
+    return new _MenuView2.default(element);
+});
+
+_loader2.default.register('dropdown', function (element) {
+    var dropdown = new _MenuView2.default(element);
+    var config = {
+        timeout: -1,
+        closeOnSelect: true,
+        activateEvent: 'click'
+        // toggle: 'click'
+    };
+
+    config = Object.assign(config, dropdown.$element.data());
+    dropdown.$element.data(config);
+
+    return dropdown;
 });
 
 window.MenuView = _MenuView2.default;

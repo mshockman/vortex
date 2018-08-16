@@ -110,7 +110,7 @@ export function getMenuItemProperty(target, propName, parentPropName, type, defa
         let key = keys[i],
             datum = data[i];
 
-        if(!key) continue;
+        if(!key || !datum) continue;
 
         let value = datum[key];
 
