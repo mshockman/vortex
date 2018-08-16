@@ -122,7 +122,6 @@ export default class MenuItem extends MenuNode {
 
     activate() {
         if(!this.isActive) {
-            console.log("activate item");
             this.$element.addClass('active');
 
             this.clearTimer('openDelay');
@@ -147,7 +146,6 @@ export default class MenuItem extends MenuNode {
         this.clearTimer('openDelay');
 
         if(this.isActive) {
-            console.log("deactivate item");
             this.$element.removeClass('active');
 
             if(this.isDropDown && this.submenu && this.submenu.isOpen) {

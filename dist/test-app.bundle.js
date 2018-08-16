@@ -2290,7 +2290,6 @@ var MenuItem = (_dec = (0, _core.menuItemProperty)('activateEvent', (0, _types.c
         key: "activate",
         value: function activate() {
             if (!this.isActive) {
-                console.log("activate item");
                 this.$element.addClass('active');
 
                 this.clearTimer('openDelay');
@@ -2316,7 +2315,6 @@ var MenuItem = (_dec = (0, _core.menuItemProperty)('activateEvent', (0, _types.c
             this.clearTimer('openDelay');
 
             if (this.isActive) {
-                console.log("deactivate item");
                 this.$element.removeClass('active');
 
                 if (this.isDropDown && this.submenu && this.submenu.isOpen) {
@@ -2913,6 +2911,21 @@ var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), 
         get: function get() {
             return this.$element.hasClass('active');
         }
+    }], [{
+        key: 'getController',
+        value: function getController(target) {
+            target = (0, _jquery2.default)(target);
+
+            while (target && target.length) {
+                if (target.data('menu-controller')) {
+                    return target;
+                }
+
+                target = target.parent();
+            }
+
+            return null;
+        }
     }]);
 
     return MenuView;
@@ -2934,6 +2947,294 @@ MenuView.prototype.MenuItemClass = _MenuItem2.default;
 
 /***/ }),
 
+/***/ "./src/menus/menuWidget/Selectable.js":
+/*!********************************************!*\
+  !*** ./src/menus/menuWidget/Selectable.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7;
+
+var _jquery = __webpack_require__(/*! jquery */ "jquery");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _core = __webpack_require__(/*! ./core */ "./src/menus/menuWidget/core.js");
+
+var _types = __webpack_require__(/*! ../../common/types */ "./src/common/types.js");
+
+var _MenuView = __webpack_require__(/*! ./MenuView */ "./src/menus/menuWidget/MenuView.js");
+
+var _MenuView2 = _interopRequireDefault(_MenuView);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _initDefineProp(target, property, descriptor, context) {
+    if (!descriptor) return;
+    Object.defineProperty(target, property, {
+        enumerable: descriptor.enumerable,
+        configurable: descriptor.configurable,
+        writable: descriptor.writable,
+        value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+    });
+}
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+    var desc = {};
+    Object['ke' + 'ys'](descriptor).forEach(function (key) {
+        desc[key] = descriptor[key];
+    });
+    desc.enumerable = !!desc.enumerable;
+    desc.configurable = !!desc.configurable;
+
+    if ('value' in desc || desc.initializer) {
+        desc.writable = true;
+    }
+
+    desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+        return decorator(target, property, desc) || desc;
+    }, desc);
+
+    if (context && desc.initializer !== void 0) {
+        desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+        desc.initializer = undefined;
+    }
+
+    if (desc.initializer === void 0) {
+        Object['define' + 'Property'](target, property, desc);
+        desc = null;
+    }
+
+    return desc;
+}
+
+function _initializerWarningHelper(descriptor, context) {
+    throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+}
+
+var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, false), _dec2 = (0, _core.boundProperty)(_types.parseIntegerValue, 3), _dec3 = (0, _core.boundProperty)(null, ', '), _dec4 = (0, _core.boundProperty)(null, undefined), _dec5 = (0, _core.boundProperty)(null, 'form'), _dec6 = (0, _core.boundProperty)(null, ', '), _dec7 = (0, _core.boundProperty)((0, _types.choiceType)('change', 'select'), 'select'), (_class = function () {
+    function Selectable(selector, config) {
+        _classCallCheck(this, Selectable);
+
+        _initDefineProp(this, 'multiSelect', _descriptor, this);
+
+        _initDefineProp(this, 'maxLabels', _descriptor2, this);
+
+        _initDefineProp(this, 'labelDelimiter', _descriptor3, this);
+
+        _initDefineProp(this, 'name', _descriptor4, this);
+
+        _initDefineProp(this, 'export', _descriptor5, this);
+
+        _initDefineProp(this, 'delimiter', _descriptor6, this);
+
+        _initDefineProp(this, 'selectEvent', _descriptor7, this);
+
+        this.$element = (0, _jquery2.default)(selector);
+
+        this._onSelect = this.onSelect.bind(this);
+        this.$element.on(_core.events.select, this._onSelect);
+        this.$element.data('select-widget', this);
+
+        if (config) {
+            this.$element.data(config);
+        }
+
+        this.render();
+    }
+
+    _createClass(Selectable, [{
+        key: 'onSelect',
+        value: function onSelect(event) {
+            if (this.multiSelect) {
+                if (this.isSelected(event.target)) {
+                    this.deselect(event.target);
+                } else {
+                    this.select(event.target);
+                }
+            } else {
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = this.getSelectedItems().toArray()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var item = _step.value;
+
+                        if (item !== event.target) {
+                            this.deselect(item);
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+
+                if (!this.isSelected(event.target)) {
+                    this.select(event.target);
+                }
+            }
+
+            this.render();
+        }
+    }, {
+        key: 'deselect',
+        value: function deselect(item) {
+            (0, _jquery2.default)(item).removeClass('selected');
+        }
+    }, {
+        key: 'select',
+        value: function select(item) {
+            (0, _jquery2.default)(item).addClass('selected');
+        }
+    }, {
+        key: 'isSelected',
+        value: function isSelected(item) {
+            return (0, _jquery2.default)(item).hasClass('selected');
+        }
+    }, {
+        key: 'getSelectedItems',
+        value: function getSelectedItems() {
+            return this.$element.find("[data-role='item'].selected");
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var r = [],
+                values = [];
+
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = this.getSelectedItems().toArray()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var item = _step2.value;
+
+                    item = (0, _jquery2.default)(item);
+                    var label = item.find("[data-label]");
+
+                    if (label.length) {
+                        r.push(label.html());
+                    } else {
+                        r.push(item.html());
+                    }
+                    values.push(item.data('value'));
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
+
+            if (r.length > this.maxLabels) {
+                r = r.length + ' Selected';
+            } else {
+                r = r.join(this.labelDelimiter);
+            }
+
+            this.$element.children("[data-role='chosen']").html(r);
+
+            if (this.name) {
+                if (this.export === 'form') {
+                    this.$element.children('[name="' + this.name + '"]').remove();
+
+                    var _iteratorNormalCompletion3 = true;
+                    var _didIteratorError3 = false;
+                    var _iteratorError3 = undefined;
+
+                    try {
+                        for (var _iterator3 = values[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                            var value = _step3.value;
+
+                            if (value) {
+                                var i = (0, _jquery2.default)('<input type="hidden" value="' + value + '" name="' + this.name + '" />');
+                                this.$element.append(i);
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError3 = true;
+                        _iteratorError3 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                                _iterator3.return();
+                            }
+                        } finally {
+                            if (_didIteratorError3) {
+                                throw _iteratorError3;
+                            }
+                        }
+                    }
+                } else if (this.export === 'csv') {
+                    this.$element.children('[name="' + this.name + '"]').remove();
+                    var v = values.join(this.delimiter || ',');
+                    var _i = (0, _jquery2.default)('<input type="hidden" value="' + v + '" name="' + this.name + '" />');
+                    this.$element.append(_i);
+                }
+            }
+        }
+    }]);
+
+    return Selectable;
+}(), (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'multiSelect', [_dec], {
+    enumerable: true,
+    initializer: null
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'maxLabels', [_dec2], {
+    enumerable: true,
+    initializer: null
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, 'labelDelimiter', [_dec3], {
+    enumerable: true,
+    initializer: null
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, 'name', [_dec4], {
+    enumerable: true,
+    initializer: null
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, 'export', [_dec5], {
+    enumerable: true,
+    initializer: null
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, 'delimiter', [_dec6], {
+    enumerable: true,
+    initializer: null
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, 'selectEvent', [_dec7], {
+    enumerable: true,
+    initializer: null
+})), _class));
+exports.default = Selectable;
+
+/***/ }),
+
 /***/ "./src/menus/menuWidget/core.js":
 /*!**************************************!*\
   !*** ./src/menus/menuWidget/core.js ***!
@@ -2952,10 +3253,11 @@ exports.getRoles = getRoles;
 exports.hasRole = hasRole;
 exports.addRoles = addRoles;
 exports.removeRoles = removeRoles;
-exports.getMenuNodeProperty = getMenuNodeProperty;
+exports.getAttributeProperty = getAttributeProperty;
 exports.getMenuItemProperty = getMenuItemProperty;
 exports.menuProperty = menuProperty;
 exports.menuItemProperty = menuItemProperty;
+exports.boundProperty = boundProperty;
 exports.toggleType = toggleType;
 exports.autoActivateType = autoActivateType;
 
@@ -2967,7 +3269,7 @@ var _utility = __webpack_require__(/*! ../../utility */ "./src/utility.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var PREFIX = exports.PREFIX = 'menus.';
+var PREFIX = exports.PREFIX = 'menus-';
 
 var SELECTORS = exports.SELECTORS = {
     menu: "[data-role~='menu']",
@@ -3077,7 +3379,7 @@ function removeRoles(element) {
     return r;
 }
 
-function getMenuNodeProperty(target, name, type, defaultValue) {
+function getAttributeProperty(target, name, type, defaultValue) {
     var data = [target.$element.data()],
         keys = [name];
 
@@ -3141,7 +3443,7 @@ function menuProperty(type, defaultValue) {
             descriptor: descriptor,
 
             get: function get() {
-                return getMenuNodeProperty(this, name, type, defaultValue);
+                return getAttributeProperty(this, name, type, defaultValue);
             },
             set: function set(value) {
                 this.$element.data(name, value);
@@ -3157,6 +3459,21 @@ function menuItemProperty(menuProperty, type, defaultValue) {
 
             get: function get() {
                 return getMenuItemProperty(this, name, menuProperty, type, defaultValue);
+            },
+            set: function set(value) {
+                this.$element.data(name, value);
+            }
+        };
+    };
+}
+
+function boundProperty(type, defaultValue) {
+    return function (target, name, descriptor) {
+        return {
+            descriptor: descriptor,
+
+            get: function get() {
+                return getAttributeProperty(this, name, type, defaultValue);
             },
             set: function set(value) {
                 this.$element.data(name, value);
@@ -3235,6 +3552,10 @@ var _DropDown = __webpack_require__(/*! ./DropDown */ "./src/menus/menuWidget/Dr
 
 var _DropDown2 = _interopRequireDefault(_DropDown);
 
+var _Selectable = __webpack_require__(/*! ./Selectable */ "./src/menus/menuWidget/Selectable.js");
+
+var _Selectable2 = _interopRequireDefault(_Selectable);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _loader2.default.register('menu', function (element) {
@@ -3243,6 +3564,10 @@ _loader2.default.register('menu', function (element) {
 
 _loader2.default.register('dropdown', function (element) {
     return new _DropDown2.default(element);
+});
+
+_loader2.default.register('selectable', function (element) {
+    return new _Selectable2.default(element);
 });
 
 window.MenuView = _MenuView2.default;

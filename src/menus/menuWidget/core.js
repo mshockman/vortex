@@ -2,7 +2,7 @@ import $ from 'jquery';
 import {parseInteger} from "../../utility";
 
 
-export const PREFIX = 'menus.';
+export const PREFIX = 'menus-';
 
 
 export const SELECTORS = {
@@ -70,7 +70,7 @@ export function removeRoles(element, ...roles) {
 }
 
 
-export function getMenuNodeProperty(target, name, type, defaultValue) {
+export function getAttributeProperty(target, name, type, defaultValue) {
     let data = [target.$element.data()],
         keys = [name];
 
@@ -139,7 +139,7 @@ export function menuProperty(type, defaultValue) {
             descriptor,
 
             get() {
-                return getMenuNodeProperty(this, name, type, defaultValue);
+                return getAttributeProperty(this, name, type, defaultValue);
             },
 
             set(value) {
@@ -157,6 +157,23 @@ export function menuItemProperty(menuProperty, type, defaultValue) {
 
             get() {
                 return getMenuItemProperty(this, name, menuProperty, type, defaultValue);
+            },
+
+            set(value) {
+                this.$element.data(name, value);
+            }
+        }
+    }
+}
+
+
+export function boundProperty(type, defaultValue) {
+    return function(target, name, descriptor) {
+        return {
+            descriptor,
+
+            get() {
+                return getAttributeProperty(this, name, type, defaultValue);
             },
 
             set(value) {

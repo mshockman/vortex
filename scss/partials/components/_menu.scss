@@ -111,3 +111,13 @@
     display: block;
   }
 }
+
+
+.select-widget {
+  > .select {
+    border: 1px solid $silver;
+    padding: 3px 5px;
+    cursor: pointer;
+    user-select: none;
+  }
+}

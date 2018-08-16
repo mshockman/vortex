@@ -38,6 +38,20 @@ export default class MenuView {
         this.$element.on(events.select, this._handleSelectEvent);
     }
 
+    static getController(target) {
+        target = $(target);
+
+        while(target && target.length) {
+            if(target.data('menu-controller')) {
+                return target;
+            }
+
+            target = target.parent();
+        }
+
+        return null;
+    }
+
     destroy() {
         this.$element.off('click', this._handleClickEvent);
         this.$element.off('mouseover', this._handleMouseOverEvent);
@@ -46,7 +60,7 @@ export default class MenuView {
         this.$element.data('menu-controller', null);
         this.$element.off(events.select, this._handleSelectEvent);
     }
-    
+
     activate() {
         let node = this._getInstance(this.$element);
 
