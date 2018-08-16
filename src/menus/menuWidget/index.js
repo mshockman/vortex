@@ -15,7 +15,7 @@ Loader.register('dropdown', (element) => {
         timeout: -1,
         closeOnSelect: true,
         activateEvent: 'click',
-        // toggle: 'click'
+        toggle: 'click'
     };
 
     config = Object.assign(config, dropdown.$element.data());

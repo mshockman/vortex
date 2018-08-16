@@ -83,3 +83,15 @@ export function setDefaultValues(target, defaults) {
 export function randomChoice(list) {
     return list[Math.floor(Math.random() * list.length)];
 }
+
+
+export function isMouseLeave(target, event) {
+    if(target.jquery) target = target[0];
+    return !target.contains(event.relatedTarget);
+}
+
+
+export function isMouseEnter(target, event) {
+    if(target.jquery) target = target[0];
+    return !target.contains(event.relatedTarget);
+}

@@ -1,12 +1,12 @@
-import {SELECTORS, events, menuProperty, autoActivateType} from "./core";
+import {SELECTORS, events, menuProperty, autoActivateType, getRoles} from "./core";
 import Menu from './Menu';
 import MenuItem from './MenuItem';
 import $ from "jquery";
 import {parseBooleanValue} from "../../common/types";
-import {getRoles} from "../core";
+import {isMouseEnter, isMouseLeave} from '../../utility';
 
 
-export default class MenuView extends Menu {
+export default class MenuView {
     @menuProperty(parseBooleanValue, true) closeOnSelect;
 
     @menuProperty(parseBooleanValue, true) closeOnBlur;
@@ -14,9 +14,11 @@ export default class MenuView extends Menu {
     @menuProperty(autoActivateType, -1) timeout;
 
     constructor(selector) {
-        super(selector);
-        // noinspection JSUnusedGlobalSymbols
-        this.root = this;
+        if(typeof selector === 'function') {
+            this.$element = $(selector());
+        } else {
+            this.$element = $(selector);
+        }
 
         this._handleClickEvent = this.handleClickEvent.bind(this);
         this._handleMouseOverEvent = this.handleMouseOverEvent.bind(this);
@@ -42,7 +44,11 @@ export default class MenuView extends Menu {
     }
 
     activate() {
-        super.activate();
+        let node = this._getInstance(this.$element);
+
+        if(!node.isActive) {
+            node.activate();
+        }
 
         // If closeOnBlur is is true attach the necessary events to the document to track outside
         // mouse clicks.
@@ -68,7 +74,11 @@ export default class MenuView extends Menu {
     }
 
     deactivate() {
-        super.deactivate();
+        let node = this._getInstance(this.$element);
+
+        if(node.isActive) {
+            node.deactivate();
+        }
 
         // Remove click tracking from the document.
         if(this._handleDocumentClickEvent && !this.isActive) {
@@ -111,7 +121,7 @@ export default class MenuView extends Menu {
 
         this.clearTimer('rootTimer');
 
-        if(target && target.onMouseOver && !this.disabled && !target.disabled) {
+        if(target && isMouseEnter(target.$element, event) && target.onMouseOver && !this.disabled && !target.disabled) {
             target.onMouseOver(event);
         }
     }
@@ -119,16 +129,13 @@ export default class MenuView extends Menu {
     handleMouseOutEvent(event) {
         let target = this._getClosestNode(event.target);
 
-        if(this._timeoutTimer) {
-            clearTimeout(this._timeoutTimer);
-            this._timeoutTimer = null;
-        }
+        this.clearTimer('rootTimer');
 
-        if(typeof this.timeout === 'number' && this.timeout >= 0 && !this.disabled && !target.disabled) {
+        if(isMouseLeave(this.$element[0], event) && typeof this.timeout === 'number' && this.timeout >= 0 && !this.disabled && !target.disabled) {
             this.startTimer('rootTimer', this.deactivate.bind(this), this.timeout);
         }
 
-        if(target && target.onMouseOut) {
+        if(target && !target.$element[0].contains(event.relatedTarget) && target.onMouseOut) {
             target.onMouseOut(event);
         }
     }
@@ -167,10 +174,6 @@ export default class MenuView extends Menu {
         const $node = $(node),
             type = this.getComponentType(node);
 
-        if($node[0] === this.$element[0]) {
-            return this;
-        }
-
         if(type === "menu") {
             return new this.MenuClass($node, this);
         } else if(type === 'item' || type === 'dropdown') {
@@ -191,6 +194,45 @@ export default class MenuView extends Menu {
         } else if(roles.indexOf('dropdown') !== -1) {
             return 'dropdown';
         }
+    }
+
+    startTimer(name, fn, time) {
+        // Don't create a timer of time < 0 or Infinite.
+        if(time < 0 || !Number.isFinite(time)) return;
+
+        let _timer = this.$element.data(name);
+
+        if(_timer) {
+            clearTimeout(_timer);
+            this.$element.data(name, null);
+        }
+
+        _timer = setTimeout(() => {
+            this.$element.data(name, null);
+            fn();
+        }, time);
+
+        this.$element.data(name, _timer);
+    }
+
+    clearTimer(name) {
+        let _timer = this.$element.data(name);
+
+        if(_timer) {
+            clearTimeout(_timer);
+            this.$element.data(name, null);
+        }
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Properties
+
+    get disabled() {
+        return this.$element.hasClass('disabled');
+    }
+
+    get isActive() {
+        return this.$element.hasClass('active');
     }
 }
 

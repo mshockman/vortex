@@ -80,6 +80,10 @@ export default class Menu extends MenuNode {
                 parent.activate();
             }
 
+            if(this.controller.$element.is(this.$element)) {
+                this.controller.activate();
+            }
+
             this.$element.trigger(events.activate, this);
         }
     }
@@ -90,6 +94,10 @@ export default class Menu extends MenuNode {
 
             for(let item of this.getActiveItems()) {
                 item.deactivate();
+            }
+
+            if(this.controller.$element.is(this.$element)) {
+                this.controller.deactivate();
             }
 
             this.$element.trigger(events.deactivate, this);
@@ -173,7 +181,7 @@ export default class Menu extends MenuNode {
 
     // noinspection JSUnusedGlobalSymbols
     get parent() {
-        if(this.root === this) {
+        if(this.controller === this) {
             return null;
         } else {
             return this.getParent('dropdown');

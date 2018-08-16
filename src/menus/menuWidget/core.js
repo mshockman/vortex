@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import {choiceType, compoundType, parseBooleanValue} from "../../common/types";
 import {parseInteger} from "../../utility";
 
 
@@ -53,6 +52,7 @@ export function addRoles(element, ...roles) {
 }
 
 
+// noinspection JSUnusedGlobalSymbols
 export function removeRoles(element, ...roles) {
     let $element = $(element),
         current = getRoles($element),

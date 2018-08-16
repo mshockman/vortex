@@ -1494,188 +1494,6 @@ Loader.init();
 
 /***/ }),
 
-/***/ "./src/menus/core.js":
-/*!***************************!*\
-  !*** ./src/menus/core.js ***!
-  \***************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.addRole = addRole;
-exports.removeRole = removeRole;
-exports.hasRoles = hasRoles;
-exports.getRoles = getRoles;
-var PREFIX = exports.PREFIX = 'menus.',
-    CONTROLLER = exports.CONTROLLER = PREFIX + "menu";
-
-var SELECTORS = exports.SELECTORS = {
-    menu: "[data-role~='menu']",
-    item: "[data-role~='item']",
-    dropdown: "[data-role~='dropdown']"
-};
-
-SELECTORS.all = SELECTORS.menu + ", " + SELECTORS.item + ", " + SELECTORS.dropdown;
-SELECTORS.menuitem = SELECTORS.item + ", " + SELECTORS.dropdown;
-
-var CLASSNAMES = exports.CLASSNAMES = {
-    open: 'open',
-    active: 'active',
-    disabled: 'disabled'
-};
-
-var EVENTS = exports.EVENTS = {
-    select: PREFIX + "select",
-    activate: PREFIX + "activate",
-    deactivate: PREFIX + "deactivate",
-    open: PREFIX + "open",
-    close: PREFIX + "close"
-};
-
-function addRole(element) {
-    element = $(element);
-    var r = getRoles(element);
-
-    for (var _len = arguments.length, roles = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        roles[_key - 1] = arguments[_key];
-    }
-
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-        for (var _iterator = roles[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var item = _step.value;
-
-            var i = r.indexOf(item);
-
-            if (i === -1) {
-                r.push(item);
-            }
-        }
-    } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-            }
-        } finally {
-            if (_didIteratorError) {
-                throw _iteratorError;
-            }
-        }
-    }
-
-    r = r.join(' ');
-    element.attr("data-role", r);
-    return r;
-}
-
-function removeRole(element) {
-    element = $(element);
-    var r = getRoles(element);
-
-    for (var _len2 = arguments.length, roles = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-        roles[_key2 - 1] = arguments[_key2];
-    }
-
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
-
-    try {
-        for (var _iterator2 = roles[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var item = _step2.value;
-
-            var i = r.indexOf(item);
-
-            if (i !== -1) {
-                r.splice(i, 1);
-            }
-        }
-    } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
-            }
-        } finally {
-            if (_didIteratorError2) {
-                throw _iteratorError2;
-            }
-        }
-    }
-
-    r = r.join(' ');
-    element.attr("data-role", r);
-    return r;
-}
-
-function hasRoles(element) {
-    element = $(element);
-    var r = getRoles(element);
-
-    for (var _len3 = arguments.length, roles = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-        roles[_key3 - 1] = arguments[_key3];
-    }
-
-    var _iteratorNormalCompletion3 = true;
-    var _didIteratorError3 = false;
-    var _iteratorError3 = undefined;
-
-    try {
-        for (var _iterator3 = roles[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var item = _step3.value;
-
-            var i = r.indexOf(item);
-
-            if (i === -1) {
-                return false;
-            }
-        }
-    } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
-            }
-        } finally {
-            if (_didIteratorError3) {
-                throw _iteratorError3;
-            }
-        }
-    }
-
-    return true;
-}
-
-function getRoles(element) {
-    element = $(element);
-    var r = element.attr("data-role");
-
-    if (!r) {
-        r = [];
-    } else {
-        r = r.split('/s+/');
-    }
-
-    return r;
-}
-
-/***/ }),
-
 /***/ "./src/menus/menuWidget/Menu.js":
 /*!**************************************!*\
   !*** ./src/menus/menuWidget/Menu.js ***!
@@ -1838,6 +1656,10 @@ var Menu = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec
                     parent.activate();
                 }
 
+                if (this.controller.$element.is(this.$element)) {
+                    this.controller.activate();
+                }
+
                 this.$element.trigger(_core.events.activate, this);
             }
         }
@@ -1870,6 +1692,10 @@ var Menu = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec
                             throw _iteratorError;
                         }
                     }
+                }
+
+                if (this.controller.$element.is(this.$element)) {
+                    this.controller.deactivate();
                 }
 
                 this.$element.trigger(_core.events.deactivate, this);
@@ -2027,7 +1853,7 @@ var Menu = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec
     }, {
         key: "parent",
         get: function get() {
-            if (this.root === this) {
+            if (this.controller === this) {
                 return null;
             } else {
                 return this.getParent('dropdown');
@@ -2182,10 +2008,10 @@ function _initializerWarningHelper(descriptor, context) {
 var MenuItem = (_dec = (0, _core.menuItemProperty)('activateEvent', (0, _types.choiceType)('click', 'mouseover', 'dblclick'), 'click'), _dec2 = (0, _core.menuItemProperty)('submenuOpenDelay', _types.parseIntegerValue, 0), _dec3 = (0, _core.menuItemProperty)('autoActivateItems', _types.parseIntegerValue, 0), _dec4 = (0, _core.menuItemProperty)('toggle', _core.toggleType, true), _dec5 = (0, _core.menuItemProperty)('delayItems', _types.parseIntegerValue, 0), _dec6 = (0, _core.menuItemProperty)('selectableItems', _types.parseBooleanValue, true), (_class = function (_MenuNode) {
     _inherits(MenuItem, _MenuNode);
 
-    function MenuItem(selector, root) {
+    function MenuItem(selector, controller) {
         _classCallCheck(this, MenuItem);
 
-        var _this = _possibleConstructorReturn(this, (MenuItem.__proto__ || Object.getPrototypeOf(MenuItem)).call(this, selector, root));
+        var _this = _possibleConstructorReturn(this, (MenuItem.__proto__ || Object.getPrototypeOf(MenuItem)).call(this, selector, controller));
 
         _initDefineProp(_this, "activateEvent", _descriptor, _this);
 
@@ -2211,7 +2037,7 @@ var MenuItem = (_dec = (0, _core.menuItemProperty)('activateEvent', (0, _types.c
             if (this.disabled) return;
 
             if (!this.isActive) {
-                if (this.parent.isActive) {
+                if (this.parent && this.parent.isActive) {
                     if (this.autoActivate >= 0) {
                         this.startTimer('activateTimer', this.activate.bind(this), this.autoActivate);
                     }
@@ -2242,7 +2068,7 @@ var MenuItem = (_dec = (0, _core.menuItemProperty)('activateEvent', (0, _types.c
                 if (this.isActive && this.toggle === 'click') {
                     this.deactivate();
 
-                    if (this.parent.isActive && !this.parent.getActiveItems().length) {
+                    if (this.parent && this.parent.isActive && !this.parent.getActiveItems().length) {
                         this.parent.deactivate();
                     }
                 } else if (!this.isActive && this.activateEvent === 'click') {
@@ -2275,6 +2101,7 @@ var MenuItem = (_dec = (0, _core.menuItemProperty)('activateEvent', (0, _types.c
         key: "activate",
         value: function activate() {
             if (!this.isActive) {
+                console.log("activate item");
                 this.$element.addClass('active');
 
                 this.clearTimer('openDelay');
@@ -2287,6 +2114,10 @@ var MenuItem = (_dec = (0, _core.menuItemProperty)('activateEvent', (0, _types.c
                     this.parent._addActiveItem(this);
                 }
 
+                if (this.controller.$element.is(this.$element)) {
+                    this.controller.activate();
+                }
+
                 this.$element.trigger(_core.events.activate, this);
             }
         }
@@ -2296,6 +2127,7 @@ var MenuItem = (_dec = (0, _core.menuItemProperty)('activateEvent', (0, _types.c
             this.clearTimer('openDelay');
 
             if (this.isActive) {
+                console.log("deactivate item");
                 this.$element.removeClass('active');
 
                 if (this.isDropDown && this.submenu && this.submenu.isOpen) {
@@ -2304,6 +2136,10 @@ var MenuItem = (_dec = (0, _core.menuItemProperty)('activateEvent', (0, _types.c
 
                 if (this.parent) {
                     this.parent._removeActiveItem(this);
+                }
+
+                if (this.controller.$element.is(this.$element)) {
+                    this.controller.deactivate();
                 }
 
                 this.$element.trigger(_core.events.deactivate, this);
@@ -2321,7 +2157,7 @@ var MenuItem = (_dec = (0, _core.menuItemProperty)('activateEvent', (0, _types.c
     }, {
         key: "parent",
         get: function get() {
-            if (!this._parent) {
+            if (this._parent === undefined) {
                 this._parent = this.getParent('menu');
             }
 
@@ -2330,7 +2166,7 @@ var MenuItem = (_dec = (0, _core.menuItemProperty)('activateEvent', (0, _types.c
     }, {
         key: "submenu",
         get: function get() {
-            if (!this._submenu && this.isDropDown) {
+            if (this._submenu === undefined && this.isDropDown) {
                 this._submenu = this.getChildren('menu')[0];
             }
 
@@ -2404,7 +2240,7 @@ var _ObjectEvents2 = __webpack_require__(/*! ../../common/ObjectEvents */ "./src
 
 var _ObjectEvents3 = _interopRequireDefault(_ObjectEvents2);
 
-var _core = __webpack_require__(/*! ../core */ "./src/menus/core.js");
+var _core = __webpack_require__(/*! ./core */ "./src/menus/menuWidget/core.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2417,12 +2253,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var MenuNode = function (_ObjectEvents) {
     _inherits(MenuNode, _ObjectEvents);
 
-    function MenuNode(selector, root) {
+    function MenuNode(selector, controller) {
         _classCallCheck(this, MenuNode);
 
         var _this = _possibleConstructorReturn(this, (MenuNode.__proto__ || Object.getPrototypeOf(MenuNode)).call(this));
 
-        _this.root = root;
+        _this.controller = controller;
 
         if (typeof selector === 'function') {
             _this.$element = (0, _jquery2.default)(selector());
@@ -2437,10 +2273,12 @@ var MenuNode = function (_ObjectEvents) {
         value: function getParent() {
             var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'all';
 
-            var $parent = this.$element.parent(_core.SELECTORS[type], this.root.$element);
+            var $parent = this.$element.parent(_core.SELECTORS[type], this.controller.$element);
 
             if ($parent.length) {
-                return this.root._getInstance($parent);
+                return this.controller._getInstance($parent);
+            } else {
+                return null;
             }
         }
     }, {
@@ -2464,8 +2302,8 @@ var MenuNode = function (_ObjectEvents) {
 
             var r = [];
 
-            this.$element.find(_core.SELECTORS[type], this.root.$element).each(function (x, element) {
-                r.push(_this3.root._getInstance(element));
+            this.$element.find(_core.SELECTORS[type], this.controller.$element).each(function (x, element) {
+                r.push(_this3.controller._getInstance(element));
             });
 
             return r;
@@ -2477,7 +2315,7 @@ var MenuNode = function (_ObjectEvents) {
                 return this.$element.is(item);
             } else if (item === this) {
                 return true;
-            } else if (this.$element && item.$element) {
+            } else if (item.$element) {
                 return this.$element.is(item.$element);
             }
         }
@@ -2516,7 +2354,7 @@ var MenuNode = function (_ObjectEvents) {
     }, {
         key: "componentType",
         get: function get() {
-            return this.root.getComponentType(this.$element);
+            return this.controller.getComponentType(this.$element);
         }
     }, {
         key: "isActive",
@@ -2554,15 +2392,13 @@ exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
 var _dec, _dec2, _dec3, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3;
 
 var _core = __webpack_require__(/*! ./core */ "./src/menus/menuWidget/core.js");
 
-var _Menu2 = __webpack_require__(/*! ./Menu */ "./src/menus/menuWidget/Menu.js");
+var _Menu = __webpack_require__(/*! ./Menu */ "./src/menus/menuWidget/Menu.js");
 
-var _Menu3 = _interopRequireDefault(_Menu2);
+var _Menu2 = _interopRequireDefault(_Menu);
 
 var _MenuItem = __webpack_require__(/*! ./MenuItem */ "./src/menus/menuWidget/MenuItem.js");
 
@@ -2574,7 +2410,7 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 var _types = __webpack_require__(/*! ../../common/types */ "./src/common/types.js");
 
-var _core2 = __webpack_require__(/*! ../core */ "./src/menus/core.js");
+var _utility = __webpack_require__(/*! ../../utility */ "./src/utility.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2589,10 +2425,6 @@ function _initDefineProp(target, property, descriptor, context) {
 }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
     var desc = {};
@@ -2627,36 +2459,34 @@ function _initializerWarningHelper(descriptor, context) {
     throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
 }
 
-var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec2 = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec3 = (0, _core.menuProperty)(_core.autoActivateType, -1), (_class = function (_Menu) {
-    _inherits(MenuView, _Menu);
-
+var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec2 = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec3 = (0, _core.menuProperty)(_core.autoActivateType, -1), (_class = function () {
     function MenuView(selector) {
         _classCallCheck(this, MenuView);
 
-        // noinspection JSUnusedGlobalSymbols
-        var _this = _possibleConstructorReturn(this, (MenuView.__proto__ || Object.getPrototypeOf(MenuView)).call(this, selector));
+        _initDefineProp(this, 'closeOnSelect', _descriptor, this);
 
-        _initDefineProp(_this, 'closeOnSelect', _descriptor, _this);
+        _initDefineProp(this, 'closeOnBlur', _descriptor2, this);
 
-        _initDefineProp(_this, 'closeOnBlur', _descriptor2, _this);
+        _initDefineProp(this, 'timeout', _descriptor3, this);
 
-        _initDefineProp(_this, 'timeout', _descriptor3, _this);
+        if (typeof selector === 'function') {
+            this.$element = (0, _jquery2.default)(selector());
+        } else {
+            this.$element = (0, _jquery2.default)(selector);
+        }
 
-        _this.root = _this;
+        this._handleClickEvent = this.handleClickEvent.bind(this);
+        this._handleMouseOverEvent = this.handleMouseOverEvent.bind(this);
+        this._handleMouseOutEvent = this.handleMouseOutEvent.bind(this);
+        this._handleDBLClickEvent = this.handleDBLClickEvent.bind(this);
+        this._handleSelectEvent = this.handleSelectEvent.bind(this);
 
-        _this._handleClickEvent = _this.handleClickEvent.bind(_this);
-        _this._handleMouseOverEvent = _this.handleMouseOverEvent.bind(_this);
-        _this._handleMouseOutEvent = _this.handleMouseOutEvent.bind(_this);
-        _this._handleDBLClickEvent = _this.handleDBLClickEvent.bind(_this);
-        _this._handleSelectEvent = _this.handleSelectEvent.bind(_this);
-
-        _this.$element.on('click', _this._handleClickEvent);
-        _this.$element.on('mouseover', _this._handleMouseOverEvent);
-        _this.$element.on('mouseout', _this._handleMouseOutEvent);
-        _this.$element.on('dblclick', _this._handleDBLClickEvent);
-        _this.$element.data('menu-controller', _this);
-        _this.$element.on(_core.events.select, _this._handleSelectEvent);
-        return _this;
+        this.$element.on('click', this._handleClickEvent);
+        this.$element.on('mouseover', this._handleMouseOverEvent);
+        this.$element.on('mouseout', this._handleMouseOutEvent);
+        this.$element.on('dblclick', this._handleDBLClickEvent);
+        this.$element.data('menu-controller', this);
+        this.$element.on(_core.events.select, this._handleSelectEvent);
     }
 
     _createClass(MenuView, [{
@@ -2672,9 +2502,13 @@ var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), 
     }, {
         key: 'activate',
         value: function activate() {
-            var _this2 = this;
+            var _this = this;
 
-            _get(MenuView.prototype.__proto__ || Object.getPrototypeOf(MenuView.prototype), 'activate', this).call(this);
+            var node = this._getInstance(this.$element);
+
+            if (!node.isActive) {
+                node.activate();
+            }
 
             // If closeOnBlur is is true attach the necessary events to the document to track outside
             // mouse clicks.
@@ -2682,15 +2516,15 @@ var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), 
                 var $doc = (0, _jquery2.default)(document);
 
                 this._handleDocumentClickEvent = function (event) {
-                    if (!_this2.$element[0].contains(event.target)) {
-                        _this2._handleDocumentClickEvent.remove();
-                        _this2._handleDocumentClickEvent = null;
-                        _this2.deactivate();
+                    if (!_this.$element[0].contains(event.target)) {
+                        _this._handleDocumentClickEvent.remove();
+                        _this._handleDocumentClickEvent = null;
+                        _this.deactivate();
                     }
                 };
 
                 this._handleDocumentClickEvent.remove = function () {
-                    $doc.off('click', _this2._handleDocumentClickEvent);
+                    $doc.off('click', _this._handleDocumentClickEvent);
                 };
 
                 this._handleDocumentClickEvent.$doc = $doc;
@@ -2701,7 +2535,11 @@ var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), 
     }, {
         key: 'deactivate',
         value: function deactivate() {
-            _get(MenuView.prototype.__proto__ || Object.getPrototypeOf(MenuView.prototype), 'deactivate', this).call(this);
+            var node = this._getInstance(this.$element);
+
+            if (node.isActive) {
+                node.deactivate();
+            }
 
             // Remove click tracking from the document.
             if (this._handleDocumentClickEvent && !this.isActive) {
@@ -2718,7 +2556,7 @@ var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), 
     }, {
         key: 'findNodes',
         value: function findNodes(selector) {
-            var _this3 = this;
+            var _this2 = this;
 
             if (_core.SELECTORS[selector]) {
                 selector = _core.SELECTORS[selector];
@@ -2727,7 +2565,7 @@ var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), 
             var r = [];
 
             this.$element.find(selector).each(function (x, element) {
-                r.push(_this3._getInstance(element));
+                r.push(_this2._getInstance(element));
             });
 
             return r;
@@ -2752,7 +2590,7 @@ var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), 
 
             this.clearTimer('rootTimer');
 
-            if (target && target.onMouseOver && !this.disabled && !target.disabled) {
+            if (target && (0, _utility.isMouseEnter)(target.$element, event) && target.onMouseOver && !this.disabled && !target.disabled) {
                 target.onMouseOver(event);
             }
         }
@@ -2761,16 +2599,13 @@ var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), 
         value: function handleMouseOutEvent(event) {
             var target = this._getClosestNode(event.target);
 
-            if (this._timeoutTimer) {
-                clearTimeout(this._timeoutTimer);
-                this._timeoutTimer = null;
-            }
+            this.clearTimer('rootTimer');
 
-            if (typeof this.timeout === 'number' && this.timeout >= 0 && !this.disabled && !target.disabled) {
+            if ((0, _utility.isMouseLeave)(this.$element[0], event) && typeof this.timeout === 'number' && this.timeout >= 0 && !this.disabled && !target.disabled) {
                 this.startTimer('rootTimer', this.deactivate.bind(this), this.timeout);
             }
 
-            if (target && target.onMouseOut) {
+            if (target && !target.$element[0].contains(event.relatedTarget) && target.onMouseOut) {
                 target.onMouseOut(event);
             }
         }
@@ -2816,10 +2651,6 @@ var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), 
             var $node = (0, _jquery2.default)(node),
                 type = this.getComponentType(node);
 
-            if ($node[0] === this.$element[0]) {
-                return this;
-            }
-
             if (type === "menu") {
                 return new this.MenuClass($node, this);
             } else if (type === 'item' || type === 'dropdown') {
@@ -2833,7 +2664,7 @@ var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), 
     }, {
         key: 'getComponentType',
         value: function getComponentType(node) {
-            var roles = (0, _core2.getRoles)(node);
+            var roles = (0, _core.getRoles)(node);
 
             if (roles.indexOf('menu') !== -1) {
                 return 'menu';
@@ -2843,10 +2674,56 @@ var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), 
                 return 'dropdown';
             }
         }
+    }, {
+        key: 'startTimer',
+        value: function startTimer(name, fn, time) {
+            var _this3 = this;
+
+            // Don't create a timer of time < 0 or Infinite.
+            if (time < 0 || !Number.isFinite(time)) return;
+
+            var _timer = this.$element.data(name);
+
+            if (_timer) {
+                clearTimeout(_timer);
+                this.$element.data(name, null);
+            }
+
+            _timer = setTimeout(function () {
+                _this3.$element.data(name, null);
+                fn();
+            }, time);
+
+            this.$element.data(name, _timer);
+        }
+    }, {
+        key: 'clearTimer',
+        value: function clearTimer(name) {
+            var _timer = this.$element.data(name);
+
+            if (_timer) {
+                clearTimeout(_timer);
+                this.$element.data(name, null);
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------------------------
+        // Properties
+
+    }, {
+        key: 'disabled',
+        get: function get() {
+            return this.$element.hasClass('disabled');
+        }
+    }, {
+        key: 'isActive',
+        get: function get() {
+            return this.$element.hasClass('active');
+        }
     }]);
 
     return MenuView;
-}(_Menu3.default), (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'closeOnSelect', [_dec], {
+}(), (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'closeOnSelect', [_dec], {
     enumerable: true,
     initializer: null
 }), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'closeOnBlur', [_dec2], {
@@ -2859,7 +2736,7 @@ var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), 
 exports.default = MenuView;
 
 
-MenuView.prototype.MenuClass = _Menu3.default;
+MenuView.prototype.MenuClass = _Menu2.default;
 MenuView.prototype.MenuItemClass = _MenuItem2.default;
 
 /***/ }),
@@ -2893,8 +2770,6 @@ var _jquery = __webpack_require__(/*! jquery */ "jquery");
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _types = __webpack_require__(/*! ../../common/types */ "./src/common/types.js");
-
 var _utility = __webpack_require__(/*! ../../utility */ "./src/utility.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -2907,15 +2782,15 @@ var SELECTORS = exports.SELECTORS = {
     dropdown: "[data-role~='dropdown']"
 };
 
-SELECTORS.all = SELECTORS.menu + ", " + SELECTORS.item + ", " + SELECTORS.dropdown;
-SELECTORS.menuitem = SELECTORS.item + ", " + SELECTORS.dropdown;
+SELECTORS.all = SELECTORS.menu + ', ' + SELECTORS.item + ', ' + SELECTORS.dropdown;
+SELECTORS.menuitem = SELECTORS.item + ', ' + SELECTORS.dropdown;
 
 var events = exports.events = {
-    activate: PREFIX + "activate",
-    deactivate: PREFIX + "deactivate",
-    open: PREFIX + "open",
-    close: PREFIX + "close",
-    select: PREFIX + "select"
+    activate: PREFIX + 'activate',
+    deactivate: PREFIX + 'deactivate',
+    open: PREFIX + 'open',
+    close: PREFIX + 'close',
+    select: PREFIX + 'select'
 };
 
 function getRoles(element) {
@@ -2967,6 +2842,7 @@ function addRoles(element) {
     return r;
 }
 
+// noinspection JSUnusedGlobalSymbols
 function removeRoles(element) {
     var $element = (0, _jquery2.default)(element),
         current = getRoles($element),
@@ -3173,8 +3049,8 @@ _loader2.default.register('dropdown', function (element) {
     var config = {
         timeout: -1,
         closeOnSelect: true,
-        activateEvent: 'click'
-        // toggle: 'click'
+        activateEvent: 'click',
+        toggle: 'click'
     };
 
     config = Object.assign(config, dropdown.$element.data());
@@ -3210,6 +3086,8 @@ exports.parseBooleanString = parseBooleanString;
 exports.parseBooleanOrNumber = parseBooleanOrNumber;
 exports.setDefaultValues = setDefaultValues;
 exports.randomChoice = randomChoice;
+exports.isMouseLeave = isMouseLeave;
+exports.isMouseEnter = isMouseEnter;
 var nill = {};
 
 function clamp(value) {
@@ -3318,6 +3196,16 @@ function setDefaultValues(target, defaults) {
 
 function randomChoice(list) {
     return list[Math.floor(Math.random() * list.length)];
+}
+
+function isMouseLeave(target, event) {
+    if (target.jquery) target = target[0];
+    return !target.contains(event.relatedTarget);
+}
+
+function isMouseEnter(target, event) {
+    if (target.jquery) target = target[0];
+    return !target.contains(event.relatedTarget);
 }
 
 /***/ }),

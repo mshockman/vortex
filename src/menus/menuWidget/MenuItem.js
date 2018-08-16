@@ -52,8 +52,8 @@ export default class MenuItem extends MenuNode {
 
     @menuItemProperty('selectableItems', parseBooleanValue, true) selectable;
 
-    constructor(selector, root) {
-        super(selector, root);
+    constructor(selector, controller) {
+        super(selector, controller);
     }
 
     //------------------------------------------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ export default class MenuItem extends MenuNode {
         if(this.disabled) return;
 
         if(!this.isActive) {
-            if(this.parent.isActive) {
+            if(this.parent && this.parent.isActive) {
                 if(this.autoActivate >= 0) {
                     this.startTimer('activateTimer', this.activate.bind(this), this.autoActivate);
                 }
@@ -92,7 +92,7 @@ export default class MenuItem extends MenuNode {
             if(this.isActive && this.toggle === 'click') {
                 this.deactivate();
 
-                if(this.parent.isActive && !this.parent.getActiveItems().length) {
+                if(this.parent && this.parent.isActive && !this.parent.getActiveItems().length) {
                     this.parent.deactivate();
                 }
             } else if(!this.isActive && this.activateEvent === 'click') {
@@ -122,6 +122,7 @@ export default class MenuItem extends MenuNode {
 
     activate() {
         if(!this.isActive) {
+            console.log("activate item");
             this.$element.addClass('active');
 
             this.clearTimer('openDelay');
@@ -134,6 +135,10 @@ export default class MenuItem extends MenuNode {
                 this.parent._addActiveItem(this);
             }
 
+            if(this.controller.$element.is(this.$element)) {
+                this.controller.activate();
+            }
+
             this.$element.trigger(events.activate, this);
         }
     }
@@ -142,6 +147,7 @@ export default class MenuItem extends MenuNode {
         this.clearTimer('openDelay');
 
         if(this.isActive) {
+            console.log("deactivate item");
             this.$element.removeClass('active');
 
             if(this.isDropDown && this.submenu && this.submenu.isOpen) {
@@ -150,6 +156,10 @@ export default class MenuItem extends MenuNode {
 
             if(this.parent) {
                 this.parent._removeActiveItem(this);
+            }
+
+            if(this.controller.$element.is(this.$element)) {
+                this.controller.deactivate();
             }
 
             this.$element.trigger(events.deactivate, this);
@@ -164,7 +174,7 @@ export default class MenuItem extends MenuNode {
     // Properties
 
     get parent() {
-        if(!this._parent) {
+        if(this._parent === undefined) {
             this._parent = this.getParent('menu');
         }
 
@@ -172,7 +182,7 @@ export default class MenuItem extends MenuNode {
     }
 
     get submenu() {
-        if(!this._submenu && this.isDropDown) {
+        if(this._submenu === undefined && this.isDropDown) {
             this._submenu = this.getChildren('menu')[0];
         }
 

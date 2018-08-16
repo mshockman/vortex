@@ -1,12 +1,12 @@
 import $ from "jquery";
 import ObjectEvents from "../../common/ObjectEvents";
-import {SELECTORS} from "../core";
+import {SELECTORS} from "./core";
 
 
 export default class MenuNode extends ObjectEvents {
-    constructor(selector, root) {
+    constructor(selector, controller) {
         super();
-        this.root = root;
+        this.controller = controller;
 
         if(typeof selector === 'function') {
             this.$element = $(selector());
@@ -16,10 +16,12 @@ export default class MenuNode extends ObjectEvents {
     }
 
     getParent(type='all') {
-        let $parent = this.$element.parent(SELECTORS[type], this.root.$element);
+        let $parent = this.$element.parent(SELECTORS[type], this.controller.$element);
 
         if($parent.length) {
-            return this.root._getInstance($parent);
+            return this.controller._getInstance($parent);
+        } else {
+            return null;
         }
     }
 
@@ -31,8 +33,8 @@ export default class MenuNode extends ObjectEvents {
     getDescendants(type='all') {
         const r = [];
 
-        this.$element.find(SELECTORS[type], this.root.$element).each((x, element) => {
-            r.push(this.root._getInstance(element));
+        this.$element.find(SELECTORS[type], this.controller.$element).each((x, element) => {
+            r.push(this.controller._getInstance(element));
         });
 
         return r;
@@ -43,7 +45,7 @@ export default class MenuNode extends ObjectEvents {
             return this.$element.is(item);
         } else if(item === this) {
             return true;
-        } else if(this.$element && item.$element) {
+        } else if(item.$element) {
             return this.$element.is(item.$element);
         }
     }
@@ -77,7 +79,7 @@ export default class MenuNode extends ObjectEvents {
     }
 
     get componentType() {
-        return this.root.getComponentType(this.$element);
+        return this.controller.getComponentType(this.$element);
     }
 
     get isActive() {

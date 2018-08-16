@@ -80,6 +80,25 @@
 }
 
 
+.dropdown {
+  position: relative;
+  display: inline-block;
+
+  & > .btn {
+    cursor: pointer;
+  }
+
+  & > button {
+    cursor: pointer;
+  }
+
+  & > .menu {
+    left: 0;
+    top: 100%;
+  }
+}
+
+
 .ribbon {
   position: absolute;
   left: 0;

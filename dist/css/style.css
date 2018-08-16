@@ -875,6 +875,21 @@ select.form-control {
   content: "";
 }
 
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown > .btn {
+  cursor: pointer;
+}
+.dropdown > button {
+  cursor: pointer;
+}
+.dropdown > .menu {
+  left: 0;
+  top: 100%;
+}
+
 .ribbon {
   position: absolute;
   left: 0;
