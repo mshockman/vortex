@@ -1,4 +1,4 @@
-import {addRoles, autoActivateType, menuProperty, toggleType} from "./core";
+import {addRoles, autoActivateType, menuProperty, toggleType, events} from "./core";
 import MenuNode from './MenuNode';
 import {parseBooleanValue, parseIntegerValue, choiceType} from "../../common/types";
 
@@ -80,7 +80,7 @@ export default class Menu extends MenuNode {
                 parent.activate();
             }
 
-            this.$element.trigger('activate', this);
+            this.$element.trigger(events.activate, this);
         }
     }
 
@@ -92,7 +92,7 @@ export default class Menu extends MenuNode {
                 item.deactivate();
             }
 
-            this.$element.trigger('deactivate', this);
+            this.$element.trigger(events.deactivate, this);
         }
     }
 
@@ -100,7 +100,7 @@ export default class Menu extends MenuNode {
         if(!this.isOpen) {
             this.showFX(this);
 
-            this.$element.trigger("open", this);
+            this.$element.trigger(events.open, this);
         }
     }
 
@@ -109,7 +109,7 @@ export default class Menu extends MenuNode {
         if(this.isOpen) {
             this.hideFX(this);
 
-            this.$element.trigger("close", this);
+            this.$element.trigger(events.close, this);
 
             if(this.isActive && this.autoDeactivate) {
                 this.deactivate();

@@ -1,12 +1,18 @@
-import {SELECTORS} from "./core";
+import {SELECTORS, events, menuProperty, autoActivateType} from "./core";
 import Menu from './Menu';
 import MenuItem from './MenuItem';
 import $ from "jquery";
-import {castType, ifChoiceThen, parseBooleanValue, parseIntegerValue} from "../../common/types";
+import {parseBooleanValue} from "../../common/types";
 import {getRoles} from "../core";
 
 
 export default class MenuView extends Menu {
+    @menuProperty(parseBooleanValue, true) closeOnSelect;
+
+    @menuProperty(parseBooleanValue, true) closeOnBlur;
+
+    @menuProperty(autoActivateType, -1) timeout;
+
     constructor(selector) {
         super(selector);
         // noinspection JSUnusedGlobalSymbols
@@ -16,12 +22,23 @@ export default class MenuView extends Menu {
         this._handleMouseOverEvent = this.handleMouseOverEvent.bind(this);
         this._handleMouseOutEvent = this.handleMouseOutEvent.bind(this);
         this._handleDBLClickEvent = this.handleDBLClickEvent.bind(this);
+        this._handleSelectEvent = this.handleSelectEvent.bind(this);
 
         this.$element.on('click', this._handleClickEvent);
         this.$element.on('mouseover', this._handleMouseOverEvent);
         this.$element.on('mouseout', this._handleMouseOutEvent);
         this.$element.on('dblclick', this._handleDBLClickEvent);
         this.$element.data('menu-controller', this);
+        this.$element.on(events.select, this._handleSelectEvent);
+    }
+
+    destroy() {
+        this.$element.off('click', this._handleClickEvent);
+        this.$element.off('mouseover', this._handleMouseOverEvent);
+        this.$element.off('mouseout', this._handleMouseOutEvent);
+        this.$element.off('dblclick', this._handleDBLClickEvent);
+        this.$element.data('menu-controller', null);
+        this.$element.off(events.select, this._handleSelectEvent);
     }
 
     activate() {
@@ -63,6 +80,7 @@ export default class MenuView extends Menu {
     //------------------------------------------------------------------------------------------------------------------
     // Methods
 
+    // noinspection JSUnusedGlobalSymbols
     findNodes(selector) {
         if(SELECTORS[selector]) {
             selector = SELECTORS[selector];
@@ -123,6 +141,17 @@ export default class MenuView extends Menu {
         }
     }
 
+    /**
+     *
+     * @param event
+     * @param target
+     */
+    handleSelectEvent(event, target) {
+        if(this.isActive && this.closeOnSelect) {
+            this.deactivate();
+        }
+    }
+
     //------------------------------------------------------------------------------------------------------------------
     // Private functions
 
@@ -162,38 +191,6 @@ export default class MenuView extends Menu {
         } else if(roles.indexOf('dropdown') !== -1) {
             return 'dropdown';
         }
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-    // Properties
-
-    get timeout() {
-        return castType(
-            this.$element.data('timeout'),
-            [
-                ifChoiceThen([null, undefined, ""], false),
-                parseIntegerValue,
-                parseBooleanValue
-            ]
-        )
-    }
-
-    set timeout(value) {
-        this.$element.data('timeout', value);
-    }
-
-    get closeOnBlur() {
-        return castType(
-            this.$element.data('closeOnBlur'),
-            [
-                ifChoiceThen([null, undefined, ""], true),
-                parseBooleanValue
-            ]
-        );
-    }
-
-    set closeOnBlur(value) {
-        this.$element.data('closeOnBlur', value);
     }
 }
 

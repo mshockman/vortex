@@ -1838,7 +1838,7 @@ var Menu = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec
                     parent.activate();
                 }
 
-                this.$element.trigger('activate', this);
+                this.$element.trigger(_core.events.activate, this);
             }
         }
     }, {
@@ -1872,7 +1872,7 @@ var Menu = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec
                     }
                 }
 
-                this.$element.trigger('deactivate', this);
+                this.$element.trigger(_core.events.deactivate, this);
             }
         }
     }, {
@@ -1881,7 +1881,7 @@ var Menu = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec
             if (!this.isOpen) {
                 this.showFX(this);
 
-                this.$element.trigger("open", this);
+                this.$element.trigger(_core.events.open, this);
             }
         }
 
@@ -1893,7 +1893,7 @@ var Menu = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec
             if (this.isOpen) {
                 this.hideFX(this);
 
-                this.$element.trigger("close", this);
+                this.$element.trigger(_core.events.close, this);
 
                 if (this.isActive && this.autoDeactivate) {
                     this.deactivate();
@@ -2287,7 +2287,7 @@ var MenuItem = (_dec = (0, _core.menuItemProperty)('activateEvent', (0, _types.c
                     this.parent._addActiveItem(this);
                 }
 
-                this.$element.trigger('activate', this);
+                this.$element.trigger(_core.events.activate, this);
             }
         }
     }, {
@@ -2306,13 +2306,13 @@ var MenuItem = (_dec = (0, _core.menuItemProperty)('activateEvent', (0, _types.c
                     this.parent._removeActiveItem(this);
                 }
 
-                this.$element.trigger('deactivate', this);
+                this.$element.trigger(_core.events.deactivate, this);
             }
         }
     }, {
         key: "select",
         value: function select() {
-            this.$element.trigger('select', this);
+            this.$element.trigger(_core.events.select, this);
         }
 
         //------------------------------------------------------------------------------------------------------------------
@@ -2556,6 +2556,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
+var _dec, _dec2, _dec3, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3;
+
 var _core = __webpack_require__(/*! ./core */ "./src/menus/menuWidget/core.js");
 
 var _Menu2 = __webpack_require__(/*! ./Menu */ "./src/menus/menuWidget/Menu.js");
@@ -2576,13 +2578,56 @@ var _core2 = __webpack_require__(/*! ../core */ "./src/menus/core.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _initDefineProp(target, property, descriptor, context) {
+    if (!descriptor) return;
+    Object.defineProperty(target, property, {
+        enumerable: descriptor.enumerable,
+        configurable: descriptor.configurable,
+        writable: descriptor.writable,
+        value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+    });
+}
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var MenuView = function (_Menu) {
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+    var desc = {};
+    Object['ke' + 'ys'](descriptor).forEach(function (key) {
+        desc[key] = descriptor[key];
+    });
+    desc.enumerable = !!desc.enumerable;
+    desc.configurable = !!desc.configurable;
+
+    if ('value' in desc || desc.initializer) {
+        desc.writable = true;
+    }
+
+    desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+        return decorator(target, property, desc) || desc;
+    }, desc);
+
+    if (context && desc.initializer !== void 0) {
+        desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+        desc.initializer = undefined;
+    }
+
+    if (desc.initializer === void 0) {
+        Object['define' + 'Property'](target, property, desc);
+        desc = null;
+    }
+
+    return desc;
+}
+
+function _initializerWarningHelper(descriptor, context) {
+    throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+}
+
+var MenuView = (_dec = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec2 = (0, _core.menuProperty)(_types.parseBooleanValue, true), _dec3 = (0, _core.menuProperty)(_core.autoActivateType, -1), (_class = function (_Menu) {
     _inherits(MenuView, _Menu);
 
     function MenuView(selector) {
@@ -2591,22 +2636,40 @@ var MenuView = function (_Menu) {
         // noinspection JSUnusedGlobalSymbols
         var _this = _possibleConstructorReturn(this, (MenuView.__proto__ || Object.getPrototypeOf(MenuView)).call(this, selector));
 
+        _initDefineProp(_this, 'closeOnSelect', _descriptor, _this);
+
+        _initDefineProp(_this, 'closeOnBlur', _descriptor2, _this);
+
+        _initDefineProp(_this, 'timeout', _descriptor3, _this);
+
         _this.root = _this;
 
         _this._handleClickEvent = _this.handleClickEvent.bind(_this);
         _this._handleMouseOverEvent = _this.handleMouseOverEvent.bind(_this);
         _this._handleMouseOutEvent = _this.handleMouseOutEvent.bind(_this);
         _this._handleDBLClickEvent = _this.handleDBLClickEvent.bind(_this);
+        _this._handleSelectEvent = _this.handleSelectEvent.bind(_this);
 
         _this.$element.on('click', _this._handleClickEvent);
         _this.$element.on('mouseover', _this._handleMouseOverEvent);
         _this.$element.on('mouseout', _this._handleMouseOutEvent);
         _this.$element.on('dblclick', _this._handleDBLClickEvent);
         _this.$element.data('menu-controller', _this);
+        _this.$element.on(_core.events.select, _this._handleSelectEvent);
         return _this;
     }
 
     _createClass(MenuView, [{
+        key: 'destroy',
+        value: function destroy() {
+            this.$element.off('click', this._handleClickEvent);
+            this.$element.off('mouseover', this._handleMouseOverEvent);
+            this.$element.off('mouseout', this._handleMouseOutEvent);
+            this.$element.off('dblclick', this._handleDBLClickEvent);
+            this.$element.data('menu-controller', null);
+            this.$element.off(_core.events.select, this._handleSelectEvent);
+        }
+    }, {
         key: 'activate',
         value: function activate() {
             var _this2 = this;
@@ -2649,6 +2712,8 @@ var MenuView = function (_Menu) {
 
         //------------------------------------------------------------------------------------------------------------------
         // Methods
+
+        // noinspection JSUnusedGlobalSymbols
 
     }, {
         key: 'findNodes',
@@ -2719,6 +2784,20 @@ var MenuView = function (_Menu) {
             }
         }
 
+        /**
+         *
+         * @param event
+         * @param target
+         */
+
+    }, {
+        key: 'handleSelectEvent',
+        value: function handleSelectEvent(event, target) {
+            if (this.isActive && this.closeOnSelect) {
+                this.deactivate();
+            }
+        }
+
         //------------------------------------------------------------------------------------------------------------------
         // Private functions
 
@@ -2764,31 +2843,19 @@ var MenuView = function (_Menu) {
                 return 'dropdown';
             }
         }
-
-        //------------------------------------------------------------------------------------------------------------------
-        // Properties
-
-    }, {
-        key: 'timeout',
-        get: function get() {
-            return (0, _types.castType)(this.$element.data('timeout'), [(0, _types.ifChoiceThen)([null, undefined, ""], false), _types.parseIntegerValue, _types.parseBooleanValue]);
-        },
-        set: function set(value) {
-            this.$element.data('timeout', value);
-        }
-    }, {
-        key: 'closeOnBlur',
-        get: function get() {
-            return (0, _types.castType)(this.$element.data('closeOnBlur'), [(0, _types.ifChoiceThen)([null, undefined, ""], true), _types.parseBooleanValue]);
-        },
-        set: function set(value) {
-            this.$element.data('closeOnBlur', value);
-        }
     }]);
 
     return MenuView;
-}(_Menu3.default);
-
+}(_Menu3.default), (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'closeOnSelect', [_dec], {
+    enumerable: true,
+    initializer: null
+}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, 'closeOnBlur', [_dec2], {
+    enumerable: true,
+    initializer: null
+}), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, 'timeout', [_dec3], {
+    enumerable: true,
+    initializer: null
+})), _class));
 exports.default = MenuView;
 
 
@@ -2810,7 +2877,7 @@ MenuView.prototype.MenuItemClass = _MenuItem2.default;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.SELECTORS = undefined;
+exports.events = exports.SELECTORS = exports.PREFIX = undefined;
 exports.getRoles = getRoles;
 exports.hasRole = hasRole;
 exports.addRoles = addRoles;
@@ -2832,6 +2899,8 @@ var _utility = __webpack_require__(/*! ../../utility */ "./src/utility.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var PREFIX = exports.PREFIX = 'menus.';
+
 var SELECTORS = exports.SELECTORS = {
     menu: "[data-role~='menu']",
     item: "[data-role~='item']",
@@ -2840,6 +2909,14 @@ var SELECTORS = exports.SELECTORS = {
 
 SELECTORS.all = SELECTORS.menu + ", " + SELECTORS.item + ", " + SELECTORS.dropdown;
 SELECTORS.menuitem = SELECTORS.item + ", " + SELECTORS.dropdown;
+
+var events = exports.events = {
+    activate: PREFIX + "activate",
+    deactivate: PREFIX + "deactivate",
+    open: PREFIX + "open",
+    close: PREFIX + "close",
+    select: PREFIX + "select"
+};
 
 function getRoles(element) {
     var $element = (0, _jquery2.default)(element);

@@ -827,6 +827,10 @@ select.form-control {
   min-width: 200px;
   color: #000000;
 }
+.menu .menu {
+  left: 100%;
+  top: 0;
+}
 
 .menuitem, .item {
   position: relative;

@@ -1,6 +1,6 @@
 import MenuNode from "./MenuNode";
 import {parseBooleanValue, parseIntegerValue, choiceType} from "../../common/types";
-import {hasRole, menuItemProperty, toggleType} from "./core";
+import {hasRole, menuItemProperty, toggleType, events} from "./core";
 
 
 /**
@@ -134,7 +134,7 @@ export default class MenuItem extends MenuNode {
                 this.parent._addActiveItem(this);
             }
 
-            this.$element.trigger('activate', this);
+            this.$element.trigger(events.activate, this);
         }
     }
 
@@ -152,12 +152,12 @@ export default class MenuItem extends MenuNode {
                 this.parent._removeActiveItem(this);
             }
 
-            this.$element.trigger('deactivate', this);
+            this.$element.trigger(events.deactivate, this);
         }
     }
 
     select() {
-        this.$element.trigger('select', this);
+        this.$element.trigger(events.select, this);
     }
 
     //------------------------------------------------------------------------------------------------------------------

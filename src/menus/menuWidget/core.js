@@ -3,6 +3,9 @@ import {choiceType, compoundType, parseBooleanValue} from "../../common/types";
 import {parseInteger} from "../../utility";
 
 
+export const PREFIX = 'menus.';
+
+
 export const SELECTORS = {
     menu: "[data-role~='menu']",
     item: "[data-role~='item']",
@@ -12,6 +15,15 @@ export const SELECTORS = {
 
 SELECTORS.all = `${SELECTORS.menu}, ${SELECTORS.item}, ${SELECTORS.dropdown}`;
 SELECTORS.menuitem = `${SELECTORS.item}, ${SELECTORS.dropdown}`;
+
+
+export const events = {
+    activate: `${PREFIX}activate`,
+    deactivate: `${PREFIX}deactivate`,
+    open: `${PREFIX}open`,
+    close: `${PREFIX}close`,
+    select: `${PREFIX}select`
+};
 
 
 export function getRoles(element) {

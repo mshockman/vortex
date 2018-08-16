@@ -13,55 +13,280 @@
 
 
 <div class="navbar navbar-lg">
-    <ul class="menubar navbar-item" data-init="menu" data-activate-event="dblclick" data-toggle-items="false" data-auto-activate-items="0" data-toggle="dblclick">
+    <ul class="menubar navbar-item" data-init="menu" data-activate-event="click" data-toggle-items="false" data-auto-activate-items="0" data-toggle="click" data-timeout="3000">
         <li class="navbar-nav menuitem" data-role="dropdown">
             <a>DropDown #1</a>
-            <ul class="menu" data-role="menu">
-                <li data-role="item" class="menuitem">Test Item #1</li>
-                <li data-role="item" class="menuitem">Test Item #2</li>
-                <li data-role="item" class="menuitem">Test Item #3</li>
-                <li data-role="item" class="menuitem">Test Item #4</li>
-                <li data-role="item" class="menuitem">Test Item #5</li>
+            <ul class="menu list-group" data-role="menu">
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #1</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #2</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #3</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #4</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #5</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
             </ul>
         </li>
         <li class="navbar-nav menuitem" data-role="dropdown">
             <a>DropDown #2</a>
             <ul class="menu list-group" data-role="menu">
-                <li data-role="item" class="menuitem">Test Item #1</li>
-                <li data-role="item" class="menuitem">Test Item #2</li>
-                <li data-role="item" class="menuitem">Test Item #3</li>
-                <li data-role="item" class="menuitem">Test Item #4</li>
-                <li data-role="item" class="menuitem">Test Item #5</li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #1</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #2</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #3</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #4</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #5</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
             </ul>
         </li>
-        <li class="menuitem navbar-nav" data-role="dropdown">
+        <li class="navbar-nav menuitem" data-role="dropdown">
             <a>DropDown #3</a>
-            <ul class="menu" data-role="menu">
-                <li data-role="item" class="menuitem">Test Item #1</li>
-                <li data-role="item" class="menuitem">Test Item #2</li>
-                <li data-role="item" class="menuitem">Test Item #3</li>
-                <li data-role="item" class="menuitem">Test Item #4</li>
-                <li data-role="item" class="menuitem">Test Item #5</li>
+            <ul class="menu list-group" data-role="menu">
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #1</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #2</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #3</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #4</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #5</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
             </ul>
         </li>
-        <li class="menuitem navbar-nav" data-role="dropdown">
+        <li class="navbar-nav menuitem" data-role="dropdown">
             <a>DropDown #4</a>
-            <ul class="menu" data-role="menu">
-                <li data-role="item" class="menuitem">Test Item #1</li>
-                <li data-role="item" class="menuitem">Test Item #2</li>
-                <li data-role="item" class="menuitem">Test Item #3</li>
-                <li data-role="item" class="menuitem">Test Item #4</li>
-                <li data-role="item" class="menuitem">Test Item #5</li>
+            <ul class="menu list-group" data-role="menu">
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #1</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #2</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #3</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #4</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #5</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
             </ul>
         </li>
-        <li class="menuitem navbar-nav" data-role="dropdown">
+        <li class="navbar-nav menuitem" data-role="dropdown">
             <a>DropDown #5</a>
-            <ul class="menu" data-role="menu">
-                <li data-role="item" class="menuitem">Test Item #1</li>
-                <li data-role="item" class="menuitem">Test Item #2</li>
-                <li data-role="item" class="menuitem">Test Item #3</li>
-                <li data-role="item" class="menuitem">Test Item #4</li>
-                <li data-role="item" class="menuitem">Test Item #5</li>
+            <ul class="menu list-group" data-role="menu">
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #1</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #2</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #3</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #4</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
+                <li data-role="dropdown" class="menuitem list-item">
+                    <a>Test Item #5</a>
+                    <ul data-role="menu" class="menu list-group">
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #1</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #2</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #3</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #4</a></li>
+                        <li data-role="item" class="menuitem list-item"><a>Sub Item #5</a></li>
+                    </ul>
+                </li>
             </ul>
         </li>
     </ul>
