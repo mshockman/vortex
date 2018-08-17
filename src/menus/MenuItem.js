@@ -1,5 +1,5 @@
 import MenuNode from "./MenuNode";
-import {parseBooleanValue, parseIntegerValue, choiceType} from "../../common/types";
+import {parseBooleanValue, parseIntegerValue, choiceType} from "../common/types";
 import {hasRole, menuItemProperty, toggleType, events} from "./core";
 
 

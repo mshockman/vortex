@@ -1329,7 +1329,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Application = exports.Loader = undefined;
 
-__webpack_require__(/*! ./menus/menuWidget */ "./src/menus/menuWidget/index.js");
+__webpack_require__(/*! ./menus/index */ "./src/menus/index.js");
 
 var _loader = __webpack_require__(/*! ./loader */ "./src/loader.js");
 
@@ -1494,10 +1494,10 @@ Loader.init();
 
 /***/ }),
 
-/***/ "./src/menus/menuWidget/AccordionMenu.js":
-/*!***********************************************!*\
-  !*** ./src/menus/menuWidget/AccordionMenu.js ***!
-  \***********************************************/
+/***/ "./src/menus/AccordionMenu.js":
+/*!************************************!*\
+  !*** ./src/menus/AccordionMenu.js ***!
+  \************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1511,17 +1511,17 @@ exports.default = exports.AccordionSubMenu = undefined;
 
 var _dec, _dec2, _dec3, _dec4, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _dec5, _dec6, _desc2, _value2, _class3, _descriptor5, _descriptor6;
 
-var _MenuView2 = __webpack_require__(/*! ./MenuView */ "./src/menus/menuWidget/MenuView.js");
+var _MenuView2 = __webpack_require__(/*! ./MenuView */ "./src/menus/MenuView.js");
 
 var _MenuView3 = _interopRequireDefault(_MenuView2);
 
-var _Menu2 = __webpack_require__(/*! ./Menu */ "./src/menus/menuWidget/Menu.js");
+var _Menu2 = __webpack_require__(/*! ./Menu */ "./src/menus/Menu.js");
 
 var _Menu3 = _interopRequireDefault(_Menu2);
 
-var _core = __webpack_require__(/*! ./core */ "./src/menus/menuWidget/core.js");
+var _core = __webpack_require__(/*! ./core */ "./src/menus/core.js");
 
-var _types = __webpack_require__(/*! ../../common/types */ "./src/common/types.js");
+var _types = __webpack_require__(/*! ../common/types */ "./src/common/types.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1637,10 +1637,10 @@ AccordionMenu.prototype.MenuClass = AccordionSubMenu;
 
 /***/ }),
 
-/***/ "./src/menus/menuWidget/DropDown.js":
-/*!******************************************!*\
-  !*** ./src/menus/menuWidget/DropDown.js ***!
-  \******************************************/
+/***/ "./src/menus/DropDown.js":
+/*!*******************************!*\
+  !*** ./src/menus/DropDown.js ***!
+  \*******************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1652,7 +1652,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _MenuView2 = __webpack_require__(/*! ./MenuView */ "./src/menus/menuWidget/MenuView.js");
+var _MenuView2 = __webpack_require__(/*! ./MenuView */ "./src/menus/MenuView.js");
 
 var _MenuView3 = _interopRequireDefault(_MenuView2);
 
@@ -1691,10 +1691,10 @@ exports.default = DropDown;
 
 /***/ }),
 
-/***/ "./src/menus/menuWidget/Menu.js":
-/*!**************************************!*\
-  !*** ./src/menus/menuWidget/Menu.js ***!
-  \**************************************/
+/***/ "./src/menus/Menu.js":
+/*!***************************!*\
+  !*** ./src/menus/Menu.js ***!
+  \***************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1710,13 +1710,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8;
 
-var _core = __webpack_require__(/*! ./core */ "./src/menus/menuWidget/core.js");
+var _core = __webpack_require__(/*! ./core */ "./src/menus/core.js");
 
-var _MenuNode2 = __webpack_require__(/*! ./MenuNode */ "./src/menus/menuWidget/MenuNode.js");
+var _MenuNode2 = __webpack_require__(/*! ./MenuNode */ "./src/menus/MenuNode.js");
 
 var _MenuNode3 = _interopRequireDefault(_MenuNode2);
 
-var _types = __webpack_require__(/*! ../../common/types */ "./src/common/types.js");
+var _types = __webpack_require__(/*! ../common/types */ "./src/common/types.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2088,10 +2088,10 @@ exports.default = Menu;
 
 /***/ }),
 
-/***/ "./src/menus/menuWidget/MenuItem.js":
-/*!******************************************!*\
-  !*** ./src/menus/menuWidget/MenuItem.js ***!
-  \******************************************/
+/***/ "./src/menus/MenuItem.js":
+/*!*******************************!*\
+  !*** ./src/menus/MenuItem.js ***!
+  \*******************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2107,13 +2107,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6;
 
-var _MenuNode2 = __webpack_require__(/*! ./MenuNode */ "./src/menus/menuWidget/MenuNode.js");
+var _MenuNode2 = __webpack_require__(/*! ./MenuNode */ "./src/menus/MenuNode.js");
 
 var _MenuNode3 = _interopRequireDefault(_MenuNode2);
 
-var _types = __webpack_require__(/*! ../../common/types */ "./src/common/types.js");
+var _types = __webpack_require__(/*! ../common/types */ "./src/common/types.js");
 
-var _core = __webpack_require__(/*! ./core */ "./src/menus/menuWidget/core.js");
+var _core = __webpack_require__(/*! ./core */ "./src/menus/core.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2410,10 +2410,10 @@ exports.default = MenuItem;
 
 /***/ }),
 
-/***/ "./src/menus/menuWidget/MenuNode.js":
-/*!******************************************!*\
-  !*** ./src/menus/menuWidget/MenuNode.js ***!
-  \******************************************/
+/***/ "./src/menus/MenuNode.js":
+/*!*******************************!*\
+  !*** ./src/menus/MenuNode.js ***!
+  \*******************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2431,11 +2431,11 @@ var _jquery = __webpack_require__(/*! jquery */ "jquery");
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _ObjectEvents2 = __webpack_require__(/*! ../../common/ObjectEvents */ "./src/common/ObjectEvents.js");
+var _ObjectEvents2 = __webpack_require__(/*! ../common/ObjectEvents */ "./src/common/ObjectEvents.js");
 
 var _ObjectEvents3 = _interopRequireDefault(_ObjectEvents2);
 
-var _core = __webpack_require__(/*! ./core */ "./src/menus/menuWidget/core.js");
+var _core = __webpack_require__(/*! ./core */ "./src/menus/core.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2570,10 +2570,10 @@ exports.default = MenuNode;
 
 /***/ }),
 
-/***/ "./src/menus/menuWidget/MenuView.js":
-/*!******************************************!*\
-  !*** ./src/menus/menuWidget/MenuView.js ***!
-  \******************************************/
+/***/ "./src/menus/MenuView.js":
+/*!*******************************!*\
+  !*** ./src/menus/MenuView.js ***!
+  \*******************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2589,13 +2589,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _dec, _dec2, _dec3, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3;
 
-var _core = __webpack_require__(/*! ./core */ "./src/menus/menuWidget/core.js");
+var _core = __webpack_require__(/*! ./core */ "./src/menus/core.js");
 
-var _Menu = __webpack_require__(/*! ./Menu */ "./src/menus/menuWidget/Menu.js");
+var _Menu = __webpack_require__(/*! ./Menu */ "./src/menus/Menu.js");
 
 var _Menu2 = _interopRequireDefault(_Menu);
 
-var _MenuItem = __webpack_require__(/*! ./MenuItem */ "./src/menus/menuWidget/MenuItem.js");
+var _MenuItem = __webpack_require__(/*! ./MenuItem */ "./src/menus/MenuItem.js");
 
 var _MenuItem2 = _interopRequireDefault(_MenuItem);
 
@@ -2603,11 +2603,11 @@ var _jquery = __webpack_require__(/*! jquery */ "jquery");
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _types = __webpack_require__(/*! ../../common/types */ "./src/common/types.js");
+var _types = __webpack_require__(/*! ../common/types */ "./src/common/types.js");
 
-var _utility = __webpack_require__(/*! ../../utility */ "./src/utility.js");
+var _utility = __webpack_require__(/*! ../utility */ "./src/utility.js");
 
-var _ObjectEvents2 = __webpack_require__(/*! ../../common/ObjectEvents */ "./src/common/ObjectEvents.js");
+var _ObjectEvents2 = __webpack_require__(/*! ../common/ObjectEvents */ "./src/common/ObjectEvents.js");
 
 var _ObjectEvents3 = _interopRequireDefault(_ObjectEvents2);
 
@@ -2976,10 +2976,10 @@ MenuView.prototype.MenuItemClass = _MenuItem2.default;
 
 /***/ }),
 
-/***/ "./src/menus/menuWidget/Selectable.js":
-/*!********************************************!*\
-  !*** ./src/menus/menuWidget/Selectable.js ***!
-  \********************************************/
+/***/ "./src/menus/Selectable.js":
+/*!*********************************!*\
+  !*** ./src/menus/Selectable.js ***!
+  \*********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3001,11 +3001,11 @@ var _jquery = __webpack_require__(/*! jquery */ "jquery");
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _core = __webpack_require__(/*! ./core */ "./src/menus/menuWidget/core.js");
+var _core = __webpack_require__(/*! ./core */ "./src/menus/core.js");
 
-var _types = __webpack_require__(/*! ../../common/types */ "./src/common/types.js");
+var _types = __webpack_require__(/*! ../common/types */ "./src/common/types.js");
 
-var _DropDown = __webpack_require__(/*! ./DropDown */ "./src/menus/menuWidget/DropDown.js");
+var _DropDown = __webpack_require__(/*! ./DropDown */ "./src/menus/DropDown.js");
 
 var _DropDown2 = _interopRequireDefault(_DropDown);
 
@@ -3410,10 +3410,10 @@ function buildFromSelect(element) {
 
 /***/ }),
 
-/***/ "./src/menus/menuWidget/core.js":
-/*!**************************************!*\
-  !*** ./src/menus/menuWidget/core.js ***!
-  \**************************************/
+/***/ "./src/menus/core.js":
+/*!***************************!*\
+  !*** ./src/menus/core.js ***!
+  \***************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3440,7 +3440,7 @@ var _jquery = __webpack_require__(/*! jquery */ "jquery");
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _utility = __webpack_require__(/*! ../../utility */ "./src/utility.js");
+var _utility = __webpack_require__(/*! ../utility */ "./src/utility.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3697,33 +3697,33 @@ function autoActivateType(value) {
 
 /***/ }),
 
-/***/ "./src/menus/menuWidget/index.js":
-/*!***************************************!*\
-  !*** ./src/menus/menuWidget/index.js ***!
-  \***************************************/
+/***/ "./src/menus/index.js":
+/*!****************************!*\
+  !*** ./src/menus/index.js ***!
+  \****************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _loader = __webpack_require__(/*! ../../loader */ "./src/loader.js");
+var _loader = __webpack_require__(/*! ../loader */ "./src/loader.js");
 
 var _loader2 = _interopRequireDefault(_loader);
 
-var _MenuView = __webpack_require__(/*! ./MenuView */ "./src/menus/menuWidget/MenuView.js");
+var _MenuView = __webpack_require__(/*! ./MenuView */ "./src/menus/MenuView.js");
 
 var _MenuView2 = _interopRequireDefault(_MenuView);
 
-var _DropDown = __webpack_require__(/*! ./DropDown */ "./src/menus/menuWidget/DropDown.js");
+var _DropDown = __webpack_require__(/*! ./DropDown */ "./src/menus/DropDown.js");
 
 var _DropDown2 = _interopRequireDefault(_DropDown);
 
-var _Selectable = __webpack_require__(/*! ./Selectable */ "./src/menus/menuWidget/Selectable.js");
+var _Selectable = __webpack_require__(/*! ./Selectable */ "./src/menus/Selectable.js");
 
 var _Selectable2 = _interopRequireDefault(_Selectable);
 
-var _AccordionMenu = __webpack_require__(/*! ./AccordionMenu */ "./src/menus/menuWidget/AccordionMenu.js");
+var _AccordionMenu = __webpack_require__(/*! ./AccordionMenu */ "./src/menus/AccordionMenu.js");
 
 var _AccordionMenu2 = _interopRequireDefault(_AccordionMenu);
 

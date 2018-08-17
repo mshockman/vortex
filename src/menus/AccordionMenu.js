@@ -1,7 +1,7 @@
 import MenuView from "./MenuView";
 import Menu from "./Menu";
 import {autoActivateType, menuProperty, toggleType} from "./core";
-import {choiceType, parseBooleanValue, parseIntegerValue} from "../../common/types";
+import {choiceType, parseBooleanValue, parseIntegerValue} from "../common/types";
 
 
 export class AccordionSubMenu extends Menu {

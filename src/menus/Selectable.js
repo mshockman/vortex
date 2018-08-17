@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import {events, boundProperty} from './core';
-import {choiceType, parseBooleanValue, parseIntegerValue} from "../../common/types";
+import {choiceType, parseBooleanValue, parseIntegerValue} from "../common/types";
 import DropDown from "./DropDown";
 
 

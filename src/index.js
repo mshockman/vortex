@@ -1,4 +1,4 @@
-import './menus/menuWidget';
+import './menus/index';
 import Loader from './loader';
 import './components/toggle';
 import './components/Modal';

@@ -1,5 +1,5 @@
 import $ from "jquery";
-import ObjectEvents from "../../common/ObjectEvents";
+import ObjectEvents from "../common/ObjectEvents";
 import {SELECTORS} from "./core";
 
 

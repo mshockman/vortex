@@ -2,9 +2,9 @@ import {SELECTORS, events, menuProperty, autoActivateType, getRoles} from "./cor
 import Menu from './Menu';
 import MenuItem from './MenuItem';
 import $ from "jquery";
-import {parseBooleanValue} from "../../common/types";
-import {isMouseEnter, isMouseLeave} from '../../utility';
-import ObjectEvents from "../../common/ObjectEvents";
+import {parseBooleanValue} from "../common/types";
+import {isMouseEnter, isMouseLeave} from '../utility';
+import ObjectEvents from "../common/ObjectEvents";
 
 
 export default class MenuView extends ObjectEvents {
