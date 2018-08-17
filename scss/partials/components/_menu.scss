@@ -121,3 +121,41 @@
     user-select: none;
   }
 }
+
+
+.accordion-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  .menu {
+    position: static;
+    border: 0;
+    background-color: transparent;
+  }
+
+  li > a {
+    display: block;
+    padding: 0.125rem 0;
+  }
+
+  .accordion-depth-1 > li > a {
+    padding-left: 1.25rem;
+  }
+
+  .accordion-depth-2 > li > a {
+    padding-left: 2.5rem;
+  }
+
+  .accordion-depth-3 > li > a {
+    padding-left: 3.75rem;
+  }
+
+  .accordion-depth-4 > li > a {
+    padding-left: 5rem;
+  }
+
+  li > a:hover {
+    background-color: #E2EFF8;
+  }
+}

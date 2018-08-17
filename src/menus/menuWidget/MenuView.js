@@ -4,9 +4,10 @@ import MenuItem from './MenuItem';
 import $ from "jquery";
 import {parseBooleanValue} from "../../common/types";
 import {isMouseEnter, isMouseLeave} from '../../utility';
+import ObjectEvents from "../../common/ObjectEvents";
 
 
-export default class MenuView {
+export default class MenuView extends ObjectEvents {
     @menuProperty(parseBooleanValue, true) closeOnSelect;
 
     @menuProperty(parseBooleanValue, true) closeOnBlur;
@@ -14,6 +15,8 @@ export default class MenuView {
     @menuProperty(autoActivateType, -1) timeout;
 
     constructor(selector, config) {
+        super();
+
         if(typeof selector === 'function') {
             this.$element = $(selector());
         } else {
@@ -132,6 +135,8 @@ export default class MenuView {
         if(target && target.onClick && !this.disabled && !target.disabled) {
             target.onClick(event);
         }
+
+        this.trigger('click', event, target);
     }
 
     handleMouseOverEvent(event) {
@@ -142,6 +147,8 @@ export default class MenuView {
         if(target && isMouseEnter(target.$element, event) && target.onMouseOver && !this.disabled && !target.disabled) {
             target.onMouseOver(event);
         }
+
+        this.trigger('mouseover', event, target);
     }
 
     handleMouseOutEvent(event) {
@@ -156,6 +163,8 @@ export default class MenuView {
         if(target && !target.$element[0].contains(event.relatedTarget) && target.onMouseOut) {
             target.onMouseOut(event);
         }
+
+        this.trigger('mouseout', event, target);
     }
 
     handleDBLClickEvent(event) {
@@ -164,6 +173,8 @@ export default class MenuView {
         if(target && target.onDBLClick && !this.disabled && !target.disabled) {
             target.onDBLClick(event);
         }
+
+        this.trigger('dblclick', event, target);
     }
 
     /**

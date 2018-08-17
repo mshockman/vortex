@@ -1,10 +1,9 @@
 import Loader from '../../loader';
 import MenuView from './MenuView';
-import Menu from './Menu';
-import MenuItem from './MenuItem';
 import DropDown from './DropDown';
 import Selectable from './Selectable';
 import {buildFromSelect} from "./Selectable";
+import AccordionMenu from './AccordionMenu';
 
 
 Loader.register('menu', (element) => {
@@ -27,6 +26,6 @@ Loader.register('select', (element) => {
 });
 
 
-window.MenuView = MenuView;
-window.Menu = Menu;
-window.MenuItem = MenuItem;
+Loader.register('accordion-menu', (element) => {
+    return new AccordionMenu(element);
+});
