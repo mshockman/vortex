@@ -4,6 +4,7 @@ import Menu from './Menu';
 import MenuItem from './MenuItem';
 import DropDown from './DropDown';
 import Selectable from './Selectable';
+import {buildFromSelect} from "./Selectable";
 
 
 Loader.register('menu', (element) => {
@@ -18,6 +19,11 @@ Loader.register('dropdown', (element) => {
 
 Loader.register('selectable', (element) => {
     return new Selectable(element);
+});
+
+
+Loader.register('select', (element) => {
+    return buildFromSelect(element);
 });
 
 

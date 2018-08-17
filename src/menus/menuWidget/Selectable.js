@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import {events, boundProperty} from './core';
 import {choiceType, parseBooleanValue, parseIntegerValue} from "../../common/types";
-import MenuView from './MenuView';
+import DropDown from "./DropDown";
 
 
 export default class Selectable {
@@ -14,26 +14,37 @@ export default class Selectable {
     @boundProperty(null, undefined) name;
 
     @boundProperty(null, 'form') export;
+
     @boundProperty(null, ', ') delimiter;
 
     @boundProperty(choiceType('check', 'click'), 'click') selectEvent;
 
     @boundProperty(null, "Select...") placeholder;
 
+    @boundProperty(parseBooleanValue, true) activateSelected;
+
     constructor(selector, config) {
         this.$element = $(selector);
 
         this._onClick = this.onClick.bind(this);
         this._onChange = this.onChange.bind(this);
+        this._onOpen = this.onOpen.bind(this);
         this.$element.on(events.select, this._onClick);
         this.$element.on('change', this._onChange);
         this.$element.data('select-widget', this);
+        this.$element.on(events.open, this._onOpen);
 
         if(config) {
             this.$element.data(config);
         }
 
         this.render();
+    }
+
+    onOpen() {
+        if(this.activateSelected && !this.multiSelect) {
+            this.getSelectedItems().addClass('active');
+        }
     }
 
     onClick(event) {
@@ -173,4 +184,54 @@ export default class Selectable {
             return r;
         }
     }
+}
+
+
+export function buildFromSelect(element) {
+    let dom = $(`
+        <div class="dropdown select-widget" data-role="dropdown">
+            <span class="select" data-role="chosen"></span>
+            <ul class="menu list-group" data-role="menu"></ul>
+        </div>
+    `);
+
+    let $menu = dom.find('.menu');
+    element = $(element);
+    dom.data(element.data());
+
+    let name = element.attr('name'),
+        multiple = element[0].hasAttribute('multiple');
+
+    if(name) {
+        dom.data('name', name);
+    }
+
+    if(multiple) {
+        dom.data({
+            'closeOnSelect': false,
+            'selectEvent': 'check',
+            'multiSelect': true
+        });
+    }
+
+    element.find('option').each((x, option) => {
+        option = $(option);
+        let value = option.attr('value'),
+            label = option.text(),
+            $option;
+
+        if(multiple) {
+            $option = $(`<li class="menuitem list-item" data-role="item" data-value="${value}"><label><input type="checkbox" /><a data-label>${label}</a></label></li>`);
+        } else {
+            $option = $(`<li class="menuitem list-item" data-role="item" data-value="${value}"><a data-label>${label}</a></li>`);
+        }
+
+        $option.data(option.data());
+        $menu.append($option);
+    });
+
+    let d = new DropDown(dom);
+    new Selectable(dom);
+    element.replaceWith(d.$element);
+    return d;
 }

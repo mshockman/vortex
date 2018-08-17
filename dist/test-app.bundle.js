@@ -2964,7 +2964,9 @@ exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8;
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8, _descriptor9;
+
+exports.buildFromSelect = buildFromSelect;
 
 var _jquery = __webpack_require__(/*! jquery */ "jquery");
 
@@ -2974,9 +2976,9 @@ var _core = __webpack_require__(/*! ./core */ "./src/menus/menuWidget/core.js");
 
 var _types = __webpack_require__(/*! ../../common/types */ "./src/common/types.js");
 
-var _MenuView = __webpack_require__(/*! ./MenuView */ "./src/menus/menuWidget/MenuView.js");
+var _DropDown = __webpack_require__(/*! ./DropDown */ "./src/menus/menuWidget/DropDown.js");
 
-var _MenuView2 = _interopRequireDefault(_MenuView);
+var _DropDown2 = _interopRequireDefault(_DropDown);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3025,7 +3027,7 @@ function _initializerWarningHelper(descriptor, context) {
     throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
 }
 
-var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, false), _dec2 = (0, _core.boundProperty)(_types.parseIntegerValue, 3), _dec3 = (0, _core.boundProperty)(null, ', '), _dec4 = (0, _core.boundProperty)(null, undefined), _dec5 = (0, _core.boundProperty)(null, 'form'), _dec6 = (0, _core.boundProperty)(null, ', '), _dec7 = (0, _core.boundProperty)((0, _types.choiceType)('check', 'click'), 'click'), _dec8 = (0, _core.boundProperty)(null, "Select..."), (_class = function () {
+var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, false), _dec2 = (0, _core.boundProperty)(_types.parseIntegerValue, 3), _dec3 = (0, _core.boundProperty)(null, ', '), _dec4 = (0, _core.boundProperty)(null, undefined), _dec5 = (0, _core.boundProperty)(null, 'form'), _dec6 = (0, _core.boundProperty)(null, ', '), _dec7 = (0, _core.boundProperty)((0, _types.choiceType)('check', 'click'), 'click'), _dec8 = (0, _core.boundProperty)(null, "Select..."), _dec9 = (0, _core.boundProperty)(_types.parseBooleanValue, true), (_class = function () {
     function Selectable(selector, config) {
         _classCallCheck(this, Selectable);
 
@@ -3045,13 +3047,17 @@ var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, fals
 
         _initDefineProp(this, 'placeholder', _descriptor8, this);
 
+        _initDefineProp(this, 'activateSelected', _descriptor9, this);
+
         this.$element = (0, _jquery2.default)(selector);
 
         this._onClick = this.onClick.bind(this);
         this._onChange = this.onChange.bind(this);
+        this._onOpen = this.onOpen.bind(this);
         this.$element.on(_core.events.select, this._onClick);
         this.$element.on('change', this._onChange);
         this.$element.data('select-widget', this);
+        this.$element.on(_core.events.open, this._onOpen);
 
         if (config) {
             this.$element.data(config);
@@ -3061,6 +3067,13 @@ var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, fals
     }
 
     _createClass(Selectable, [{
+        key: 'onOpen',
+        value: function onOpen() {
+            if (this.activateSelected && !this.multiSelect) {
+                this.getSelectedItems().addClass('active');
+            }
+        }
+    }, {
         key: 'onClick',
         value: function onClick(event) {
             var $target = this._getClosestItem(event.target);
@@ -3317,8 +3330,54 @@ var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, fals
 }), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, 'placeholder', [_dec8], {
     enumerable: true,
     initializer: null
+}), _descriptor9 = _applyDecoratedDescriptor(_class.prototype, 'activateSelected', [_dec9], {
+    enumerable: true,
+    initializer: null
 })), _class));
 exports.default = Selectable;
+function buildFromSelect(element) {
+    var dom = (0, _jquery2.default)('\n        <div class="dropdown select-widget" data-role="dropdown">\n            <span class="select" data-role="chosen"></span>\n            <ul class="menu list-group" data-role="menu"></ul>\n        </div>\n    ');
+
+    var $menu = dom.find('.menu');
+    element = (0, _jquery2.default)(element);
+    dom.data(element.data());
+
+    var name = element.attr('name'),
+        multiple = element[0].hasAttribute('multiple');
+
+    if (name) {
+        dom.data('name', name);
+    }
+
+    if (multiple) {
+        dom.data({
+            'closeOnSelect': false,
+            'selectEvent': 'check',
+            'multiSelect': true
+        });
+    }
+
+    element.find('option').each(function (x, option) {
+        option = (0, _jquery2.default)(option);
+        var value = option.attr('value'),
+            label = option.text(),
+            $option = void 0;
+
+        if (multiple) {
+            $option = (0, _jquery2.default)('<li class="menuitem list-item" data-role="item" data-value="' + value + '"><label><input type="checkbox" /><a data-label>' + label + '</a></label></li>');
+        } else {
+            $option = (0, _jquery2.default)('<li class="menuitem list-item" data-role="item" data-value="' + value + '"><a data-label>' + label + '</a></li>');
+        }
+
+        $option.data(option.data());
+        $menu.append($option);
+    });
+
+    var d = new _DropDown2.default(dom);
+    new Selectable(dom);
+    element.replaceWith(d.$element);
+    return d;
+}
 
 /***/ }),
 
@@ -3655,6 +3714,10 @@ _loader2.default.register('dropdown', function (element) {
 
 _loader2.default.register('selectable', function (element) {
     return new _Selectable2.default(element);
+});
+
+_loader2.default.register('select', function (element) {
+    return (0, _Selectable.buildFromSelect)(element);
 });
 
 window.MenuView = _MenuView2.default;
