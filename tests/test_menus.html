@@ -308,20 +308,15 @@
 </div><br><br>
 
 
-<div class="dropdown select-widget" data-init="dropdown selectable" data-role="dropdown" data-name="test" data-multi-select="true" data-close-on-select="false">
+<div class="dropdown select-widget" data-init="dropdown selectable" data-role="dropdown" data-name="test" data-multi-select="true" data-close-on-select="false" data-select-event="check">
     <span class="select" data-role="chosen">Any</span>
     <ul class="menu list-group" data-role="menu">
-        <li class="menuitem list-item selected" data-role="item">
-            <label>
-            <input type="checkbox" />
-            <a data-label>Any</a>
-            </label>
-        </li>
-        <li class="menuitem list-item" data-role="item" data-value="google">Google</li>
-        <li class="menuitem list-item" data-role="item" data-value="bungie">Bungie</li>
-        <li class="menuitem list-item" data-role="item" data-value="reddit">Reddit</li>
-        <li class="menuitem list-item" data-role="item" data-value="bing">Bing</li>
-        <li class="menuitem list-item" data-role="item" data-value="test">Test Item</li>
+        <!--<li class="menuitem list-item selected" data-role="item"><label><input type="checkbox" checked /><a data-label>Any</a></label></li>-->
+        <li class="menuitem list-item" data-role="item" data-value="google"><label><input type="checkbox" /><a data-label>Google</a></label></li>
+        <li class="menuitem list-item" data-role="item" data-value="bungie"><label><input type="checkbox" /><a data-label>Bungie</a></label></li>
+        <li class="menuitem list-item" data-role="item" data-value="reddit"><label><input type="checkbox" /><a data-label>Reddit</a></label></li>
+        <li class="menuitem list-item" data-role="item" data-value="bing"><label><input type="checkbox" /><a data-label>Bing</a></label></li>
+        <li class="menuitem list-item" data-role="item" data-value="test"><label><input type="checkbox" /><a data-label>Test</a></label></li>
     </ul>
 </div>
 

@@ -2964,7 +2964,7 @@ exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7;
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8;
 
 var _jquery = __webpack_require__(/*! jquery */ "jquery");
 
@@ -3025,7 +3025,7 @@ function _initializerWarningHelper(descriptor, context) {
     throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
 }
 
-var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, false), _dec2 = (0, _core.boundProperty)(_types.parseIntegerValue, 3), _dec3 = (0, _core.boundProperty)(null, ', '), _dec4 = (0, _core.boundProperty)(null, undefined), _dec5 = (0, _core.boundProperty)(null, 'form'), _dec6 = (0, _core.boundProperty)(null, ', '), _dec7 = (0, _core.boundProperty)((0, _types.choiceType)('change', 'select'), 'select'), (_class = function () {
+var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, false), _dec2 = (0, _core.boundProperty)(_types.parseIntegerValue, 3), _dec3 = (0, _core.boundProperty)(null, ', '), _dec4 = (0, _core.boundProperty)(null, undefined), _dec5 = (0, _core.boundProperty)(null, 'form'), _dec6 = (0, _core.boundProperty)(null, ', '), _dec7 = (0, _core.boundProperty)((0, _types.choiceType)('check', 'click'), 'click'), _dec8 = (0, _core.boundProperty)(null, "Select..."), (_class = function () {
     function Selectable(selector, config) {
         _classCallCheck(this, Selectable);
 
@@ -3043,10 +3043,14 @@ var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, fals
 
         _initDefineProp(this, 'selectEvent', _descriptor7, this);
 
+        _initDefineProp(this, 'placeholder', _descriptor8, this);
+
         this.$element = (0, _jquery2.default)(selector);
 
-        this._onSelect = this.onSelect.bind(this);
-        this.$element.on(_core.events.select, this._onSelect);
+        this._onClick = this.onClick.bind(this);
+        this._onChange = this.onChange.bind(this);
+        this.$element.on(_core.events.select, this._onClick);
+        this.$element.on('change', this._onChange);
         this.$element.data('select-widget', this);
 
         if (config) {
@@ -3057,13 +3061,19 @@ var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, fals
     }
 
     _createClass(Selectable, [{
-        key: 'onSelect',
-        value: function onSelect(event) {
+        key: 'onClick',
+        value: function onClick(event) {
+            var $target = this._getClosestItem(event.target);
+
+            if (!$target || this.selectEvent !== 'click') {
+                return;
+            }
+
             if (this.multiSelect) {
-                if (this.isSelected(event.target)) {
-                    this.deselect(event.target);
+                if (this.isSelected($target)) {
+                    this.deselect($target);
                 } else {
-                    this.select(event.target);
+                    this.select($target);
                 }
             } else {
                 var _iteratorNormalCompletion = true;
@@ -3074,7 +3084,7 @@ var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, fals
                     for (var _iterator = this.getSelectedItems().toArray()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                         var item = _step.value;
 
-                        if (item !== event.target) {
+                        if (item !== $target[0]) {
                             this.deselect(item);
                         }
                     }
@@ -3093,8 +3103,66 @@ var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, fals
                     }
                 }
 
-                if (!this.isSelected(event.target)) {
-                    this.select(event.target);
+                if (!this.isSelected($target)) {
+                    this.select($target);
+                }
+            }
+
+            this.render();
+        }
+    }, {
+        key: 'onChange',
+        value: function onChange(event) {
+            var $target = this._getClosestItem(event.target);
+
+            if (!$target || this.selectEvent !== 'check') {
+                return;
+            }
+
+            var input = (0, _jquery2.default)(event.target),
+                checked = input.is(':checked'),
+                isSelected = this.isSelected($target);
+
+            if (this.multiSelect) {
+                if (checked && !isSelected) {
+                    this.select($target);
+                } else if (!checked && isSelected) {
+                    this.deselect($target);
+                }
+            } else {
+                if (checked) {
+                    var _iteratorNormalCompletion2 = true;
+                    var _didIteratorError2 = false;
+                    var _iteratorError2 = undefined;
+
+                    try {
+                        for (var _iterator2 = this.getSelectedItems().toArray()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                            var item = _step2.value;
+
+                            if (item !== $target[0]) {
+                                this.deselect(item);
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError2 = true;
+                        _iteratorError2 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                _iterator2.return();
+                            }
+                        } finally {
+                            if (_didIteratorError2) {
+                                throw _iteratorError2;
+                            }
+                        }
+                    }
+
+                    if (!isSelected) {
+                        this.select($target);
+                    }
+                } else if (!checked && isSelected) {
+                    this.deselect($target);
                 }
             }
 
@@ -3103,12 +3171,17 @@ var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, fals
     }, {
         key: 'deselect',
         value: function deselect(item) {
-            (0, _jquery2.default)(item).removeClass('selected');
+            item = (0, _jquery2.default)(item);
+            item.removeClass('selected');
+            item.find('input[type="checkbox"]').prop('checked', false);
         }
     }, {
         key: 'select',
         value: function select(item) {
-            (0, _jquery2.default)(item).addClass('selected');
+            item = (0, _jquery2.default)(item);
+            item.addClass('selected');
+
+            item.find('input[type="checkbox"]').prop('checked', true);
         }
     }, {
         key: 'isSelected',
@@ -3126,13 +3199,13 @@ var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, fals
             var r = [],
                 values = [];
 
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
 
             try {
-                for (var _iterator2 = this.getSelectedItems().toArray()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var item = _step2.value;
+                for (var _iterator3 = this.getSelectedItems().toArray()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var item = _step3.value;
 
                     item = (0, _jquery2.default)(item);
                     var label = item.find("[data-label]");
@@ -3145,24 +3218,26 @@ var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, fals
                     values.push(item.data('value'));
                 }
             } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
+                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                        _iterator3.return();
                     }
                 } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
+                    if (_didIteratorError3) {
+                        throw _iteratorError3;
                     }
                 }
             }
 
             if (r.length > this.maxLabels) {
                 r = r.length + ' Selected';
-            } else {
+            } else if (r.length) {
                 r = r.join(this.labelDelimiter);
+            } else {
+                r = this.placeholder || "";
             }
 
             this.$element.children("[data-role='chosen']").html(r);
@@ -3171,13 +3246,13 @@ var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, fals
                 if (this.export === 'form') {
                     this.$element.children('[name="' + this.name + '"]').remove();
 
-                    var _iteratorNormalCompletion3 = true;
-                    var _didIteratorError3 = false;
-                    var _iteratorError3 = undefined;
+                    var _iteratorNormalCompletion4 = true;
+                    var _didIteratorError4 = false;
+                    var _iteratorError4 = undefined;
 
                     try {
-                        for (var _iterator3 = values[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                            var value = _step3.value;
+                        for (var _iterator4 = values[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                            var value = _step4.value;
 
                             if (value) {
                                 var i = (0, _jquery2.default)('<input type="hidden" value="' + value + '" name="' + this.name + '" />');
@@ -3185,16 +3260,16 @@ var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, fals
                             }
                         }
                     } catch (err) {
-                        _didIteratorError3 = true;
-                        _iteratorError3 = err;
+                        _didIteratorError4 = true;
+                        _iteratorError4 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                                _iterator3.return();
+                            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                                _iterator4.return();
                             }
                         } finally {
-                            if (_didIteratorError3) {
-                                throw _iteratorError3;
+                            if (_didIteratorError4) {
+                                throw _iteratorError4;
                             }
                         }
                     }
@@ -3204,6 +3279,15 @@ var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, fals
                     var _i = (0, _jquery2.default)('<input type="hidden" value="' + v + '" name="' + this.name + '" />');
                     this.$element.append(_i);
                 }
+            }
+        }
+    }, {
+        key: '_getClosestItem',
+        value: function _getClosestItem(target) {
+            var r = (0, _jquery2.default)(target).closest("[data-role='item']", this.$element);
+
+            if (r.length) {
+                return r;
             }
         }
     }]);
@@ -3228,6 +3312,9 @@ var Selectable = (_dec = (0, _core.boundProperty)(_types.parseBooleanValue, fals
     enumerable: true,
     initializer: null
 }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, 'selectEvent', [_dec7], {
+    enumerable: true,
+    initializer: null
+}), _descriptor8 = _applyDecoratedDescriptor(_class.prototype, 'placeholder', [_dec8], {
     enumerable: true,
     initializer: null
 })), _class));

@@ -16,13 +16,17 @@ export default class Selectable {
     @boundProperty(null, 'form') export;
     @boundProperty(null, ', ') delimiter;
 
-    @boundProperty(choiceType('change', 'select'), 'select') selectEvent;
+    @boundProperty(choiceType('check', 'click'), 'click') selectEvent;
+
+    @boundProperty(null, "Select...") placeholder;
 
     constructor(selector, config) {
         this.$element = $(selector);
 
-        this._onSelect = this.onSelect.bind(this);
-        this.$element.on(events.select, this._onSelect);
+        this._onClick = this.onClick.bind(this);
+        this._onChange = this.onChange.bind(this);
+        this.$element.on(events.select, this._onClick);
+        this.$element.on('change', this._onChange);
         this.$element.data('select-widget', this);
 
         if(config) {
@@ -32,22 +36,64 @@ export default class Selectable {
         this.render();
     }
 
-    onSelect(event) {
+    onClick(event) {
+        const $target = this._getClosestItem(event.target);
+
+        if(!$target || this.selectEvent !== 'click') {
+            return;
+        }
+
         if(this.multiSelect) {
-            if(this.isSelected(event.target)) {
-                this.deselect(event.target);
+            if(this.isSelected($target)) {
+                this.deselect($target);
             } else {
-                this.select(event.target);
+                this.select($target);
             }
         } else {
             for(let item of this.getSelectedItems().toArray()) {
-                if(item !== event.target) {
+                if(item !== $target[0]) {
                     this.deselect(item);
                 }
             }
 
-            if(!this.isSelected(event.target)) {
-                this.select(event.target);
+            if(!this.isSelected($target)) {
+                this.select($target);
+            }
+        }
+
+        this.render();
+    }
+
+    onChange(event) {
+        const $target = this._getClosestItem(event.target);
+
+        if(!$target || this.selectEvent !== 'check') {
+            return;
+        }
+
+        const input = $(event.target),
+            checked = input.is(':checked'),
+            isSelected = this.isSelected($target);
+
+        if(this.multiSelect) {
+            if(checked && !isSelected) {
+                this.select($target);
+            } else if(!checked && isSelected) {
+                this.deselect($target);
+            }
+        } else {
+            if(checked) {
+                for (let item of this.getSelectedItems().toArray()) {
+                    if (item !== $target[0]) {
+                        this.deselect(item);
+                    }
+                }
+
+                if(!isSelected) {
+                    this.select($target);
+                }
+            } else if(!checked && isSelected) {
+                this.deselect($target);
             }
         }
 
@@ -55,11 +101,16 @@ export default class Selectable {
     }
 
     deselect(item) {
-        $(item).removeClass('selected');
+        item = $(item);
+        item.removeClass('selected');
+        item.find('input[type="checkbox"]').prop('checked', false);
     }
 
     select(item) {
-        $(item).addClass('selected');
+        item = $(item);
+        item.addClass('selected');
+
+        item.find('input[type="checkbox"]').prop('checked', true);
     }
 
     isSelected(item) {
@@ -88,8 +139,10 @@ export default class Selectable {
 
         if(r.length > this.maxLabels) {
             r = `${r.length} Selected`
-        } else {
+        } else if(r.length) {
             r = r.join(this.labelDelimiter);
+        } else {
+            r = this.placeholder || "";
         }
 
         this.$element.children("[data-role='chosen']").html(r);
@@ -110,6 +163,14 @@ export default class Selectable {
                 let i = $(`<input type="hidden" value="${v}" name="${this.name}" />`);
                 this.$element.append(i);
             }
+        }
+    }
+
+    _getClosestItem(target) {
+        let r = $(target).closest("[data-role='item']", this.$element);
+
+        if(r.length) {
+            return r;
         }
     }
 }
