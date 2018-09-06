@@ -21,8 +21,6 @@ export default class ColumnResize extends Mouse {
     }
 
     render() {
-        console.log("Hello WOrld");
-
         this.header.getColumns().each((x, element) => {
             element = $(element);
             const column = element.data('column');

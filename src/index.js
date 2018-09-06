@@ -6,6 +6,7 @@ import Application from './apps';
 import './components/resizeable';
 import './components/Panes';
 import './components/Tabs';
+import './components/OnValueChangeInput';
 
 
 export {

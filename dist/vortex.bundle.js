@@ -742,6 +742,102 @@ window.Modal = Modal;
 
 /***/ }),
 
+/***/ "./src/components/OnValueChangeInput.js":
+/*!**********************************************!*\
+  !*** ./src/components/OnValueChangeInput.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jquery = __webpack_require__(/*! jquery */ "jquery");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _ObjectEvents2 = __webpack_require__(/*! ../common/ObjectEvents */ "./src/common/ObjectEvents.js");
+
+var _ObjectEvents3 = _interopRequireDefault(_ObjectEvents2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var OnValueChangeInput = function (_ObjectEvents) {
+    _inherits(OnValueChangeInput, _ObjectEvents);
+
+    function OnValueChangeInput(selector) {
+        var delay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
+
+        _classCallCheck(this, OnValueChangeInput);
+
+        var _this = _possibleConstructorReturn(this, (OnValueChangeInput.__proto__ || Object.getPrototypeOf(OnValueChangeInput)).call(this));
+
+        _this.$element = (0, _jquery2.default)(selector);
+        _this.delay = delay;
+
+        _this._onEvent = _this.onKeyUp.bind(_this);
+        _this.$element.on('change', _this._onEvent);
+        _this.$element.on('keyup', _this._onEvent);
+        _this.value = _this.$element.val();
+        return _this;
+    }
+
+    _createClass(OnValueChangeInput, [{
+        key: 'onKeyUp',
+        value: function onKeyUp(event) {
+            var _this2 = this;
+
+            if (this._timer) {
+                clearTimeout(this._timer);
+                this._timer = null;
+            }
+
+            if (typeof this.delay === 'number' && this.delay >= 0) {
+                this._timer = setTimeout(function () {
+                    _this2._timer = null;
+                    _this2.onChange();
+                }, this.delay);
+            } else {
+                this.onChange();
+            }
+        }
+    }, {
+        key: 'onChange',
+        value: function onChange() {
+            if (this._timer) {
+                clearTimeout(this._timer);
+                this._timer = null;
+            }
+
+            var value = this.$element.val();
+
+            if (value !== this.value) {
+                this.value = value;
+                this.trigger('value-change', this.value);
+            }
+        }
+    }]);
+
+    return OnValueChangeInput;
+}(_ObjectEvents3.default);
+
+exports.default = OnValueChangeInput;
+
+/***/ }),
+
 /***/ "./src/components/Panes.js":
 /*!*********************************!*\
   !*** ./src/components/Panes.js ***!
@@ -1348,6 +1444,8 @@ __webpack_require__(/*! ./components/resizeable */ "./src/components/resizeable.
 __webpack_require__(/*! ./components/Panes */ "./src/components/Panes.js");
 
 __webpack_require__(/*! ./components/Tabs */ "./src/components/Tabs.js");
+
+__webpack_require__(/*! ./components/OnValueChangeInput */ "./src/components/OnValueChangeInput.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

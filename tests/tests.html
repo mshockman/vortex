@@ -12,56 +12,15 @@
 <body>
 
 
-<nav class="navbar navbar-lg">
-    <a class="navbar-nav" href="#">Link 1</a>
-    <ul data-init="menu" class="menubar-control navbar-item" data-timeout="3000" data-role="menu" data-auto-activate="false">
-        <li data-role="dropdown" class="navbar-nav menuitem">
-            <a>DropDown #1</a>
-            <div class="menu arrow-up" data-role="menu">
-                <ul class="list-group list-group-merge">
-                    <li data-role="item" class="list-item menuitem"><a href="#">Test Item #1</a></li>
-                    <li data-role="item" class="list-item menuitem"><a href="#">Test Item #2</a></li>
-                    <li data-role="item" class="list-item menuitem"><a href="#">Test Item #3</a></li>
-                    <li data-role="item" class="list-item menuitem"><a href="#">Test Item #4</a></li>
-                    <li data-role="item" class="list-item menuitem"><a href="#">Test Item #5</a></li>
-                </ul>
-            </div>
-        </li>
-        <li data-role="dropdown" class="navbar-nav">
-            <a>Ribbon #1</a>
-            <div class="ribbon" data-role="menu">
-                <h1>Hello World</h1>
-            </div>
-        </li>
-    </ul>
-</nav>
+<label>
+    Search
+    <input type="text" id="test2" />
+</label>
 
 
-<div class="container">
-<ul class="list-group">
-    <li class="list-item">List Item #1</li>
-    <li class="list-item active">List Item #2</li>
-    <li class="list-item">List Item #3</li>
-    <li class="list-item">List Item #4</li>
-    <li class="list-item">List Item #5</li>
-</ul>
-</div>
-
-
-<div class="container">
-    <div class="panel">
-        <div class="panel-header hbox">
-            <div class="panel-title">Panel Title</div>
-        </div>
-        <div class="panel-body">
-            This it the body
-        </div>
-        <div class="panel-footer">
-            This is the footer
-        </div>
-    </div>
-</div>
-
+<script type="text/javascript">
+    window.f = new OnValueChangeInput("#test2");
+</script>
 
 </body>
 </html>
