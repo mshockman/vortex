@@ -153,6 +153,7 @@ export default class DataTableView extends ObjectEvents {
                     }
 
                     $tr.attr('data-pk', pk);
+                    $tr.data('data', row);
                 }
 
                 for(let column of this.columns) {
