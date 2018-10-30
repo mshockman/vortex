@@ -186,6 +186,11 @@ export default class MenuView extends ObjectEvents {
         if(this.isActive && this.closeOnSelect) {
             this.deactivate();
         }
+
+        this.trigger('select', {
+            'originalEvent': event,
+            'item': target
+        });
     }
 
     //------------------------------------------------------------------------------------------------------------------
