@@ -134,52 +134,76 @@ export function getMenuItemProperty(target, propName, parentPropName, type, defa
 
 
 export function menuProperty(type, defaultValue) {
-    return function(target, name, descriptor) {
+    return function({kind, key, placement, descriptor, initializer}) {
         return {
-            descriptor,
+            kind: "method",
+            key,
+            placement,
+            initializer,
 
-            get() {
-                return getAttributeProperty(this, name, type, defaultValue);
-            },
+            descriptor: {
+                get() {
+                    return getAttributeProperty(this, key, type, defaultValue);
+                },
 
-            set(value) {
-                this.$element.data(name, value);
+                set(value) {
+                    this.$element.data(key, value);
+                },
+
+                enumerable: descriptor.enumerable,
+                configurable: descriptor.configurable
             }
-        }
+        };
     }
 }
 
 
 export function menuItemProperty(menuProperty, type, defaultValue) {
-    return function(target, name, descriptor) {
+    return function({kind, key, placement, descriptor, initializer}) {
         return {
-            descriptor,
+            kind: "method",
+            key,
+            placement,
+            initializer,
 
-            get() {
-                return getMenuItemProperty(this, name, menuProperty, type, defaultValue);
-            },
+            descriptor: {
+                get() {
+                    return getMenuItemProperty(this, key, menuProperty, type, defaultValue);
+                },
 
-            set(value) {
-                this.$element.data(name, value);
+                set(value) {
+                    this.$element.data(key, value);
+                },
+
+                enumerable: descriptor.enumerable,
+                configurable: descriptor.configurable
             }
-        }
+        };
     }
 }
 
 
 export function boundProperty(type, defaultValue) {
-    return function(target, name, descriptor) {
+    return function({kind, key, placement, descriptor, initializer}) {
         return {
-            descriptor,
+            kind: "method",
+            key,
+            placement,
+            initializer,
 
-            get() {
-                return getAttributeProperty(this, name, type, defaultValue);
-            },
+            descriptor: {
+                get() {
+                    return getAttributeProperty(this, key, type, defaultValue);
+                },
 
-            set(value) {
-                this.$element.data(name, value);
+                set(value) {
+                    this.$element.data(key, value);
+                },
+
+                enumerable: descriptor.enumerable,
+                configurable: descriptor.configurable
             }
-        }
+        };
     }
 }
 
