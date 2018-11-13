@@ -95,3 +95,32 @@ export function isMouseEnter(target, event) {
     if(target.jquery) target = target[0];
     return !target.contains(event.relatedTarget);
 }
+
+
+export const Prism = {
+    *values(object) {
+        for(let key of Object.keys(object)) {
+            yield object[key];
+        }
+    },
+
+    *items(object) {
+        for(let key of Object.keys(object)) {
+            yield [key, object[key]];
+        }
+    },
+
+    clamp: clamp,
+
+    proto(descriptor) {
+        descriptor.placement = "prototype";
+        return descriptor;
+    },
+
+    enumerable(enumerable) {
+        return function(descriptor) {
+            descriptor.descriptor.enumerable = enumerable;
+            return descriptor;
+        }
+    }
+};
