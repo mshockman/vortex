@@ -1,7 +1,7 @@
 # vortex
 Replacement javascript library for axion and axil.
 
-##Features
+<strong>Features</strong><br>
 - Data Grids
 - Menus
 - Accordian Menus
@@ -11,5 +11,5 @@ Replacement javascript library for axion and axil.
 - Modals
 - Paginator
 
-##Status
+<strong>Status</strong><br>
 Abandonend
